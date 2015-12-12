@@ -11,6 +11,7 @@
 # Generated files
 bin/
 gen/
+MuSeek/.idea/
 
 # Gradle files
 .gradle/
@@ -25,3 +26,6 @@ proguard/
 
 # Log Files
 *.log
+
+# temp
+.DS_Store
