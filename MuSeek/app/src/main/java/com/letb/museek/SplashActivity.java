@@ -1,8 +1,5 @@
 package com.letb.museek;
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -12,12 +9,9 @@ import android.widget.Toast;
 
 import com.letb.museek.Entities.Token;
 import com.letb.museek.Requests.TokenRequest;
-import com.letb.museek.Services.MediaPlayerService;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import java.io.IOException;
 
 public class SplashActivity extends BaseSpiceActivity {
     private TokenRequest tokenRequest;
@@ -38,14 +32,6 @@ public class SplashActivity extends BaseSpiceActivity {
         setProgressBarVisibility(true);
 
         getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new APIRequestListener());
-
-        MediaPlayerService mplayer = new MediaPlayerService();
-        try {
-            mplayer.test();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
 //    Ну в общем сплеш скрин - это тоже не rocket science
