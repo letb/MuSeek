@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MuSeek</string>
+    <string name="main_activity">MuSeek YO</string>
 </resources>
