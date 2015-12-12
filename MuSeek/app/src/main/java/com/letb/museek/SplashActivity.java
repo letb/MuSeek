@@ -1,5 +1,6 @@
 package com.letb.museek;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,35 +20,17 @@ public class SplashActivity extends BaseSpiceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
 
         tokenRequest = new TokenRequest(Token.authHTTPHeader);
-        StartAnimations();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setProgressBarIndeterminate(false);
-        setProgressBarVisibility(true);
-
         getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new APIRequestListener());
     }
 
-//    Ну в общем сплеш скрин - это тоже не rocket science
-    private void StartAnimations() {
-        Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
-        anim.reset();
-        LinearLayout l=(LinearLayout) findViewById(R.id.lin_lay);
-        l.clearAnimation();
-        l.startAnimation(anim);
+    public void proceedNextActivity(String accessToken) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("PLEER.COM ACCESS TOKEN", accessToken);
+        startActivity(intent);
 
-        anim = AnimationUtils.loadAnimation(this, R.anim.translate);
-        anim.reset();
-        ImageView iv = (ImageView) findViewById(R.id.logo);
-        iv.clearAnimation();
-        iv.startAnimation(anim);
-
+        finish();
     }
 
 //    Пока для реквестов создаем такие, я потом вынесу все в отдельный класс-обработчик
@@ -60,8 +43,8 @@ public class SplashActivity extends BaseSpiceActivity {
 
         @Override
         public void onRequestSuccess(final Token result) {
-            // Получили, сохранили, передали
-            Toast.makeText(SplashActivity.this, "Success!: " + result.getAccessToken(), Toast.LENGTH_SHORT).show();
+            proceedNextActivity(result.getAccessToken());
+
         }
     }
 }
