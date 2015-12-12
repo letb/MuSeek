@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.letb.museek" >
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -22,8 +23,11 @@
         </activity>
 
         <service
-            android:name="com.letb.museek.Services.SpiceRequestService"
+            android:name=".Services.SpiceRequestService"
             android:exported="false" />
+
+        <activity android:name=".PlayListActivity" >
+        </activity>
     </application>
 
 </manifest>
