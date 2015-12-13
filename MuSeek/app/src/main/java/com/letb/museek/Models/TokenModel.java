@@ -1,13 +1,15 @@
-package com.letb.museek.Entities;
+package com.letb.museek.Models;
 
 import android.util.Base64;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by eugene on 06.12.15.
  */
-public class Token {
+public class TokenModel {
     @SerializedName("access_token")
     private String accessToken;
 
@@ -18,5 +20,9 @@ public class Token {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public Integer getExpiresIn() {
+        return expiresIn;
     }
 }

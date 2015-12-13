@@ -1,6 +1,7 @@
 package com.letb.museek;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,7 +13,7 @@ import com.octo.android.robospice.SpiceManager;
 // В джаве экстендить можно только один класс, поэтому придется экстендить рано
 // Не работает пока меню не используется
 //public abstract class BaseSpiceActivity extends SlidingActivity {
-public abstract class BaseSpiceActivity extends Activity {
+public abstract class BaseSpiceActivity extends FragmentActivity {
 
     private SpiceManager spiceManager = new SpiceManager( SpiceRequestService.class );
 

@@ -1,18 +1,19 @@
 package com.letb.museek;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.letb.museek.Entities.Token;
+import com.letb.museek.Entities.TokenHolder;
+import com.letb.museek.Fragments.PlaylistFragment;
+import com.letb.museek.Models.TokenModel;
+import com.letb.museek.Models.TrackModel;
 import com.letb.museek.Requests.TokenRequest;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.ArrayList;
 
 public class SplashActivity extends BaseSpiceActivity {
     private TokenRequest tokenRequest;
@@ -22,8 +23,7 @@ public class SplashActivity extends BaseSpiceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        tokenRequest = new TokenRequest(Token.authHTTPHeader);
-        StartAnimations();
+        tokenRequest = new TokenRequest(TokenModel.authHTTPHeader);
     }
 
     @Override
@@ -32,37 +32,38 @@ public class SplashActivity extends BaseSpiceActivity {
         setProgressBarIndeterminate(false);
         setProgressBarVisibility(true);
 
-        getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new APIRequestListener());
+        getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new TokenRequestListener());
     }
 
-//    Ну в общем сплеш скрин - это тоже не rocket science
-    private void StartAnimations() {
-        Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
-        anim.reset();
-        LinearLayout l=(LinearLayout) findViewById(R.id.lin_lay);
-        l.clearAnimation();
-        l.startAnimation(anim);
+    private void proceedToPlayList () {
+        ArrayList<TrackModel> trackList = new ArrayList<>();
+        TrackModel track = new TrackModel();
+        track.setTitle("MyFavSong");
+        TrackModel anotherTrack = new TrackModel();
+        anotherTrack.setTitle("MyFavSoniiiiig");
+        trackList.add(track);
+        trackList.add(anotherTrack);
 
-        anim = AnimationUtils.loadAnimation(this, R.anim.translate);
-        anim.reset();
-        ImageView iv = (ImageView) findViewById(R.id.logo);
-        iv.clearAnimation();
-        iv.startAnimation(anim);
 
+        Intent intent = new Intent(this, PlayListActivity.class);
+        intent.putExtra(PlaylistFragment.TRACK_LIST, trackList);
+        startActivity(intent);
     }
 
 //    Пока для реквестов создаем такие, я потом вынесу все в отдельный класс-обработчик
 //    Концы для реквестов
-    public final class APIRequestListener implements RequestListener<Token> {
+    public final class TokenRequestListener implements RequestListener<TokenModel> {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             Toast.makeText(SplashActivity.this, "Failure!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void onRequestSuccess(final Token result) {
-            // Получили, сохранили, передали
+        public void onRequestSuccess(final TokenModel result) {
             Toast.makeText(SplashActivity.this, "Success!: " + result.getAccessToken(), Toast.LENGTH_SHORT).show();
+            TokenHolder.setAccessToken(result.getAccessToken());
+            TokenHolder.setExpiresIn(result.getExpiresIn());
+            proceedToPlayList();
         }
     }
 }
