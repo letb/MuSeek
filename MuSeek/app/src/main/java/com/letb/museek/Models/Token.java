@@ -1,4 +1,4 @@
-package com.letb.museek.Entities;
+package com.letb.museek.Models;
 
 import android.util.Base64;
 
