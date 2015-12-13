@@ -9,22 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.letb.museek.Adapters.TrackAdapter;
-import com.letb.museek.Models.TrackModel;
+import com.letb.museek.Models.SongModel;
 import com.letb.museek.R;
 
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnTrackSelectedListener}
- * interface.
- */
 public class PlaylistFragment extends ListFragment {
     public static final String TRACK_LIST = "TRACK_LIST";
 
-    private List<TrackModel> mListItems;
+    private List<SongModel> mListItems;
 
     private OnTrackSelectedListener mListener;
     private TrackAdapter mAdapter;
@@ -38,7 +31,7 @@ public class PlaylistFragment extends ListFragment {
 
         View view = inflater.inflate(R.layout.fragment_play_list, container, false);
         if (getArguments() != null) {
-            mListItems = (List<TrackModel>) getArguments().getSerializable(TRACK_LIST);
+            mListItems = (List<SongModel>) getArguments().getSerializable(TRACK_LIST);
         }
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         mAdapter = new TrackAdapter(getActivity(), mListItems);

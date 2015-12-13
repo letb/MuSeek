@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.letb.museek.Models.TrackModel;
+import com.letb.museek.Models.SongModel;
 import com.letb.museek.R;
 
 import java.util.List;
@@ -21,9 +21,9 @@ NICE ViewHolder implementation found
  */
 public class TrackAdapter extends BaseAdapter {
         private Context mContext;
-        private List<TrackModel> mTracks;
+        private List<SongModel> mTracks;
 
-        public TrackAdapter(Context context, List<TrackModel> tracks) {
+        public TrackAdapter(Context context, List<SongModel> tracks) {
             mContext = context;
             mTracks = tracks;
         }
@@ -34,7 +34,7 @@ public class TrackAdapter extends BaseAdapter {
         }
 
         @Override
-        public TrackModel getItem(int position) {
+        public SongModel getItem(int position) {
             return mTracks.get(position);
         }
 
@@ -46,7 +46,7 @@ public class TrackAdapter extends BaseAdapter {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            TrackModel track = getItem(position);
+            SongModel track = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {

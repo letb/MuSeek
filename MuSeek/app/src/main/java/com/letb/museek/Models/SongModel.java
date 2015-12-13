@@ -8,8 +8,14 @@ import java.io.Serializable;
  * Created by eugene on 13.12.15.
  */
 //TODO: Parcelable
-public class TrackModel implements Serializable {
+public class SongModel implements Serializable {
     private String title;
+
+    private String _url;
+
+    public String getUrl() {
+        return _url;
+    }
 
     public String getTitle() {
         return title;
@@ -17,5 +23,9 @@ public class TrackModel implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void set_url(String _url) {
+        this._url = _url;
     }
 }

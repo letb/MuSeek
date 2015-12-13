@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.Models.TokenModel;
-import com.letb.museek.Models.TrackModel;
+import com.letb.museek.Models.SongModel;
 import com.letb.museek.Requests.TokenRequest;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -21,7 +21,6 @@ public class SplashActivity extends BaseSpiceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
 
         tokenRequest = new TokenRequest(TokenModel.authHTTPHeader);
     }
@@ -36,10 +35,10 @@ public class SplashActivity extends BaseSpiceActivity {
     }
 
     private void proceedToPlayList () {
-        ArrayList<TrackModel> trackList = new ArrayList<>();
-        TrackModel track = new TrackModel();
+        ArrayList<SongModel> trackList = new ArrayList<>();
+        SongModel track = new SongModel();
         track.setTitle("MyFavSong");
-        TrackModel anotherTrack = new TrackModel();
+        SongModel anotherTrack = new SongModel();
         anotherTrack.setTitle("MyFavSoniiiiig");
         trackList.add(track);
         trackList.add(anotherTrack);
@@ -49,6 +48,7 @@ public class SplashActivity extends BaseSpiceActivity {
         intent.putExtra(PlaylistFragment.TRACK_LIST, trackList);
         startActivity(intent);
     }
+
 
 //    Пока для реквестов создаем такие, я потом вынесу все в отдельный класс-обработчик
 //    Концы для реквестов
