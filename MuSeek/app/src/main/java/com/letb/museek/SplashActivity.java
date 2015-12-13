@@ -1,19 +1,16 @@
 package com.letb.museek;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.letb.museek.Entities.Token;
+import com.letb.museek.Models.Token;
 import com.letb.museek.Entities.TokenHolder;
-import com.letb.museek.Entities.Track.Track;
 import com.letb.museek.Requests.TokenRequest;
 import com.letb.museek.Requests.TrackRequest;
+import com.letb.museek.Models.Track.Track;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import java.util.ArrayList;
 
 public class SplashActivity extends BaseSpiceActivity {
     private TokenRequest tokenRequest;

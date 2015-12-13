@@ -1,6 +1,6 @@
 package com.letb.museek.Requests;
 
-import com.letb.museek.Entities.Token;
+import com.letb.museek.Models.Token;
 
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;

@@ -1,6 +1,6 @@
 package com.letb.museek.Requests;
 
-import com.letb.museek.Entities.Track.Track;
+import com.letb.museek.Models.Track.Track;
 
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;

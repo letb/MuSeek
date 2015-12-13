@@ -1,4 +1,4 @@
-package com.letb.museek.Entities.Track;
+package com.letb.museek.Models.Track;
 
 import com.google.gson.annotations.SerializedName;
 
