@@ -2,8 +2,10 @@ package com.letb.museek.Models.Track;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 
-public class Track {
+
+public class Track implements Serializable{
 
     public static String getTrackInfoMethod = "tracks_get_info";
     public static String getTrackUrlMethod = "tracks_get_download_link";
@@ -16,6 +18,10 @@ public class Track {
 
     @SerializedName("data")
     private Data data;
+
+    public Track() {
+        data = new Data();
+    }
 
     public String getSuccess() {
         return success;
@@ -39,5 +45,14 @@ public class Track {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getTitle() {
+        return data.getmArtist() + " – " + data.getmTrack();
+    }
+
+    public void setTitle(String artist, String track) {
+        data.setmArtist(artist);
+        data.setmTrack(track);
     }
 }

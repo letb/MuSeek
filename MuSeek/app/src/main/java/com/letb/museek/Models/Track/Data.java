@@ -2,7 +2,9 @@ package com.letb.museek.Models.Track;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Data {
+import java.io.Serializable;
+
+public class Data implements Serializable{
 
 
     @SerializedName("track_id")
