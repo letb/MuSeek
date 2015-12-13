@@ -6,6 +6,10 @@ import com.google.gson.annotations.SerializedName;
 public class Track {
 
     public static String getTrackInfoMethod = "tracks_get_info";
+    public static String getTrackUrlMethod = "tracks_get_download_link";
+
+    @SerializedName("url")
+    private String url;
 
     @SerializedName("success")
     private String success;
@@ -27,5 +31,13 @@ public class Track {
 
     public void setData(Data data) {
         this.data = data;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
