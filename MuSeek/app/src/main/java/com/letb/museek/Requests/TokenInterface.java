@@ -1,6 +1,6 @@
 package com.letb.museek.Requests;
 
-import com.letb.museek.Models.TokenModel;
+import com.letb.museek.Entities.Token;
 
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
@@ -13,5 +13,5 @@ import retrofit.http.POST;
 public interface TokenInterface {
     @FormUrlEncoded
     @POST("/token.php")
-    TokenModel getToken(@Header("Authorization") String authorization, @Field("grant_type") String type);
+    Token getToken(@Header("Authorization") String authorization, @Field("grant_type") String type);
 }

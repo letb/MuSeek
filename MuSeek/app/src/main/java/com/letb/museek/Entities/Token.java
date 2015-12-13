@@ -1,4 +1,4 @@
-package com.letb.museek.Models;
+package com.letb.museek.Entities;
 
 import android.util.Base64;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by eugene on 06.12.15.
  */
-public class TokenModel {
+public class Token {
     @SerializedName("access_token")
     private String accessToken;
 
