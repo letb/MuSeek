@@ -29,3 +29,6 @@ proguard/
 
 # IDEA Files
 MuSeek/.idea
+MuSeek/*.iml
+MuSeek/app/*.iml
+
