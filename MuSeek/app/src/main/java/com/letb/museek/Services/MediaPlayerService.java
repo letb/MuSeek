@@ -22,10 +22,10 @@ public class MediaPlayerService
                     MediaPlayer.OnErrorListener,
                     MediaPlayer.OnCompletionListener {
 
-    private final IBinder binder        = new Binder();
-    private MediaPlayer mediaPlayer;
-    private List<Track> trackList = null;
-    private int currentTrackIndex = 0;
+    private final IBinder binder    = new Binder();
+    private MediaPlayer mediaPlayer = null;
+    private List<Track> trackList   = null;
+    private int currentTrackIndex   = 0;
 
     public class Binder extends android.os.Binder {
         public MediaPlayerService getService() {
@@ -65,8 +65,8 @@ public class MediaPlayerService
         trackList = tracks;
     }
 
-    public void setTrack(int trackId) {
-        currentTrackIndex = trackId;
+    public void setTrack(int trackIndex) {
+        currentTrackIndex = trackIndex;
     }
 
     public void playTrack() {
