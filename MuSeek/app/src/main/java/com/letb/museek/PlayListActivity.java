@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.widget.Toast;
 
 import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Services.MediaPlayerService;
+import com.letb.museek.Utils.UserInformer;
 
 import java.util.List;
 
@@ -21,34 +21,29 @@ public class PlayListActivity extends BaseSpiceActivity  implements PlaylistFrag
     private MediaPlayerService mediaPlayerService;
     private Intent playIntent;
     private boolean mediaPlayerBound = false;
-    private List<Track> mListItems;
-
-    //    TODO: Когда это происходит?
-    //connect to the service
-    private ServiceConnection musicConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MediaPlayerService.Binder binder = (MediaPlayerService.Binder) service;
-            mediaPlayerService = binder.getService();
-            mediaPlayerService.setTrackList(mListItems);
-            mediaPlayerBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mediaPlayerBound = false;
-        }
-    };
+    private List<Track> trackList;
+    private ServiceConnection musicConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListItems = (List<Track>) getIntent().getExtras().getSerializable(PlaylistFragment.TRACK_LIST);
-        PlaylistFragment playlistFragment = new PlaylistFragment();
-        playlistFragment.setArguments(getIntent().getExtras());
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(android.R.id.content, playlistFragment);
-        ft.commit();
+        musicConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                MediaPlayerService.Binder binder = (MediaPlayerService.Binder) service;
+                mediaPlayerService = binder.getService();
+                mediaPlayerService.setTrackList(trackList);
+                mediaPlayerBound = true;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mediaPlayerBound = false;
+            }
+        };
+
+        trackList = (List<Track>) getIntent().getExtras().getSerializable(PlaylistFragment.TRACK_LIST);
+        showFragment(new PlaylistFragment(), getIntent());
     }
 
     @Override
@@ -62,19 +57,16 @@ public class PlayListActivity extends BaseSpiceActivity  implements PlaylistFrag
     }
 
     @Override
-    public void onTrackSelected(String title) {
-        Toast.makeText(PlayListActivity.this, title, Toast.LENGTH_SHORT).show();
-        mediaPlayerService.setTrack(0);
-        mediaPlayerService.playTrack();
-
-    }
-
-//    TODO: Как это работает??
-//    Смерджить этот и предыдущий методы - и будет счастье
-    public void songPicked(View view) {
-        // todo: change view get tag to smth useful
-        mediaPlayerService.setTrack(Integer.parseInt(view.getTag().toString()));
+    public void onTrackSelected(Integer position) {
+        UserInformer.showMessage(PlayListActivity.this, "Playing track " + trackList.get(position).getTitle());
+        mediaPlayerService.setTrack(position);
         mediaPlayerService.playTrack();
     }
 
+    public void showFragment (Fragment fragment, Intent data) {
+        fragment.setArguments(data.getExtras());
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(android.R.id.content, fragment);
+        ft.commit();
+    }
 }

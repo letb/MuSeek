@@ -70,13 +70,6 @@ public class PlayerFragment extends Fragment implements PlaylistFragment.OnTrack
         }
     }
 
-    @Override
-    public void onTrackSelected(String title) {
-        Toast.makeText(appContext, title, Toast.LENGTH_SHORT).show();
-        mediaPlayerService.setTrack(Integer.parseInt(view.getTag().toString()));
-        mediaPlayerService.playTrack();
-    }
-
     public void trackPicked(View view) {
         // todo: change view get tag to smth useful
 
@@ -97,4 +90,9 @@ public class PlayerFragment extends Fragment implements PlaylistFragment.OnTrack
             mediaPlayerBound = false;
         }
     };
+
+    @Override
+    public void onTrackSelected(Integer position) {
+        Toast.makeText(appContext, position, Toast.LENGTH_SHORT).show();
+    }
 }

@@ -23,17 +23,12 @@ public class TrackRequest extends RetrofitSpiceRequest <Track, TrackInterface> {
         this.reason = reason;
     }
 
-
-
-
     @Override
     public Track loadDataFromNetwork() throws Exception {
         Ln.d("Request track info");
         Track result = getService().getTrack(token, info_method, trackId);
         Track url = getService().getTrackUrl(token, url_method, trackId, reason);
-
         result.setUrl(url.getUrl());
-
         return result;
     }
 

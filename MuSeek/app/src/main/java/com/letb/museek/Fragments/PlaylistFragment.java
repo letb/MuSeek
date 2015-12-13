@@ -62,12 +62,12 @@ public class PlaylistFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         if (null != mListener) {
-            mListener.onTrackSelected(mListItems.get(position).getTitle());
+            mListener.onTrackSelected(position);
         }
     }
 
     public interface OnTrackSelectedListener {
-        public void onTrackSelected(String title);
+        public void onTrackSelected(Integer position);
     }
 
 }

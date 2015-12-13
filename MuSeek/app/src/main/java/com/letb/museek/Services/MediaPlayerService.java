@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.letb.museek.Models.Track.Track;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class MediaPlayerService
                     MediaPlayer.OnCompletionListener {
 
     private final IBinder binder    = new Binder();
+//    TODO: Зачему делать это явно?
     private MediaPlayer mediaPlayer = null;
     private List<Track> trackList   = null;
     private int currentTrackIndex   = 0;
@@ -76,11 +78,10 @@ public class MediaPlayerService
         Log.i("MUSIC SERVICE", "Trying play track");
         try {
             mediaPlayer.setDataSource(url);
-            mediaPlayer.prepareAsync();
-        }
-        catch(Exception e){
+        } catch (IOException e) {
             Log.e("MUSIC SERVICE", "Error setting data source", e);
         }
+        mediaPlayer.prepareAsync();
     }
 
     @Override
