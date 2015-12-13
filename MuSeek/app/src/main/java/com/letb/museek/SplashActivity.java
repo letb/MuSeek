@@ -28,8 +28,8 @@ public class SplashActivity extends BaseSpiceActivity {
         getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new TokenRequestListener());
     }
 
-    public void requestTrack(String token, String trackId) {
-        trackRequest = new TrackRequest(token, Track.getTrackInfoMethod, trackId);
+    public void requestTrack(String token, String trackId, String reason) {
+        trackRequest = new TrackRequest(token, trackId, reason);
         getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new TrackRequestListener());
     }
 
@@ -73,7 +73,7 @@ public class SplashActivity extends BaseSpiceActivity {
 //            proceedNextActivity(result.getAccessToken());
             TokenHolder.setAccessToken(result.getAccessToken());
             TokenHolder.setExpiresIn(result.getExpiresIn());
-            requestTrack(result.getAccessToken(), "851340JUky");
+            requestTrack(result.getAccessToken(), "851340JUky", "save");
 
         }
     }
