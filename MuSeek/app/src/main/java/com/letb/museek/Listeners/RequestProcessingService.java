@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.content.Context;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.letb.museek.Entities.TokenHolder;
+import com.letb.museek.Events.EventFail;
+import com.letb.museek.Events.TokenEventSuccess;
+import com.letb.museek.Events.TrackEventSuccess;
 import com.letb.museek.Models.Token;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Requests.TokenRequest;
@@ -17,26 +18,15 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p/>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
+import de.greenrobot.event.EventBus;
+
 public class RequestProcessingService extends BaseSpiceService {
-
-    public static final String BROADCAST_TOKEN_REQUEST = "com.letb.museek.Listeners.broadcast.token.request";
-    public static final String BROADCAST_TOKEN_REQUEST_PARAMETER = "com.letb.museek.Listeners.broadcast.token.request.parameter";
-    public static final String BROADCAST_TOKEN_REQUEST_ANSWER = "com.letb.museek.Listeners.broadcast.token.request.answer";
-
-    private static final String BROADCAST_TRACK_REQUEST = "com.letb.museek.Listeners.broadcast.track.request";
-
     private static final String ACTION_TOKEN_REQUEST = "com.letb.museek.Listeners.action.token.request";
     private static final String ACTION_TRACK_REQUEST = "com.letb.museek.Listeners.action.track.request";
 
     private static final String TRACK_ID = "com.letb.museek.Listeners.extra.track.id";
-
+    private static final String TRACK_REASON = "com.letb.museek.Listeners.extra.track.reason";
+    private EventBus bus = EventBus.getDefault();
 
     public static void startTokenRequestAction(Context context) {
         Intent intent = new Intent(context, RequestProcessingService.class);
@@ -45,10 +35,11 @@ public class RequestProcessingService extends BaseSpiceService {
     }
 
 
-    public static void startTrackRequestAction(Context context, String trackId) {
+    public static void startTrackRequestAction(Context context, String trackId, String reason) {
         Intent intent = new Intent(context, RequestProcessingService.class);
         intent.setAction(ACTION_TRACK_REQUEST);
         intent.putExtra(TRACK_ID, trackId);
+        intent.putExtra(TRACK_REASON, reason);
         context.startService(intent);
     }
 
@@ -60,48 +51,45 @@ public class RequestProcessingService extends BaseSpiceService {
                 handleTokenRequest();
             } else if (ACTION_TRACK_REQUEST.equals(action)) {
                 final String trackId = intent.getStringExtra(TRACK_ID);
-                handelSingleTrackRequest(trackId);
+                final String trackReason = intent.getStringExtra(TRACK_REASON);
+                handelSingleTrackRequest(trackId, trackReason);
             }
         }
         return START_STICKY;
     }
+
 
     private void handleTokenRequest() {
         TokenRequest tokenRequest = new TokenRequest(Token.authHTTPHeader);
         getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessingService.TokenRequestListener());
     }
 
-    private void handelSingleTrackRequest(String trackId) {
-        TrackRequest trackRequest = new TrackRequest(TokenHolder.getAccessToken(), trackId, "listen");
+    private void handelSingleTrackRequest(String trackId, String reason) {
+        TrackRequest trackRequest = new TrackRequest(TokenHolder.getAccessToken(), trackId, reason);
         getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessingService.TrackRequestListener());
     }
 
     public final class TokenRequestListener implements RequestListener<Token> {
-
-        private final String SUCCESS_RESULT = "SUCCESS";
-        private final String FAIL_RESULT = "FAIL";
-
-
-
         @Override
         public void onRequestFailure(SpiceException spiceException) {
+            bus.post(new EventFail(spiceException.getMessage()));
         }
 
         @Override
         public void onRequestSuccess(final Token result) {
-            TokenHolder.setAccessToken(result.getAccessToken());
-            TokenHolder.setExpiresIn(result.getExpiresIn());
-    //        requestTrack(result.getAccessToken(), "4425964VcAZ", "listen");
+            bus.post(new TokenEventSuccess(result));
         }
     }
 
-    public static final class TrackRequestListener implements RequestListener<Track> {
+    public final class TrackRequestListener implements RequestListener<Track> {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
+            bus.post(new EventFail(spiceException.getMessage()));
         }
 
         @Override
         public void onRequestSuccess(final Track result) {
+            bus.post(new TrackEventSuccess(result));
         }
     }
 

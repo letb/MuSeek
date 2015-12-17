@@ -8,8 +8,13 @@ public final class TokenHolder {
 
     private static Integer expiresIn;
 
+    public static void setData (String accessToken, Integer expiresIn) {
+        TokenHolder.accessToken = accessToken;
+        TokenHolder.expiresIn = expiresIn;
+    }
+
     public static Integer getExpiresIn() {
-        return expiresIn;
+        return TokenHolder.expiresIn;
     }
 
     public static void setExpiresIn(Integer expiresIn) {
@@ -17,7 +22,7 @@ public final class TokenHolder {
     }
 
     public static String getAccessToken() {
-        return accessToken;
+        return TokenHolder.accessToken;
     }
 
     public static void setAccessToken(String accessToken) {

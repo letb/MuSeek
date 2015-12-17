@@ -1,25 +1,25 @@
 package com.letb.museek;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.letb.museek.Entities.TokenHolder;
+import com.letb.museek.Events.EventFail;
+import com.letb.museek.Events.TokenEventSuccess;
+import com.letb.museek.Events.TrackEventSuccess;
 import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.Listeners.RequestProcessingService;
-import com.letb.museek.Models.Token;
-import com.letb.museek.Requests.TokenRequest;
-import com.letb.museek.Requests.TrackRequest;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Utils.UserInformer;
-import com.octo.android.robospice.persistence.DurationInMillis;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+
 public class SplashActivity extends BaseSpiceActivity {
 
-    private BroadcastReceiver receiver;
+    private EventBus bus = EventBus.getDefault();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,21 +29,13 @@ public class SplashActivity extends BaseSpiceActivity {
 
     @Override
     public void onResume () {
-        IntentFilter filter = new IntentFilter(RequestProcessingService.BROADCAST_TOKEN_REQUEST_ANSWER);
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                UserInformer.showMessage(SplashActivity.this, intent.getAction());
-                UserInformer.showMessage(SplashActivity.this, intent.getStringExtra(RequestProcessingService.BROADCAST_TOKEN_REQUEST_PARAMETER));
-            }
-        };
-        this.registerReceiver(receiver, filter);
+        bus.register(this);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        this.unregisterReceiver(receiver);
+        bus.unregister(this);
         super.onPause();
     }
 
@@ -51,9 +43,23 @@ public class SplashActivity extends BaseSpiceActivity {
         RequestProcessingService.startTokenRequestAction(this);
     }
 
-    public void requestTrack(String token, String trackId, String reason) {
+    public void requestTrack(String trackId, String reason) {
+        RequestProcessingService.startTrackRequestAction(this, trackId, reason);
     }
 
+    public void onEvent(TokenEventSuccess event){
+        TokenHolder.setData(event.getData().getAccessToken(), event.getData().getExpiresIn());
+        UserInformer.showMessage(SplashActivity.this, event.getData().getAccessToken());
+        requestTrack("4425964VcAZ", "listen");
+    }
+
+    public void onEvent(TrackEventSuccess event){
+        proceedToPlayList(event.getData());
+    }
+
+    public void onEvent(EventFail event){
+        UserInformer.showMessage(SplashActivity.this, event.getException());
+    }
 
     private void proceedToPlayList (final Track trackForTest) {
         ArrayList<Track> trackList = new ArrayList<>();
