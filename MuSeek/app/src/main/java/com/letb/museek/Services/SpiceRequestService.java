@@ -8,10 +8,6 @@ import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
  */
 public class SpiceRequestService extends RetrofitGsonSpiceService {
 
-//    У тебя появится проблема с не тем урлом. Моя идея решения такая: прописываешь для токена
-//    в ретрофите полный путь, тогда он не будет использовать этот базовый
-//    А для АПИ скачивания музыки вставляешь сюда новый урл
-
     private final static String BASE_URL = "http://api.pleer.com";
 
     @Override

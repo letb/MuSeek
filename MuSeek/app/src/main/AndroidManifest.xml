@@ -13,31 +13,34 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".BaseSpiceActivity" >
         </activity>
-
         <activity android:name=".PlayListActivity" >
         </activity>
 
         <service
             android:name=".Services.SpiceRequestService"
             android:exported="false" />
-
         <service
             android:name=".Services.MediaPlayerService"
             android:exported="true" />
+        <service
+            android:name=".Listeners.RequestProcessingService"
+            android:exported="false" >
+        </service>
+        <service
+            android:name=".Listeners.BaseSpiceService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
