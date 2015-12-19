@@ -20,18 +20,19 @@ import com.letb.museek.R;
 
 import java.util.ArrayList;
 
+import co.mobiwise.library.AnimationCompleteListener;
+import co.mobiwise.library.MaskProgressView;
+import co.mobiwise.library.OnProgressDraggedListener;
+
 /**
  * Created by marina.titova on 13.12.15.
  */
-public class PlayerFragment extends Fragment implements PlaylistFragment.OnTrackSelectedListener {
+public class PlayerFragment extends Fragment {
 
     public static final String TRACK_LIST = "TRACK_LIST";
 
-    private Context appContext = null;
-    private MediaPlayerService mediaPlayerService;
-    private Intent  playIntent = null;
-    private boolean mediaPlayerBound   = false;
-    private ArrayList<Track> trackList = null;
+    private Track currentTrack;
+    MaskProgressView maskProgressView;
 
     public PlayerFragment() {}
 
@@ -40,39 +41,41 @@ public class PlayerFragment extends Fragment implements PlaylistFragment.OnTrack
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_player, container, false);
-        if (getArguments() != null) {
-            trackList = (ArrayList<Track>) getArguments().getSerializable(TRACK_LIST);
-        }
+        if (getArguments() != null)
+            currentTrack = (Track) getArguments().getSerializable(TRACK_LIST);
+        maskProgressView = (MaskProgressView) view.findViewById(R.id.maskProgressView);
+        maskProgressView.setmMaxSeconds(currentTrack.getData().getmLength());
+        maskProgressView.start();
+
+        maskProgressView.setOnProgressDraggedListener(new OnProgressDraggedListener() {
+            @Override
+            public void onProgressDragged(int position) {
+
+            }
+
+            @Override
+            public void onProgressDragging(int position) {
+
+            }
+        });
+        maskProgressView.setAnimationCompleteListener(new AnimationCompleteListener() {
+            @Override
+            public void onAnimationCompleted() {
+
+            }
+        });
+//        maskProgressView.setmMaxSeconds(musicArrayList.get(index).durationInSeconds);
+//        maskProgressView.setCoverImage(musicArrayList.get(index).coverImage);
         return view;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getActivity() != null)
-            appContext = getActivity().getApplicationContext();
-
-//        trackList = (ArrayList<Track>) getIntent().getExtras().getSerializable(PlaylistFragment.TRACK_LIST);
-//        PlaylistFragment playlistFragment = new PlaylistFragment();
-//        playlistFragment.setArguments(getIntent().getExtras());
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.add(android.R.id.content, playlistFragment);
-//        ft.commit();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-    }
-
-    public void trackPicked(View view) {
-        // todo: change view get tag to smth useful
-
-    }
-
-
-    @Override
-    public void onTrackSelected(Integer position) {
-        Toast.makeText(appContext, position, Toast.LENGTH_SHORT).show();
     }
 }
