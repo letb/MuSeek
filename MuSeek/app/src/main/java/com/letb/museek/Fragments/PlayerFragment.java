@@ -63,11 +63,6 @@ public class PlayerFragment extends Fragment implements PlaylistFragment.OnTrack
     @Override
     public void onStart() {
         super.onStart();
-        if (playIntent == null) {
-            playIntent = new Intent(appContext, MediaPlayerService.class);
-            appContext.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            appContext.startService(playIntent);
-        }
     }
 
     public void trackPicked(View view) {
@@ -75,21 +70,6 @@ public class PlayerFragment extends Fragment implements PlaylistFragment.OnTrack
 
     }
 
-//    TODO: Когда это происходит?
-    private ServiceConnection musicConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MediaPlayerService.Binder binder = (MediaPlayerService.Binder) service;
-            mediaPlayerService = binder.getService();
-            mediaPlayerService.setTrackList(trackList);
-            mediaPlayerBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mediaPlayerBound = false;
-        }
-    };
 
     @Override
     public void onTrackSelected(Integer position) {

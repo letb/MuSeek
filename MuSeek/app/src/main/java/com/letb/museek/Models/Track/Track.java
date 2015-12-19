@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 
-public class Track implements Serializable{
+public class Track implements Serializable {
 
     public static String getTrackInfoMethod = "tracks_get_info";
     public static String getTrackUrlMethod = "tracks_get_download_link";
