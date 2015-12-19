@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.letb.museek.Fragments.PlaylistFragment;
@@ -19,6 +20,7 @@ import com.letb.museek.Services.MediaPlayerService;
 import com.letb.museek.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import co.mobiwise.library.AnimationCompleteListener;
 import co.mobiwise.library.MaskProgressView;
@@ -27,11 +29,14 @@ import co.mobiwise.library.OnProgressDraggedListener;
 /**
  * Created by marina.titova on 13.12.15.
  */
-public class PlayerFragment extends Fragment {
+public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     public static final String TRACK_LIST = "TRACK_LIST";
-
-    private Track currentTrack;
+    private Button buttonPlayPause;
+    private Button buttonNext;
+    private Button buttonPrevious;
+    private List<Track> currentTrackList;
+    private Integer index = 0;
     MaskProgressView maskProgressView;
 
     public PlayerFragment() {}
@@ -42,9 +47,9 @@ public class PlayerFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_player, container, false);
         if (getArguments() != null)
-            currentTrack = (Track) getArguments().getSerializable(TRACK_LIST);
+            currentTrackList = (List<Track>) getArguments().getSerializable(TRACK_LIST);
         maskProgressView = (MaskProgressView) view.findViewById(R.id.maskProgressView);
-        maskProgressView.setmMaxSeconds(currentTrack.getData().getmLength());
+        maskProgressView.setmMaxSeconds(currentTrackList.get(index).getData().getmLength());
         maskProgressView.start();
 
         maskProgressView.setOnProgressDraggedListener(new OnProgressDraggedListener() {
@@ -66,7 +71,57 @@ public class PlayerFragment extends Fragment {
         });
 //        maskProgressView.setmMaxSeconds(musicArrayList.get(index).durationInSeconds);
 //        maskProgressView.setCoverImage(musicArrayList.get(index).coverImage);
+        buttonPlayPause = (Button) view.findViewById(R.id.buttonControl);
+        buttonNext = (Button) view.findViewById(R.id.buttonNext);
+        buttonPrevious = (Button) view.findViewById(R.id.buttonPrevious);
+        buttonPlayPause.setOnClickListener(this);
+        buttonNext.setOnClickListener(this);
+        buttonPrevious.setOnClickListener(this);
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonControl:
+                if(maskProgressView.isPlaying()){
+                    buttonPlayPause.setBackgroundResource(R.drawable.icon_play);
+                    maskProgressView.pause();
+                }
+                else{
+                    buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+                    maskProgressView.start();
+                }
+
+                break;
+            case R.id.buttonNext:
+                if(index < currentTrackList.size() - 1)
+                    index = index + 1;
+
+                maskProgressView.stop();
+
+//                maskProgressView.setmMaxSeconds(currentTrackList.get(index).durationInSeconds);
+//                maskProgressView.setCoverImage(currentTrackList.get(index).coverImage);
+                maskProgressView.start();
+
+                buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+
+                break;
+            case R.id.buttonPrevious:
+
+                if(index > 0)
+                    index = index - 1;
+
+//                maskProgressView.setmMaxSeconds(currentTrackList.get(index).durationInSeconds);
+//                maskProgressView.setCoverImage(currentTrackList.get(index).coverImage);
+                maskProgressView.start();
+
+                buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

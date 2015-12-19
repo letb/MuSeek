@@ -16,7 +16,7 @@ public class Data implements Serializable{
     @SerializedName("track")
     private String mTrack;
 
-    @SerializedName("length")
+    @SerializedName("lenght")
     private int mLength;
 
     @SerializedName("bitrate")
