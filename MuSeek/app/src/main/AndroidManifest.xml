@@ -24,7 +24,7 @@
         </activity>
         <activity android:name=".BaseClasses.BaseSpiceActivity" >
         </activity>
-        <activity android:name=".PlayListActivity" >
+        <activity android:name=".PlaylistActivity" >
         </activity>
 
         <service

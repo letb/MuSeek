@@ -1,5 +1,7 @@
 package com.letb.museek.Requests;
 
+import android.util.Base64;
+
 import com.letb.museek.Models.Token;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
@@ -11,18 +13,17 @@ import roboguice.util.temp.Ln;
 //                  <Result, Interface>
 public class TokenRequest extends RetrofitSpiceRequest<Token, TokenInterface> {
 
-    private String authorization;
     private final String grantType = "client_credentials";
+    private static String authHTTPHeader = "Basic " + Base64.encodeToString(String.format("%s:%s", "823734", "111111").getBytes(), Base64.NO_WRAP);
 
 
-    public TokenRequest(String authorization) {
+    public TokenRequest() {
         super(Token.class, TokenInterface.class);
-        this.authorization = authorization;
     }
 
     @Override
     public Token loadDataFromNetwork() {
         Ln.d("Call web service ");
-        return getService().getToken(authorization, grantType);
+        return getService().getToken(authHTTPHeader, grantType);
     }
 }

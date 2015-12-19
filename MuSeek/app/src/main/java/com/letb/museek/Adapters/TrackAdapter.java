@@ -60,7 +60,7 @@ public class TrackAdapter extends BaseAdapter {
             }
 
 //  TODO: Hotfix to display Unicode (because this SoundCloud API is somehow Qur'an-oriented)
-        holder.titleTextView.setText(track.getData().getmTrack());
+        holder.titleTextView.setText(track.getData().getTrack());
 //
 //        // Trigger the download of the URL asynchronously into the image view.
 //        Picasso.with(mContext).load(track.getArtworkURL()).into(holder.trackImageView);

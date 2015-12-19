@@ -54,26 +54,30 @@ public class RequestProcessorService extends BaseSpiceService {
         final String action = intent.getAction();
         switch (action) {
             case ACTION_TOKEN_REQUEST:
-                handleTokenRequest();
+                initiateTokenRequest();
                 break;
             case ACTION_TRACK_REQUEST:
                 final String trackId = intent.getStringExtra(TRACK_ID);
                 final String trackReason = intent.getStringExtra(TRACK_REASON);
-                handelSingleTrackRequest(trackId, trackReason);
+                initiateSingleTrackRequest(trackId, trackReason);
                 break;
         }
         return START_STICKY;
     }
 
 //    Отправили, собсна, реквест
-    private void handleTokenRequest() {
-        TokenRequest tokenRequest = new TokenRequest(Token.authHTTPHeader);
+    private void initiateTokenRequest() {
+        TokenRequest tokenRequest = new TokenRequest();
         getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TokenRequestListener());
     }
 
-    private void handelSingleTrackRequest(String trackId, String reason) {
+    private void initiateSingleTrackRequest(String trackId, String reason) {
         TrackRequest trackRequest = new TrackRequest(TokenHolder.getAccessToken(), trackId, reason);
         getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TrackRequestListener());
+    }
+
+    private void initiateTopTracksRequest(int timePeriod, int pageNumber, String language) {
+
     }
 
 //    Получили ответ и направили его слушающему классу
@@ -101,7 +105,7 @@ public class RequestProcessorService extends BaseSpiceService {
         }
     }
 
-//    Ненужный буллшит
+//    Ненужное
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
-import com.letb.museek.Fragments.PlayerFragment;
 import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Services.MediaPlayerService;
@@ -18,7 +17,7 @@ import com.letb.museek.Utils.UserInformer;
 
 import java.util.List;
 
-public class PlayListActivity extends BaseSpiceActivity implements PlaylistFragment.OnTrackSelectedListener {
+public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragment.OnTrackSelectedListener {
 
     private MediaPlayerService mediaPlayerService;
     private Intent playIntent;
@@ -60,7 +59,7 @@ public class PlayListActivity extends BaseSpiceActivity implements PlaylistFragm
 
     @Override
     public void onTrackSelected(Integer position) {
-        UserInformer.showMessage(PlayListActivity.this, "Playing track " + trackList.get(position).getTitle());
+        UserInformer.showMessage(PlaylistActivity.this, "Playing track " + trackList.get(position).getTitle());
         mediaPlayerService.setTrack(position);
         mediaPlayerService.playTrack();
     }

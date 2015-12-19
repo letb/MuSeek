@@ -8,70 +8,80 @@ public class Data implements Serializable{
 
 
     @SerializedName("track_id")
-    private String mID;
+    private String id;
+
+    @SerializedName("position")
+    private String position;
 
     @SerializedName("artist")
-    private String mArtist;
+    private String artist;
 
     @SerializedName("track")
-    private String mTrack;
+    private String track;
 
     @SerializedName("length")
-    private int mLength;
+    private int length;
 
     @SerializedName("bitrate")
-    private int mBitrate;
+    private int bitrate;
 
     @SerializedName("size")
-    private String mSize;
+    private String size;
 
-    public String getmID() {
-        return mID;
+    public String getId() {
+        return id;
     }
 
-    public void setmID(String mID) {
-        this.mID = mID;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getmArtist() {
-        return mArtist;
+    public String getArtist() {
+        return artist;
     }
 
-    public void setmArtist(String mArtist) {
-        this.mArtist = mArtist;
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
-    public String getmTrack() {
-        return mTrack;
+    public String getTrack() {
+        return track;
     }
 
-    public void setmTrack(String mTrack) {
-        this.mTrack = mTrack;
+    public void setTrack(String track) {
+        this.track = track;
     }
 
-    public int getmBitrate() {
-        return mBitrate;
+    public int getBitrate() {
+        return bitrate;
     }
 
-    public void setmBitrate(int mBitrate) {
-        this.mBitrate = mBitrate;
+    public void setBitrate(int bitrate) {
+        this.bitrate = bitrate;
     }
 
-    public String getmSize() {
-        return mSize;
+    public String getSize() {
+        return size;
     }
 
-    public void setmSize(String mSize) {
-        this.mSize = mSize;
+    public void setSize(String size) {
+        this.size = size;
     }
 
-    public int getmLength() {
-        return mLength;
+    public int getLength() {
+        return length;
     }
 
-    public void setmLength(int mLength) {
-        this.mLength = mLength;
+    public void setLength(int length) {
+        this.length = length;
     }
 
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
 }
 
