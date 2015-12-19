@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BaseSpiceActivity" >
+        <activity android:name=".BaseClasses.BaseSpiceActivity" >
         </activity>
         <activity android:name=".PlayListActivity" >
         </activity>
@@ -34,11 +34,11 @@
             android:name=".Services.MediaPlayerService"
             android:exported="true" />
         <service
-            android:name=".Listeners.RequestProcessingService"
+            android:name=".RequestProcessor.RequestProcessorService"
             android:exported="false" >
         </service>
         <service
-            android:name=".Listeners.BaseSpiceService"
+            android:name=".BaseClasses.BaseSpiceService"
             android:exported="false" >
         </service>
     </application>

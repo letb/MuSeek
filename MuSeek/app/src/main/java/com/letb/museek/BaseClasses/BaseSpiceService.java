@@ -1,9 +1,8 @@
-package com.letb.museek.Listeners;
+package com.letb.museek.BaseClasses;
 
 import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
-import android.content.Context;
 import android.util.Log;
 
 import com.letb.museek.Services.SpiceRequestService;

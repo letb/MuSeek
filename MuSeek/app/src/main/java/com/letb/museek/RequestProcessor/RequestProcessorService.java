@@ -1,11 +1,12 @@
-package com.letb.museek.Listeners;
+package com.letb.museek.RequestProcessor;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.letb.museek.BaseClasses.BaseSpiceService;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.TokenEventSuccess;
@@ -20,55 +21,62 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import de.greenrobot.event.EventBus;
 
-public class RequestProcessingService extends BaseSpiceService {
+public class RequestProcessorService extends BaseSpiceService {
     private static final String ACTION_TOKEN_REQUEST = "com.letb.museek.Listeners.action.token.request";
     private static final String ACTION_TRACK_REQUEST = "com.letb.museek.Listeners.action.track.request";
 
     private static final String TRACK_ID = "com.letb.museek.Listeners.extra.track.id";
     private static final String TRACK_REASON = "com.letb.museek.Listeners.extra.track.reason";
+
     private EventBus bus = EventBus.getDefault();
 
+//    Определили особый метод для нового реквеста, в кот. формируется интент для сервиса
+//    TODO: перенести формаирование интента в функцию-построитель
     public static void startTokenRequestAction(Context context) {
-        Intent intent = new Intent(context, RequestProcessingService.class);
+        Intent intent = new Intent(context, RequestProcessorService.class);
         intent.setAction(ACTION_TOKEN_REQUEST);
+//        Дернули сервис
         context.startService(intent);
     }
 
-
     public static void startTrackRequestAction(Context context, String trackId, String reason) {
-        Intent intent = new Intent(context, RequestProcessingService.class);
+        Intent intent = new Intent(context, RequestProcessorService.class);
         intent.setAction(ACTION_TRACK_REQUEST);
         intent.putExtra(TRACK_ID, trackId);
         intent.putExtra(TRACK_REASON, reason);
         context.startService(intent);
     }
 
+//    Сервис дернулся, разобрались, что нам пришло
+//    Без интента сервис не дергаем! Иначе исключение
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_TOKEN_REQUEST.equals(action)) {
+    public int onStartCommand(@NonNull Intent intent, int flags, int startId) {
+        final String action = intent.getAction();
+        switch (action) {
+            case ACTION_TOKEN_REQUEST:
                 handleTokenRequest();
-            } else if (ACTION_TRACK_REQUEST.equals(action)) {
+                break;
+            case ACTION_TRACK_REQUEST:
                 final String trackId = intent.getStringExtra(TRACK_ID);
                 final String trackReason = intent.getStringExtra(TRACK_REASON);
                 handelSingleTrackRequest(trackId, trackReason);
-            }
+                break;
         }
         return START_STICKY;
     }
 
-
+//    Отправили, собсна, реквест
     private void handleTokenRequest() {
         TokenRequest tokenRequest = new TokenRequest(Token.authHTTPHeader);
-        getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessingService.TokenRequestListener());
+        getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TokenRequestListener());
     }
 
     private void handelSingleTrackRequest(String trackId, String reason) {
         TrackRequest trackRequest = new TrackRequest(TokenHolder.getAccessToken(), trackId, reason);
-        getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessingService.TrackRequestListener());
+        getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TrackRequestListener());
     }
 
+//    Получили ответ и направили его слушающему классу
     public final class TokenRequestListener implements RequestListener<Token> {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
@@ -93,6 +101,7 @@ public class RequestProcessingService extends BaseSpiceService {
         }
     }
 
+//    Ненужный буллшит
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
