@@ -80,6 +80,18 @@ public class SplashActivity extends BaseSpiceActivity {
     private void proceedToMain (Artist artistForTest) {
         //  TODO: For test
         ArrayList<Artist> artistList = new ArrayList<>();
+        artistList.add(new Artist("Lol", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+
         artistList.add(artistForTest);
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ArtistListFragment.ARTIST_LIST, artistList);
