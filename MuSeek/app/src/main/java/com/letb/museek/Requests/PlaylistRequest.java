@@ -15,7 +15,7 @@ public class PlaylistRequest extends RetrofitSpiceRequest<JsonElement, PlaylistI
     private enum Period {
         WEEK, MONTH, QUARTER, HALFYEAR, YEAR;
     }
-    static private String METHOD_GET_TOP_LIST = "get_top_list ";
+    static private String METHOD_GET_TOP_LIST = "get_top_list";
     static private String ENG_LANG = "en";
     static private String RU_LANG = "ru";
 

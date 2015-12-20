@@ -76,4 +76,12 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
     public void onPrevClicked(Integer index) {
 
     }
+
+    @Override
+    public void onPositionChanged(Integer index, Integer position) {
+        Intent intent = new Intent(this, MediaPlayerService.class);
+        intent.setAction(MediaPlayerService.ACTION_REWIND);
+        intent.putExtra(MediaPlayerService.REWIND_POSITION, position);
+        this.startService(intent);
+    }
 }

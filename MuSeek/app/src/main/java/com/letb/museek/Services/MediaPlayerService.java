@@ -35,9 +35,9 @@ public class MediaPlayerService
     public static final String ACTION_STOP = "com.letb.museek.musicplayer.action.STOP";
     public static final String ACTION_SKIP = "com.letb.museek.musicplayer.action.SKIP";
     public static final String ACTION_REWIND = "com.letb.museek.musicplayer.action.REWIND";
-    public static final String ACTION_URL = "com.letb.museek.musicplayer.action.URL";
 
     public static final String PLAYLIST = "com.letb.museek.musicplayer.data.PLAYLIST";
+    public static final String REWIND_POSITION = "com.letb.museek.musicplayer.data.REWIND_POSITION";
 
     private MediaPlayer mMediaPlayer = null;    // The Media Player
     private List<Track> trackList = null;
@@ -97,6 +97,11 @@ public class MediaPlayerService
             case ACTION_PAUSE:
                 processPauseRequest();
                 break;
+            case ACTION_REWIND:
+                processRewindRequest(
+                        intent.getIntExtra(REWIND_POSITION, 0)
+                );
+                break;
         }
         return START_NOT_STICKY; // Means we started the service, but don't want it to
         // restart in case it's killed.
@@ -108,6 +113,11 @@ public class MediaPlayerService
         } else {
             processPauseRequest();
         }
+    }
+
+    void processRewindRequest(Integer position) {
+        if (mState == State.Playing || mState == State.Paused)
+            mMediaPlayer.seekTo(position * 1000);
     }
 
     void processPlayRequest() {

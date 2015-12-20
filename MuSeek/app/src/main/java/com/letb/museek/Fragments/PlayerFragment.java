@@ -67,7 +67,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         maskProgressView.setOnProgressDraggedListener(new OnProgressDraggedListener() {
             @Override
             public void onProgressDragged(int position) {
-
+                mListener.onPositionChanged(index, position);
             }
 
             @Override
@@ -141,6 +141,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         void onPlayPauseClicked(Integer index);
         void onNextClicked(Integer index);
         void onPrevClicked(Integer index);
+        void onPositionChanged(Integer index, Integer position);
     }
 
     @Override

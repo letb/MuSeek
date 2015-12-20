@@ -63,8 +63,8 @@ public class RequestProcessorService extends BaseSpiceService {
         Intent intent = new Intent(context, RequestProcessorService.class);
         intent.setAction(ACTION_PLAYLIST_REQUEST);
         intent.putExtra(PLAYLIST_PERIOD, timePeriod);
-        intent.putExtra(PLAYLIST_PAGE, timePeriod);
-        intent.putExtra(PLAYLIST_LANGUAGE, timePeriod);
+        intent.putExtra(PLAYLIST_PAGE, page);
+        intent.putExtra(PLAYLIST_LANGUAGE, language);
         context.startService(intent);
 
     }
