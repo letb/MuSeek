@@ -2,6 +2,8 @@ package com.letb.museek.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v17.leanback.widget.HorizontalGridView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,7 @@ import com.letb.museek.R;
 
 import java.util.List;
 
-public class ArtistListFragment extends ListFragment {
+public class ArtistListFragment extends Fragment {
     public static final String ARTIST_LIST = "ARTIST_LIST";
 
     private List<Artist> mListItems;
@@ -34,10 +36,9 @@ public class ArtistListFragment extends ListFragment {
         if (getArguments() != null) {
             mListItems = (List<Artist>) getArguments().getSerializable(ARTIST_LIST);
         }
-        GridView listView = (GridView) view.findViewById(R.id.gridview);
+        HorizontalGridView listView = (HorizontalGridView) view.findViewById(R.id.horizontalGridView);
         mAdapter = new ArtistAdapter(getActivity(), mListItems);
         listView.setAdapter(mAdapter);
-        setListAdapter(mAdapter);
         return view;
     }
 
@@ -59,9 +60,9 @@ public class ArtistListFragment extends ListFragment {
         mListener = null;
     }
 
-    @Override
+//    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+//        super.onListItemClick(l, v, position, id);
         if (null != mListener) {
             mListener.onArtistSelected(position);
         }

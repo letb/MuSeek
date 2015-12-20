@@ -1,10 +1,10 @@
 package com.letb.museek.Adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +14,7 @@ import com.letb.museek.R;
 import java.util.List;
 
 
-public class ArtistAdapter extends BaseAdapter {
+public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder> {
     private Context mContext;
     private List<Artist> mArtists;
 
@@ -23,14 +23,30 @@ public class ArtistAdapter extends BaseAdapter {
         mArtists = tracks;
     }
 
-    @Override
-    public int getCount() {
-        return mArtists.size();
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        public final ImageView artistImageView;
+        public final TextView nameTextView;
+
+        public ViewHolder(View view) {
+            super(view);
+            artistImageView = (ImageView) view.findViewById(R.id.artist_image);
+            nameTextView = (TextView) view.findViewById(R.id.artist_name);
+        }
+    }
+
+    public Artist getItem(int position) {
+        return mArtists.get(position);
     }
 
     @Override
-    public Artist getItem(int position) {
-        return mArtists.get(position);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(mContext).inflate(R.layout.item_artist_list, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.nameTextView.setText(getItem(position).getName());
     }
 
     @Override
@@ -39,28 +55,7 @@ public class ArtistAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        Artist artist = getItem(position);
-
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_artist_list, parent, false);
-            holder = new ViewHolder();
-            holder.artistImageView = (ImageView) convertView.findViewById(R.id.artist_image);
-            holder.nameTextView = (TextView) convertView.findViewById(R.id.artist_name);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        //  TODO: display picture
-        holder.nameTextView.setText(artist.getName());
-        return convertView;
-    }
-
-    static class ViewHolder {
-        ImageView artistImageView;
-        TextView nameTextView;
+    public int getItemCount() {
+        return mArtists.size();
     }
 }
