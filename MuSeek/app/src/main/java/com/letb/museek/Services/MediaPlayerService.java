@@ -129,7 +129,6 @@ public class MediaPlayerService
             mState = State.Paused;
             mMediaPlayer.pause();
             relaxResources(false); // while paused, we always retain the MediaPlayer
-            // do not give up audio focus
         }
     }
 

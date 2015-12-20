@@ -20,7 +20,7 @@ import com.letb.museek.Utils.UserInformer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayListActivity extends BaseSpiceActivity implements PlaylistFragment.OnTrackSelectedListener {
+public class PlayListActivity extends BaseSpiceActivity implements PlaylistFragment.OnTrackSelectedListener, PlayerFragment.OnMediaButtonClickListener {
 
     private MediaPlayerService mediaPlayerService;
     private Intent playIntent;
@@ -43,7 +43,10 @@ public class PlayListActivity extends BaseSpiceActivity implements PlaylistFragm
         Intent fragmentIntent = new Intent(this, MediaPlayerService.class);
         fragmentIntent.putExtra(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
         showFragment(new PlayerFragment(), fragmentIntent);
+
+//        TODO:For test
         UserInformer.showMessage(PlayListActivity.this, "Playing track " + trackList.get(position).getTitle());
+//        TODO: Spaghetti
         Intent intent = new Intent(this, MediaPlayerService.class);
         intent.setAction(MediaPlayerService.ACTION_PLAY);
         intent.putExtra(MediaPlayerService.PLAYLIST, (ArrayList<Track>) trackList);
@@ -55,5 +58,22 @@ public class PlayListActivity extends BaseSpiceActivity implements PlaylistFragm
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(android.R.id.content, fragment);
         ft.commit();
+    }
+
+    @Override
+    public void onPlayPauseClicked(Integer index) {
+        Intent intent = new Intent(this, MediaPlayerService.class);
+        intent.setAction(MediaPlayerService.ACTION_TOGGLE_PLAYBACK);
+        this.startService(intent);
+    }
+
+    @Override
+    public void onNextClicked(Integer index) {
+
+    }
+
+    @Override
+    public void onPrevClicked(Integer index) {
+
     }
 }

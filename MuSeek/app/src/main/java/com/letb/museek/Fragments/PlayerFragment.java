@@ -37,9 +37,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Button buttonPrevious;
     private List<Track> currentTrackList;
     private Integer index = 0;
-    MaskProgressView maskProgressView;
+    private MaskProgressView maskProgressView;
+    private OnMediaButtonClickListener mListener;
 
     public PlayerFragment() {}
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (OnMediaButtonClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnTranslateAreaListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,6 +89,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         buttonPlayPause.setOnClickListener(this);
         buttonNext.setOnClickListener(this);
         buttonPrevious.setOnClickListener(this);
+        buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
         return view;
     }
 
@@ -92,6 +105,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                     buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
                     maskProgressView.start();
                 }
+                mListener.onPlayPauseClicked(index);
 
                 break;
             case R.id.buttonNext:
@@ -115,13 +129,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 //                maskProgressView.setmMaxSeconds(currentTrackList.get(index).durationInSeconds);
 //                maskProgressView.setCoverImage(currentTrackList.get(index).coverImage);
                 maskProgressView.start();
-
                 buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
 
                 break;
             default:
                 break;
         }
+    }
+
+    public interface OnMediaButtonClickListener {
+        void onPlayPauseClicked(Integer index);
+        void onNextClicked(Integer index);
+        void onPrevClicked(Integer index);
     }
 
     @Override
