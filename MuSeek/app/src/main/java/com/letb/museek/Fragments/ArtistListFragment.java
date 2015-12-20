@@ -2,18 +2,25 @@ package com.letb.museek.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v17.leanback.widget.HorizontalGridView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
+//import android.widget.AdapterView;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.letb.museek.Adapters.ArtistAdapter;
 import com.letb.museek.Models.Artist;
 import com.letb.museek.R;
+
+import org.lucasr.twowayview.ItemClickSupport;
+import org.lucasr.twowayview.ItemClickSupport.OnItemClickListener;
+import org.lucasr.twowayview.ItemClickSupport.OnItemLongClickListener;
+import org.lucasr.twowayview.widget.DividerItemDecoration;
+import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.util.List;
 
@@ -24,6 +31,8 @@ public class ArtistListFragment extends Fragment {
 
     private OnArtistSelectedListener mListener;
     private ArtistAdapter mAdapter;
+    private TwoWayView mRecyclerView;
+    private Toast mToast;
 
     public ArtistListFragment() {
     }
@@ -36,9 +45,36 @@ public class ArtistListFragment extends Fragment {
         if (getArguments() != null) {
             mListItems = (List<Artist>) getArguments().getSerializable(ARTIST_LIST);
         }
-        HorizontalGridView listView = (HorizontalGridView) view.findViewById(R.id.horizontalGridView);
+//        HorizontalGridView listView = (HorizontalGridView) view.findViewById(R.id.horizontalGridView);
+//        listView.setAdapter(mAdapter);
+
+//
+//
+//
+        mRecyclerView = (TwoWayView) view.findViewById(R.id.horizontalGridView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLongClickable(true);
+
+
+        final ItemClickSupport itemClick = ItemClickSupport.addTo(mRecyclerView);
+        itemClick.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerView parent, View child, int position, long id) {
+                if (null != mListener) {
+                    mListener.onArtistSelected(position);
+                }
+            }
+        });
+
+        itemClick.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(RecyclerView parent, View child, int position, long id) {
+                return true;
+            }
+        });
+
         mAdapter = new ArtistAdapter(getActivity(), mListItems);
-        listView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
         return view;
     }
 
@@ -58,14 +94,6 @@ public class ArtistListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-//    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-//        super.onListItemClick(l, v, position, id);
-        if (null != mListener) {
-            mListener.onArtistSelected(position);
-        }
     }
 
     public interface OnArtistSelectedListener {
