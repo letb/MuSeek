@@ -13,9 +13,7 @@ import com.letb.museek.R;
 
 import java.util.List;
 
-/**
- * Created by marina.titova on 20.12.15.
- */
+
 public class ArtistAdapter extends BaseAdapter {
     private Context mContext;
     private List<Artist> mArtists;
@@ -56,6 +54,7 @@ public class ArtistAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        //  TODO: display picture
         holder.nameTextView.setText(artist.getName());
         return convertView;
     }

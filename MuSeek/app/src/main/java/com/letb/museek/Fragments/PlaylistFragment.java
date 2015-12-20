@@ -48,7 +48,7 @@ public class PlaylistFragment extends ListFragment {
             mListener = (OnTrackSelectedListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnTranslateAreaListener");
+                    + " must implement OnTrackSelectedListener");
         }
     }
 

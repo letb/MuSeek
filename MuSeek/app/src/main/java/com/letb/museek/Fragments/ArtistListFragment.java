@@ -2,12 +2,10 @@ package com.letb.museek.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.letb.museek.Adapters.ArtistAdapter;
@@ -20,6 +18,7 @@ public class ArtistListFragment extends ListFragment {
     public static final String ARTIST_LIST = "ARTIST_LIST";
 
     private List<Artist> mListItems;
+
     private OnArtistSelectedListener mListener;
     private ArtistAdapter mAdapter;
 
@@ -33,32 +32,14 @@ public class ArtistListFragment extends ListFragment {
         View view = inflater.inflate(R.layout.fragment_artist_list, container, false);
         if (getArguments() != null) {
             mListItems = (List<Artist>) getArguments().getSerializable(ARTIST_LIST);
-            mAdapter = new ArtistAdapter(getActivity(), mListItems);
-            setListAdapter(mAdapter);
-            ListView v = getListView();
-
-//            ListView listView = (ListView) view.findViewById(R.id.artist_list_view);
-
-//            getListView().setOnItemClickListener((AdapterView.OnItemClickListener) this);
-
-//            listView.setAdapter(mAdapter);
-//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    if (null != mListener) {
-//                        mListener.onArtistSelected(position);
-//                    }
-//                }
-//            });
         }
+        ListView listView = (ListView) view.findViewById(android.R.id.list);
+        mAdapter = new ArtistAdapter(getActivity(), mListItems);
+        listView.setAdapter(mAdapter);
+        setListAdapter(mAdapter);
         return view;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -77,11 +58,14 @@ public class ArtistListFragment extends ListFragment {
         mListener = null;
     }
 
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
         if (null != mListener) {
             mListener.onArtistSelected(position);
         }
     }
+
     public interface OnArtistSelectedListener {
         public void onArtistSelected(Integer position);
     }

@@ -23,7 +23,7 @@
             android:paddingLeft="10dp"
             android:textStyle="bold"
             android:text="The Good, The Bad And The Ugly"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
     </LinearLayout>
 
     <!-- Player Footer -->
@@ -48,27 +48,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_player_previous"
-                android:background="@null"/>
+                android:background="@null" />
             <!-- Play Button -->
             <ImageButton
                 android:id="@+id/btnPlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_player_play"
-                android:background="@null"/>
+                android:background="@null" />
             <!-- Next Button -->
             <ImageButton
                 android:id="@+id/btnNext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_player_next"
-                android:background="@null"/>
+                android:background="@null" />
+
             <ImageButton
                 android:id="@+id/btnPlaylist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_player_playlist"
-                android:background="@null"/>
+                android:background="@null" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

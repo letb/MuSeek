@@ -50,22 +50,22 @@ public class TrackAdapter extends BaseAdapter {
 
             ViewHolder holder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.play_list_row, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_play_list, parent, false);
                 holder = new ViewHolder();
-                holder.artistImageView = (ImageView) convertView.findViewById(R.id.track_image);
-                holder.nameTestView = (TextView) convertView.findViewById(R.id.track_title);
+                holder.trackImageView = (ImageView) convertView.findViewById(R.id.track_image);
+                holder.titleTextView = (TextView) convertView.findViewById(R.id.track_title);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
         //  TODO: display picture
-        holder.nameTestView.setText(track.getData().getTrack());
+        holder.titleTextView.setText(track.getData().getTrack());
             return convertView;
         }
 
         static class ViewHolder {
-            ImageView artistImageView;
-            TextView nameTestView;
+            ImageView trackImageView;
+            TextView titleTextView;
         }
 }
