@@ -52,24 +52,20 @@ public class TrackAdapter extends BaseAdapter {
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.play_list_row, parent, false);
                 holder = new ViewHolder();
-                holder.trackImageView = (ImageView) convertView.findViewById(R.id.track_image);
-                holder.titleTextView = (TextView) convertView.findViewById(R.id.track_title);
+                holder.artistImageView = (ImageView) convertView.findViewById(R.id.track_image);
+                holder.nameTestView = (TextView) convertView.findViewById(R.id.track_title);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-//  TODO: Hotfix to display Unicode (because this SoundCloud API is somehow Qur'an-oriented)
-        holder.titleTextView.setText(track.getData().getTrack());
-//
-//        // Trigger the download of the URL asynchronously into the image view.
-//        Picasso.with(mContext).load(track.getArtworkURL()).into(holder.trackImageView);
-
+        //  TODO: display picture
+        holder.nameTestView.setText(track.getData().getTrack());
             return convertView;
         }
 
         static class ViewHolder {
-            ImageView trackImageView;
-            TextView titleTextView;
+            ImageView artistImageView;
+            TextView nameTestView;
         }
 }

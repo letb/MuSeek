@@ -8,7 +8,9 @@ import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.TokenEventSuccess;
 import com.letb.museek.Events.TrackEventSuccess;
+import com.letb.museek.Fragments.ArtistListFragment;
 import com.letb.museek.Fragments.PlaylistFragment;
+import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.Playlist;
 import com.letb.museek.RequestProcessor.RequestProcessorService;
 import com.letb.museek.Models.Track.Track;
@@ -25,7 +27,8 @@ public class SplashActivity extends BaseSpiceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestToken();
+        proceedToMain(new Artist("Pink Floyd", "blabla.png"));
+//        requestToken();
     }
 
     @Override
@@ -66,11 +69,20 @@ public class SplashActivity extends BaseSpiceActivity {
 
 
     private void proceedToPlayList (final Track trackForTest) {
-//        TODO: For test
+        //  TODO: For test
         ArrayList<Track> trackList = new ArrayList<>();
         trackList.add(trackForTest);
         Intent intent = new Intent(this, PlaylistActivity.class);
         intent.putExtra(PlaylistFragment.TRACK_LIST, trackList);
+        startActivity(intent);
+    }
+
+    private void proceedToMain (Artist artistForTest) {
+        //  TODO: For test
+        ArrayList<Artist> artistList = new ArrayList<>();
+        artistList.add(artistForTest);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(ArtistListFragment.ARTIST_LIST, artistList);
         startActivity(intent);
     }
 }
