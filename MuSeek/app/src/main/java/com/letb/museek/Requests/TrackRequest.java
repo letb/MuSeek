@@ -7,18 +7,16 @@ import roboguice.util.temp.Ln;
 
 public class TrackRequest extends RetrofitSpiceRequest <Track, TrackInterface> {
 
-    String token;
-    String trackId;
-    String info_method;
-    String url_method;
-    String reason;
+    static String methodGetTrackInfo = "tracks_get_info";
+    static String methodGetTrackUrl = "tracks_get_download_link";
+    private String token;
+    private String trackId;
+    private String reason;
 
     public TrackRequest(String token, String trackId, String reason) {
         super(Track.class, TrackInterface.class);
 
         this.token = token;
-        this.info_method = Track.getTrackInfoMethod;
-        this.url_method = Track.getTrackUrlMethod;
         this.trackId = trackId;
         this.reason = reason;
     }
@@ -26,8 +24,8 @@ public class TrackRequest extends RetrofitSpiceRequest <Track, TrackInterface> {
     @Override
     public Track loadDataFromNetwork() throws Exception {
         Ln.d("Request track info");
-        Track result = getService().getTrack(token, info_method, trackId);
-        Track url = getService().getTrackUrl(token, url_method, trackId, reason);
+        Track result = getService().getTrack(token, methodGetTrackInfo, trackId);
+        Track url = getService().getTrackUrl(token, methodGetTrackUrl, trackId, reason);
         result.setUrl(url.getUrl());
         return result;
     }

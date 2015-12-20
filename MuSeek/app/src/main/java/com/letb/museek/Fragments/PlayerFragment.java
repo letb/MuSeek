@@ -61,7 +61,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         if (getArguments() != null)
             currentTrackList = (List<Track>) getArguments().getSerializable(TRACK_LIST);
         maskProgressView = (MaskProgressView) view.findViewById(R.id.maskProgressView);
-        maskProgressView.setmMaxSeconds(currentTrackList.get(index).getData().getmLength());
+        maskProgressView.setmMaxSeconds(currentTrackList.get(index).getData().getLength());
         maskProgressView.start();
 
         maskProgressView.setOnProgressDraggedListener(new OnProgressDraggedListener() {

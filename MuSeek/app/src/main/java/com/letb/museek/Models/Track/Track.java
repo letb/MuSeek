@@ -7,9 +7,6 @@ import java.io.Serializable;
 
 public class Track implements Serializable {
 
-    public static String getTrackInfoMethod = "tracks_get_info";
-    public static String getTrackUrlMethod = "tracks_get_download_link";
-
     @SerializedName("url")
     private String url;
 
@@ -48,11 +45,11 @@ public class Track implements Serializable {
     }
 
     public String getTitle() {
-        return data.getmArtist() + " – " + data.getmTrack();
+        return data.getArtist() + " – " + data.getTrack();
     }
 
     public void setTitle(String artist, String track) {
-        data.setmArtist(artist);
-        data.setmTrack(track);
+        data.setArtist(artist);
+        data.setTrack(track);
     }
 }

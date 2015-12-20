@@ -11,8 +11,8 @@ public interface TrackInterface {
     @FormUrlEncoded
     @POST("/index.php")
     Track getTrack(@Field("access_token") String token,
-                           @Field("method") String method,
-                           @Field("track_id") String trackId);
+                   @Field("method") String method,
+                   @Field("track_id") String trackId);
 
 //    Метод tracks_get_download_link — получить ссылку на загрузку
 //

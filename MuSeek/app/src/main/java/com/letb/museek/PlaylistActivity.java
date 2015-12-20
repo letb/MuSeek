@@ -20,7 +20,7 @@ import com.letb.museek.Utils.UserInformer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayListActivity extends BaseSpiceActivity implements PlaylistFragment.OnTrackSelectedListener, PlayerFragment.OnMediaButtonClickListener {
+public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragment.OnTrackSelectedListener, PlayerFragment.OnMediaButtonClickListener {
 
     private MediaPlayerService mediaPlayerService;
     private Intent playIntent;
@@ -45,7 +45,7 @@ public class PlayListActivity extends BaseSpiceActivity implements PlaylistFragm
         showFragment(new PlayerFragment(), fragmentIntent);
 
 //        TODO:For test
-        UserInformer.showMessage(PlayListActivity.this, "Playing track " + trackList.get(position).getTitle());
+        UserInformer.showMessage(PlaylistActivity.this, "Playing track " + trackList.get(position).getTitle());
 //        TODO: Spaghetti
         Intent intent = new Intent(this, MediaPlayerService.class);
         intent.setAction(MediaPlayerService.ACTION_PLAY);

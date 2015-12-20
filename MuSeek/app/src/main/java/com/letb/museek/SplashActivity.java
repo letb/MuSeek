@@ -9,6 +9,7 @@ import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.TokenEventSuccess;
 import com.letb.museek.Events.TrackEventSuccess;
 import com.letb.museek.Fragments.PlaylistFragment;
+import com.letb.museek.Models.Playlist;
 import com.letb.museek.RequestProcessor.RequestProcessorService;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Utils.UserInformer;
@@ -63,11 +64,12 @@ public class SplashActivity extends BaseSpiceActivity {
         UserInformer.showMessage(SplashActivity.this, event.getException());
     }
 
+
     private void proceedToPlayList (final Track trackForTest) {
 //        TODO: For test
         ArrayList<Track> trackList = new ArrayList<>();
         trackList.add(trackForTest);
-        Intent intent = new Intent(this, PlayListActivity.class);
+        Intent intent = new Intent(this, PlaylistActivity.class);
         intent.putExtra(PlaylistFragment.TRACK_LIST, trackList);
         startActivity(intent);
     }
