@@ -49,12 +49,18 @@ public class SplashActivity extends BaseSpiceActivity {
         RequestProcessorService.startTrackRequestAction(this, trackId, reason);
     }
 
+    public void requestTopTracks(int timePeriod, int page, String language) {
+        RequestProcessorService.startTopTracksRequestAction(this, timePeriod, page, language);
+    }
+
     public void onEvent(TokenEventSuccess event){
         TokenHolder.setData(event.getData().getAccessToken(), event.getData().getExpiresIn());
         UserInformer.showMessage(SplashActivity.this, event.getData().getAccessToken());
 //        TODO: For Test
-        requestTrack("4425964VcAZ", "listen");
+//        requestTrack("4425964VcAZ", "listen");
+        requestTopTracks(2, 1, "en");
     }
+
 
     public void onEvent(TrackEventSuccess event){
         proceedToPlayList(event.getData());

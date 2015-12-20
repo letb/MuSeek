@@ -14,7 +14,7 @@ import roboguice.util.temp.Ln;
 public class TokenRequest extends RetrofitSpiceRequest<Token, TokenInterface> {
 
     private final String grantType = "client_credentials";
-    private static String authHTTPHeader = "Basic " + Base64.encodeToString(String.format("%s:%s", "823734", "111111").getBytes(), Base64.NO_WRAP);
+    private static String AUTH_HTTP_HEADER = "Basic " + Base64.encodeToString(String.format("%s:%s", "823734", "111111").getBytes(), Base64.NO_WRAP);
 
 
     public TokenRequest() {
@@ -24,6 +24,6 @@ public class TokenRequest extends RetrofitSpiceRequest<Token, TokenInterface> {
     @Override
     public Token loadDataFromNetwork() {
         Ln.d("Call web service ");
-        return getService().getToken(authHTTPHeader, grantType);
+        return getService().getToken(AUTH_HTTP_HEADER, grantType);
     }
 }

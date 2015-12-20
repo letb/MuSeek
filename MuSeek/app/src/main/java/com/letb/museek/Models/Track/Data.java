@@ -6,6 +6,15 @@ import java.io.Serializable;
 
 public class Data implements Serializable{
 
+    public Data() {};
+
+    public Data(String id, String artist, String track, int length, int bitrate) {
+        this.id = id;
+        this.artist = artist;
+        this.track = track;
+        this.length = length;
+        this.bitrate = bitrate;
+    }
 
     @SerializedName("track_id")
     private String id;

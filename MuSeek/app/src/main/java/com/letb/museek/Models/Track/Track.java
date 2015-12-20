@@ -19,6 +19,19 @@ public class Track implements Serializable {
     public Track() {
         data = new Data();
     }
+//
+//    track_id (string) — идентификатор трека
+//    position (int) — позиция в топе
+//      artist (string) — исполнитель
+//                                                 track (string) — название
+//                                                                  length (int) — продолжительность воспроизведения в секундах
+//    bitrate (string) — толщина потока в человекочитаемом формате
+//                                                         size (int) — размер файла в байтах
+
+    public Track(String id, String artist, String track, int length, int bitrate, String url) {
+        this.data = new Data(id, artist, track, length, bitrate);
+        this.url = url;
+    }
 
     public String getSuccess() {
         return success;
