@@ -1,6 +1,7 @@
 package com.letb.museek.Requests;
 
 
+import com.google.gson.JsonElement;
 import com.letb.museek.Models.Playlist;
 
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ public interface PlaylistInterface {
 
     @FormUrlEncoded
     @POST("/index.php")
-    JSONObject getTopTracks(@Field("access_token") String token,
+    JsonElement getTopTracks(@Field("access_token") String token,
                           @Field("method") String method,
                           @Field("list_type") int timePeriod,
                           @Field("page") int page,

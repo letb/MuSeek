@@ -1,19 +1,21 @@
 package com.letb.museek.Events;
 
 
+import com.google.gson.JsonElement;
+
 import org.json.JSONObject;
 
 /**
  * Created by dannie on 20.12.15.
  */
 public class PlaylistEventSuccess {
-        private JSONObject data;
+        private JsonElement data;
 
-        public PlaylistEventSuccess(JSONObject data) {
+        public PlaylistEventSuccess(JsonElement data) {
             this.data = data;
         }
 
-        public JSONObject getData() {
+        public JsonElement getData() {
             return data;
         }
 }

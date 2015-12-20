@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.gson.JsonElement;
 import com.letb.museek.BaseClasses.BaseSpiceService;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Events.EventFail;
@@ -134,14 +135,14 @@ public class RequestProcessorService extends BaseSpiceService {
         }
     }
 
-    public final class PlaylistRequestListener implements RequestListener<JSONObject> {
+    public final class PlaylistRequestListener implements RequestListener<JsonElement> {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             bus.post(new EventFail(spiceException.getMessage()));
         }
 
         @Override
-        public void onRequestSuccess(final JSONObject result) {
+        public void onRequestSuccess(final JsonElement result) {
             bus.post(new PlaylistEventSuccess(result));
         }
     }
