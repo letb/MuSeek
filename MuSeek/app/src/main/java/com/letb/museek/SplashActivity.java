@@ -57,7 +57,7 @@ public class SplashActivity extends BaseSpiceActivity {
         TokenHolder.setData(event.getData().getAccessToken(), event.getData().getExpiresIn());
         UserInformer.showMessage(SplashActivity.this, event.getData().getAccessToken());
 //        TODO: For Test
-        requestTrack("6318312UUl5", "listen");
+        requestTrack("11635570PMIz", "listen");
 //        requestTopTracks(2, 1, "en");
     }
 
