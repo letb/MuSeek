@@ -4,12 +4,14 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.letb.museek.Models.Track.Track;
@@ -135,6 +137,7 @@ public class MediaPlayerService
 
     void processPauseRequest() {
         if (mState == State.Playing) {
+//            setUpAsForeground("");
             // Pause media player and cancel the 'foreground service' state.
             mState = State.Paused;
             mMediaPlayer.pause();
@@ -189,6 +192,19 @@ public class MediaPlayerService
         mState = State.Playing;
 //        updateNotification(mSongTitle + " (playing)");
         configAndStartMediaPlayer();
+    }
+
+    void setUpAsForeground(String text) {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setSmallIcon(R.drawable.icon_play);
+        mBuilder.setContentTitle("Notification Alert, Click Me!");
+        mBuilder.setContentText("Hi, This is Android Notification Detail!");
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Integer serviceNotificationId = 9000;
+// notificationID allows you to update the notification later on.
+        mNotificationManager.notify(serviceNotificationId, mBuilder.build());
+//        startForeground(serviceNotificationId, mBuilder.build());
     }
 
     @Override
