@@ -1,8 +1,6 @@
 package com.letb.museek.Services;
 
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +8,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -26,56 +23,31 @@ import java.util.List;
 public class MediaPlayerService
         extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
 
-    // These are the Intent actions that we are prepared to handle. Notice that the fact these
-    // constants exist in our class is a mere convenience: what really defines the actions our
-    // service can handle are the <action> tags in the <intent-filters> tag for our service in
-    // AndroidManifest.xml.
     public static final String ACTION_TOGGLE_PLAYBACK =
             "com.letb.museek.musicplayer.action.TOGGLE_PLAYBACK";
     public static final String ACTION_PLAY = "com.letb.museek.musicplayer.action.PLAY";
-    public static final String ACTION_PAUSE = "com.letb.museek.musicplayer.action.PAUSE";
-    public static final String ACTION_STOP = "com.letb.museek.musicplayer.action.STOP";
-    public static final String ACTION_SKIP = "com.letb.museek.musicplayer.action.SKIP";
     public static final String ACTION_REWIND = "com.letb.museek.musicplayer.action.REWIND";
 
     public static final String PLAYLIST = "com.letb.museek.musicplayer.data.PLAYLIST";
     public static final String REWIND_POSITION = "com.letb.museek.musicplayer.data.REWIND_POSITION";
 
-    private MediaPlayer mMediaPlayer = null;    // The Media Player
-    private List<Track> trackList = null;
-    private Integer currentTrackIndex = 0;
-
-
-    // indicates the state our service:
     enum State {
         Retrieving, // the MediaRetriever is retrieving music
         Stopped, // media player is stopped and not prepared to play
         Preparing, // media player is preparing...
         Playing, // playback active (media player ready!). (but the media player may actually be
-        // paused in this state if we don't have audio focus. But we stay in this state
-        // so that we know we have to resume playback once we get focus back)
         Paused
-        // playback paused (media player ready!)
     };
 
-    State mState = State.Stopped;
+    private MediaPlayer mMediaPlayer = null;    // The Media Player
+    private List<Track> trackList = null;
+    private Integer currentTrackIndex = 0;
+    private State mState = State.Stopped;
 
-    @Override
-    public void onCreate() {
-    }
 
-    /**
-     * Makes sure the media player exists and has been reset. This will create the media player
-     * if needed, or reset the existing media player if one already exists.
-     */
-    void createMediaPlayerIfNeeded() {
+    private void createMediaPlayerIfNeeded() {
         if (mMediaPlayer == null) {
             mMediaPlayer = new MediaPlayer();
-            // Make sure the media player will acquire a wake-lock while playing. If we don't do
-            // that, the CPU might go to sleep while the song is playing, causing playback to stop.
-            //
-            // Remember that to use this, we have to declare the android.permission.WAKE_LOCK
-            // permission in AndroidManifest.xml.
             mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
             mMediaPlayer.setOnPreparedListener(this);
             mMediaPlayer.setOnErrorListener(this);
@@ -90,26 +62,21 @@ public class MediaPlayerService
         String action = intent.getAction();
         switch (action) {
             case ACTION_TOGGLE_PLAYBACK:
-                processTogglePlaybackRequest();
+                processTogglePlayPauseRequest();
                 break;
             case ACTION_PLAY:
                 trackList = (List<Track>) intent.getSerializableExtra(PLAYLIST);
                 processPlayRequest();
                 break;
-            case ACTION_PAUSE:
-                processPauseRequest();
-                break;
             case ACTION_REWIND:
-                processRewindRequest(
-                        intent.getIntExtra(REWIND_POSITION, 0)
-                );
+                int defaultPosition = 0;
+                processRewindRequest(intent.getIntExtra(REWIND_POSITION, defaultPosition));
                 break;
         }
-        return START_NOT_STICKY; // Means we started the service, but don't want it to
-        // restart in case it's killed.
+        return START_NOT_STICKY;
     }
 
-    void processTogglePlaybackRequest() {
+    private void processTogglePlayPauseRequest() {
         if (mState == State.Paused || mState == State.Stopped) {
             processPlayRequest();
         } else {
@@ -117,32 +84,28 @@ public class MediaPlayerService
         }
     }
 
-    void processRewindRequest(Integer position) {
+    private void processRewindRequest(Integer position) {
+        int milliseconds = 1000;
         if (mState == State.Playing || mState == State.Paused)
-            mMediaPlayer.seekTo(position * 1000);
+            mMediaPlayer.seekTo(position * milliseconds);
     }
 
-    void processPlayRequest() {
+    private void processPlayRequest() {
         if (mState == State.Stopped) {
-            // If we're stopped, just go ahead to the next song and start playing
             playNextSong(0);
         }
         else if (mState == State.Paused) {
-            // If we're paused, just continue playback and restore the 'foreground service' state.
             mState = State.Playing;
-//            setUpAsForeground(mSongTitle + " (playing)");
             configAndStartMediaPlayer();
         }
+        showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
     }
 
-    void processPauseRequest() {
-        if (mState == State.Playing) {
-//            setUpAsForeground("");
-            // Pause media player and cancel the 'foreground service' state.
-            mState = State.Paused;
-            mMediaPlayer.pause();
-            relaxResources(false); // while paused, we always retain the MediaPlayer
-        }
+    private void processPauseRequest() {
+        mState = State.Paused;
+        mMediaPlayer.pause();
+        relaxResources(false);
+        showNotification("paused...", trackList.get(currentTrackIndex).getTitle());
     }
 
     /**
@@ -151,10 +114,7 @@ public class MediaPlayerService
      *
      * @param releaseMediaPlayer Indicates whether the Media Player should also be released or not
      */
-    void relaxResources(boolean releaseMediaPlayer) {
-        // stop being a foreground service
-        stopForeground(true);
-        // stop and release the Media Player, if it's available
+    private void relaxResources(boolean releaseMediaPlayer) {
         if (releaseMediaPlayer && mMediaPlayer != null) {
             mMediaPlayer.reset();
             mMediaPlayer.release();
@@ -162,13 +122,13 @@ public class MediaPlayerService
         }
     }
 
-    void configAndStartMediaPlayer() {
+    private void configAndStartMediaPlayer() {
         if (!mMediaPlayer.isPlaying()) mMediaPlayer.start();
     }
 
-    void playNextSong(Integer newCurrentIndex) {
+    private void playNextSong(Integer newCurrentIndex) {
         mState = State.Stopped;
-        relaxResources(false); // release everything except MediaPlayer
+        relaxResources(false);
         try {
             if (newCurrentIndex != null) {
                 currentTrackIndex = newCurrentIndex;
@@ -177,7 +137,7 @@ public class MediaPlayerService
                 mMediaPlayer.setDataSource(trackList.get(currentTrackIndex).getUrl());
             }
             mState = State.Preparing;
-//            setUpAsForeground(mSongTitle + " (loading)");
+            showNotification("loading...", trackList.get(currentTrackIndex).getTitle());
             mMediaPlayer.prepareAsync();
         }
         catch (IOException ex) {
@@ -186,25 +146,22 @@ public class MediaPlayerService
         }
     }
 
-    /** Called when media player is done preparing. */
-    public void onPrepared(MediaPlayer player) {
-        // The media player is done preparing. That means we can start playing!
-        mState = State.Playing;
-//        updateNotification(mSongTitle + " (playing)");
-        configAndStartMediaPlayer();
+    private void showNotification (String text, String title) {
+        int notificationId = 999;
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.icon_play)
+                        .setContentTitle(title)
+                        .setContentText(text);
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.notify(notificationId, mBuilder.build());
     }
 
-    void setUpAsForeground(String text) {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setSmallIcon(R.drawable.icon_play);
-        mBuilder.setContentTitle("Notification Alert, Click Me!");
-        mBuilder.setContentText("Hi, This is Android Notification Detail!");
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Integer serviceNotificationId = 9000;
-// notificationID allows you to update the notification later on.
-        mNotificationManager.notify(serviceNotificationId, mBuilder.build());
-//        startForeground(serviceNotificationId, mBuilder.build());
+    public void onPrepared(MediaPlayer player) {
+        mState = State.Playing;
+        showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
+        configAndStartMediaPlayer();
     }
 
     @Override
@@ -220,11 +177,12 @@ public class MediaPlayerService
         mState = State.Retrieving;
     }
 
-
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
     }
 
-
+    @Override
+    public void onCreate() {
+    }
 }

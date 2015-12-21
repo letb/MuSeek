@@ -52,7 +52,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonControl:
-                togglePlay();
+                togglePlayPause();
                 break;
             case R.id.buttonNext:
                 switchTrack(NEXT);
@@ -87,7 +87,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
     }
 
-    private void togglePlay() {
+    private void togglePlayPause() {
         if (maskProgressView.isPlaying()) {
             buttonPlayPause.setBackgroundResource(R.drawable.icon_play);
             maskProgressView.pause();
