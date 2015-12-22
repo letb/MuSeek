@@ -27,8 +27,8 @@ public class SplashActivity extends BaseSpiceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        proceedToMain(new Artist("Pink Floyd", "blabla.png"));
-//        requestToken();
+//        proceedToMain(new Artist("Pink Floyd", "blabla.png"));
+        requestToken();
     }
 
     @Override
@@ -72,8 +72,17 @@ public class SplashActivity extends BaseSpiceActivity {
         //  TODO: For test
         ArrayList<Track> trackList = new ArrayList<>();
         trackList.add(trackForTest);
-        Intent intent = new Intent(this, PlaylistActivity.class);
+
+        ArrayList<Artist> artistList = new ArrayList<>();
+        artistList.add(new Artist("Lol", "lolpic"));
+        artistList.add(new Artist("Pink Floyd", "lolpic"));
+        artistList.add(new Artist("Blabla", "lolpic"));
+        artistList.add(new Artist("Qweqwe", "lolpic"));
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(ArtistListFragment.ARTIST_LIST, artistList);
         intent.putExtra(PlaylistFragment.TRACK_LIST, trackList);
+
         startActivity(intent);
     }
 
@@ -84,15 +93,8 @@ public class SplashActivity extends BaseSpiceActivity {
         artistList.add(new Artist("Qweqwe", "lolpic"));
         artistList.add(new Artist("Qweqwe", "lolpic"));
         artistList.add(new Artist("Qweqwe", "lolpic"));
-        artistList.add(new Artist("Qweqwe", "lolpic"));
-        artistList.add(new Artist("Qweqwe", "lolpic"));
-        artistList.add(new Artist("Qweqwe", "lolpic"));
-        artistList.add(new Artist("Qweqwe", "lolpic"));
-        artistList.add(new Artist("Qweqwe", "lolpic"));
-        artistList.add(new Artist("Qweqwe", "lolpic"));
-        artistList.add(new Artist("Qweqwe", "lolpic"));
-
         artistList.add(artistForTest);
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ArtistListFragment.ARTIST_LIST, artistList);
         startActivity(intent);
