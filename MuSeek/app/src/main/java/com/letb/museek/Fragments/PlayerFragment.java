@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
@@ -45,6 +46,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             currentTrackList = (List<Track>) getArguments().getSerializable(TRACK_LIST);
         initializeProgressBar(view);
         initializeButtons(view);
+        initializeLayout(view);
         return view;
     }
 
@@ -104,6 +106,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         maskProgressView.setmMaxSeconds(currentTrackList.get(trackIndex).getData().getLength());
         maskProgressView.start();
         maskProgressView.setOnProgressDraggedListener(new CustomProgressDraggedListener());
+    }
+
+    private void initializeLayout(View view) {
+        TextView titleView = (TextView) view.findViewById(R.id.textSinger);
+        titleView.setText(currentTrackList.get(trackIndex).getTitle());
     }
 
     private void initializeButtons(View view) {

@@ -31,7 +31,9 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         trackList = (List<Track>) getIntent().getExtras().getSerializable(PlaylistFragment.TRACK_LIST);
-        showFragment(new PlaylistFragment(), getIntent());
+        Fragment fragment = new PlaylistFragment();
+        fragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
     }
 
     @Override
@@ -60,9 +62,10 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
 
     public void showFragment (Fragment fragment, Intent data) {
         fragment.setArguments(data.getExtras());
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(android.R.id.content, fragment);
-        ft.commit();
+        getSupportFragmentManager().beginTransaction()
+        .add(android.R.id.content, fragment)
+        .addToBackStack("")
+        .commit();
     }
 
     @Override
