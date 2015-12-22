@@ -13,12 +13,15 @@ import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
 import com.letb.museek.Events.TokenEventSuccess;
 import com.letb.museek.Events.TrackEventSuccess;
+import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Models.Playlist;
 import com.letb.museek.Models.Token;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Requests.PlaylistRequest;
 import com.letb.museek.Requests.TokenRequest;
 import com.letb.museek.Requests.TrackRequest;
+import com.letb.museek.Requests.TrackUrlRequest;
+import com.letb.museek.SplashActivity;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -31,6 +34,7 @@ public class RequestProcessorService extends BaseSpiceService {
     private static final String ACTION_TOKEN_REQUEST = "com.letb.museek.Listeners.action.token.request";
     private static final String ACTION_TRACK_REQUEST = "com.letb.museek.Listeners.action.track.request";
     private static final String ACTION_PLAYLIST_REQUEST = "com.letb.museek.Listeners.action.playlist.request";
+    private static final String ACTION_TRACK_URL_REQUEST = "com.letb.museek.Listeners.action.trackurl.request";
 
     private static final String TRACK_ID = "com.letb.museek.Listeners.extra.track.id";
     private static final String TRACK_REASON = "com.letb.museek.Listeners.extra.track.reason";
@@ -69,6 +73,14 @@ public class RequestProcessorService extends BaseSpiceService {
 
     }
 
+    public static void startTrackUrlRequestAction(Context context, String trackId, String reason) {
+        Intent intent = new Intent(context, RequestProcessorService.class);
+        intent.setAction(ACTION_TRACK_URL_REQUEST);
+        intent.putExtra(TRACK_ID, trackId);
+        intent.putExtra(TRACK_REASON, reason);
+        context.startService(intent);
+    }
+
 //    Сервис дернулся, разобрались, что нам пришло
 //    Без интента сервис не дергаем! Иначе исключение
     @Override
@@ -82,6 +94,11 @@ public class RequestProcessorService extends BaseSpiceService {
                 final String trackId = intent.getStringExtra(TRACK_ID);
                 final String trackReason = intent.getStringExtra(TRACK_REASON);
                 initiateSingleTrackRequest(trackId, trackReason);
+                break;
+            case ACTION_TRACK_URL_REQUEST:
+                final String trackUrlId = intent.getStringExtra(TRACK_ID);
+                final String trackUrlReason = intent.getStringExtra(TRACK_REASON);
+                initiateTrackUrlRequest(trackUrlId, trackUrlReason);
                 break;
             case ACTION_PLAYLIST_REQUEST:
                 final int timePeriod = intent.getIntExtra(PLAYLIST_PERIOD, 1);
@@ -102,6 +119,11 @@ public class RequestProcessorService extends BaseSpiceService {
     private void initiateSingleTrackRequest(String trackId, String reason) {
         TrackRequest trackRequest = new TrackRequest(TokenHolder.getAccessToken(), trackId, reason);
         getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TrackRequestListener());
+    }
+
+    private void initiateTrackUrlRequest(String trackId, String reason) {
+        TrackUrlRequest trackRequest = new TrackUrlRequest(TokenHolder.getAccessToken(), trackId, reason);
+        getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TrackUrlRequestListener());
     }
 
     private void initiateTopTracksRequest(int timePeriod, int pageNumber, String language) {
@@ -132,6 +154,18 @@ public class RequestProcessorService extends BaseSpiceService {
         @Override
         public void onRequestSuccess(final Track result) {
             bus.post(new TrackEventSuccess(result));
+        }
+    }
+
+    public final class TrackUrlRequestListener implements RequestListener<String> {
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            bus.post(new EventFail(spiceException.getMessage()));
+        }
+
+        @Override
+        public void onRequestSuccess(final String result) {
+            bus.post(new TrackUrlEventSuccess(result));
         }
     }
 

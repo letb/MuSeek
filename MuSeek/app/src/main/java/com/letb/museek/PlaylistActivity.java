@@ -14,6 +14,7 @@ import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Fragments.PlayerFragment;
 import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.Models.Track.Track;
+import com.letb.museek.RequestProcessor.RequestProcessorService;
 import com.letb.museek.Services.MediaPlayerService;
 import com.letb.museek.Utils.UserInformer;
 
@@ -43,7 +44,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
         Intent fragmentIntent = new Intent(this, MediaPlayerService.class);
         fragmentIntent.putExtra(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
         showFragment(new PlayerFragment(), fragmentIntent);
-
+        Track selectedTrack = trackList.get(position);
 //        TODO:For test
         UserInformer.showMessage(PlaylistActivity.this, "Playing track " + trackList.get(position).getTitle());
 //        TODO: Spaghetti
@@ -51,6 +52,10 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
         intent.setAction(MediaPlayerService.ACTION_PLAY);
         intent.putExtra(MediaPlayerService.PLAYLIST, (ArrayList<Track>) trackList);
         this.startService(intent);
+    }
+
+    private void proceedToPlay(Track track) {
+
     }
 
     public void showFragment (Fragment fragment, Intent data) {
