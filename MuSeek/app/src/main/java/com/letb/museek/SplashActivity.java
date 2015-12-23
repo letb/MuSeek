@@ -14,10 +14,7 @@ import com.letb.museek.Events.TokenEventSuccess;
 import com.letb.museek.Fragments.ArtistListFragment;
 import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.Models.Artist;
-import com.letb.museek.Models.Playlist;
-import com.letb.museek.Models.Track.Data;
 import com.letb.museek.Events.TrackUrlEventSuccess;
-import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.RequestProcessor.RequestProcessorService;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Utils.ResponseParser;
@@ -37,8 +34,16 @@ public class SplashActivity extends BaseSpiceActivity {
 
     private EventBus bus = EventBus.getDefault();
     public static CountDownLatch latch = new CountDownLatch(1);
-    private ArrayList<Track> trackList;
+    private ArrayList<Track> searchTrackList;
+    private ArrayList<Track> ruTopTrackList;
+    private ArrayList<Track> enTopTrackList;
+    private ArrayList<Track> trackList = new ArrayList<>();
     private int currentTrackIndex = 0;
+
+
+    boolean gotEnTop = false;
+    boolean gotRuTop = false;
+    boolean gotSearchTracks = false;
 
     boolean isEventArrived = false;
 
@@ -80,14 +85,23 @@ public class SplashActivity extends BaseSpiceActivity {
         TokenHolder.setData(event.getData().getAccessToken(), event.getData().getExpiresIn());
         Log.i(TAG, event.getData().getAccessToken());
 //        requestTrack("11635570PMIz", "listen");
-//        requestTopTracks(2, 1, "en");
-        requestSearchTracks("bowie", 20, "all");
+        requestTopTracks(2, 1, "en");
+//        requestSearchTracks("bowie", 20, "all");
     }
 
     public void onEvent(PlaylistEventSuccess event) {
         try {
-            trackList = ResponseParser.parsePlaylistResponse(event.getData());
-            getCurrentTrackUrl();
+            if (!gotEnTop) {
+                enTopTrackList = ResponseParser.parsePlaylistResponse(event.getData());
+                trackList.addAll(enTopTrackList);
+                gotEnTop = true;
+                requestTopTracks(2, 1, "ru");
+            } else if (!gotRuTop) {
+                ruTopTrackList = ResponseParser.parsePlaylistResponse(event.getData());
+                trackList.addAll(ruTopTrackList);
+                gotRuTop = true;
+                requestSearchTracks("bowie", 20, "all");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -95,7 +109,8 @@ public class SplashActivity extends BaseSpiceActivity {
 
     public void onEvent(SearchEventSuccess event) {
         try {
-            trackList = ResponseParser.parseSearchResponse(event.getData());
+            searchTrackList = ResponseParser.parseSearchResponse(event.getData());
+            trackList.addAll(searchTrackList);
             getCurrentTrackUrl();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -132,11 +147,6 @@ public class SplashActivity extends BaseSpiceActivity {
     private void proceedToPlayList (final ArrayList<Track> trackList) {
 
         ArrayList<Artist> artistList = new ArrayList<>();
-        artistList.add(new Artist("Lol", "lolpic"));
-        artistList.add(new Artist("Pink Floyd", "lolpic"));
-        artistList.add(new Artist("Blabla", "lolpic"));
-        artistList.add(new Artist("Qweqwe", "lolpic"));
-
 //        Intent intent = new Intent(this, PlaylistActivity.class);
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ArtistListFragment.ARTIST_LIST, artistList);
