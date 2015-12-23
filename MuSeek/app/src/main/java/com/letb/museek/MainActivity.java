@@ -10,7 +10,6 @@ import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Fragments.ArtistListFragment;
 import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.Models.Artist;
-import com.letb.museek.Models.Playlist;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Utils.UserInformer;
 
@@ -29,8 +28,11 @@ public class MainActivity extends BaseSpiceActivity implements ArtistListFragmen
 
         artistList = (List<Artist>) getIntent().getExtras().getSerializable(ArtistListFragment.ARTIST_LIST);
         trackList =  (List<Track>) getIntent().getExtras().getSerializable(PlaylistFragment.TRACK_LIST);
-        showFragment(new PlaylistFragment(), getIntent(), R.id.track_list_container);
-        showFragment(new ArtistListFragment(), getIntent(), R.id.artist_list_container);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        showFragment(new ArtistListFragment(), getIntent(), R.id.artist_container, ft);
+        showFragment(new PlaylistFragment(), getIntent(), R.id.track_container, ft);
+        ft.commit();
     }
 
     @Override
@@ -49,10 +51,10 @@ public class MainActivity extends BaseSpiceActivity implements ArtistListFragmen
     }
 
     @IdRes
-    public void showFragment (Fragment fragment, Intent data, @IdRes int container) {
+    public void showFragment (Fragment fragment, Intent data, @IdRes int container, FragmentTransaction ft) {
         fragment.setArguments(data.getExtras());
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(container, fragment);
-        ft.commit();
+//        ft.commit();
     }
 }

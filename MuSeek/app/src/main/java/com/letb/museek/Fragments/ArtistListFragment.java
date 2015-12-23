@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.letb.museek.Adapters.ArtistAdapter;
+import com.letb.museek.BaseClasses.TwoWayAdapterView;
 import com.letb.museek.BaseClasses.TwoWayGridView;
 import com.letb.museek.Models.Artist;
 import com.letb.museek.R;
@@ -39,9 +40,9 @@ public class ArtistListFragment extends Fragment {
 
         mRecyclerView = (TwoWayGridView) view.findViewById(R.id.gridview);
         mRecyclerView.setLongClickable(true);
-
         mAdapter = new ArtistAdapter(getActivity(), mListItems);
         mRecyclerView.setAdapter(mAdapter);
+//        mRecyclerView.setOnItemClickListener((TwoWayAdapterView.OnItemClickListener) this);
         return view;
     }
 
@@ -56,12 +57,12 @@ public class ArtistListFragment extends Fragment {
                     + " must implement OnArtistSelectedListener");
         }
     }
-//
-//    public void onItemClick(RecyclerView parent, View child, int position, long id) {
-//        if (null != mListener) {
-//            mListener.onArtistSelected(position);
-//        }
-//    }
+
+    public void onItemClick(RecyclerView parent, View child, int position, long id) {
+        if (null != mListener) {
+            mListener.onArtistSelected(position);
+        }
+    }
 
     @Override
     public void onDetach() {

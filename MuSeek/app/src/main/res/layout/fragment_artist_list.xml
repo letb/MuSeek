@@ -7,7 +7,8 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:textSize="24dp"
+        android:paddingLeft="10dp"
         android:textStyle="bold"
         android:text="Artists"
         android:layout_marginTop="10dp" />
@@ -15,20 +16,15 @@
     <com.letb.museek.BaseClasses.TwoWayGridView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="#E8E8E8"
+        app:columnWidth="200dp"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:cacheColorHint="#444440"
+        android:background="#444440"
         android:id="@+id/gridview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        app:cacheColorHint="#E8E8E8"
-        app:columnWidth="80dp"
-        app:rowHeight="80dp"
-        app:numColumns="auto_fit"
         app:numRows="1"
-        app:verticalSpacing="16dp"
-        app:horizontalSpacing="16dp"
-        app:stretchMode="spacingWidthUniform"
+        app:numColumns="auto_fit"
         app:scrollDirectionPortrait="horizontal"
-        app:scrollDirectionLandscape="horizontal"
-        app:gravity="top"/>
+        app:scrollDirectionLandscape="horizontal"/>
 
 </LinearLayout>

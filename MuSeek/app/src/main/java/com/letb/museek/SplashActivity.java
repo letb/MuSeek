@@ -12,6 +12,7 @@ import com.letb.museek.Fragments.ArtistListFragment;
 import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.Playlist;
+import com.letb.museek.Models.Track.Data;
 import com.letb.museek.RequestProcessor.RequestProcessorService;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Utils.UserInformer;
@@ -29,6 +30,7 @@ public class SplashActivity extends BaseSpiceActivity {
         super.onCreate(savedInstanceState);
 //        proceedToMain(new Artist("Pink Floyd", "blabla.png"));
         requestToken();
+//        proceedToPlayList(new Track().setData(new Data()));
     }
 
     @Override
