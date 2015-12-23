@@ -104,6 +104,8 @@ public class SplashActivity extends BaseSpiceActivity {
         trackList.get(currentTrackIndex).setUrl(event.getData());
         currentTrackIndex += 1;
 
+        Ln.d("TRACK #" + Integer.toString(currentTrackIndex));
+
         if (currentTrackIndex < trackList.size()) {
             getCurrentTrackUrl();
         } else {
@@ -125,10 +127,7 @@ public class SplashActivity extends BaseSpiceActivity {
         UserInformer.showMessage(SplashActivity.this, event.getException());
     }
 
-    private void proceedToPlayList (final Track trackForTest) {
-        //  TODO: For test
-        ArrayList<Track> trackList = new ArrayList<>();
-        trackList.add(trackForTest);
+    private void proceedToPlayList (final ArrayList<Track> trackList) {
 
         ArrayList<Artist> artistList = new ArrayList<>();
         artistList.add(new Artist("Lol", "lolpic"));
@@ -136,6 +135,7 @@ public class SplashActivity extends BaseSpiceActivity {
         artistList.add(new Artist("Blabla", "lolpic"));
         artistList.add(new Artist("Qweqwe", "lolpic"));
 
+//        Intent intent = new Intent(this, PlaylistActivity.class);
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(ArtistListFragment.ARTIST_LIST, artistList);
         intent.putExtra(PlaylistFragment.TRACK_LIST, trackList);
