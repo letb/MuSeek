@@ -6,6 +6,15 @@ import java.io.Serializable;
 
 public class Data implements Serializable{
 
+    public Data() {};
+
+    public Data(String id, String artist, String track, int length, String bitrate, int position, int size) {
+        this.id = id;
+        this.artist = artist;
+        this.track = track;
+        this.length = length;
+        this.bitrate = bitrate;
+    }
 
     @SerializedName("track_id")
     private String id;
@@ -19,11 +28,11 @@ public class Data implements Serializable{
     @SerializedName("track")
     private String track;
 
-    @SerializedName("length")
+    @SerializedName("lenght")
     private int length;
 
     @SerializedName("bitrate")
-    private int bitrate;
+    private String bitrate;
 
     @SerializedName("size")
     private String size;
@@ -52,11 +61,11 @@ public class Data implements Serializable{
         this.track = track;
     }
 
-    public int getBitrate() {
+    public String getBitrate() {
         return bitrate;
     }
 
-    public void setBitrate(int bitrate) {
+    public void setBitrate(String bitrate) {
         this.bitrate = bitrate;
     }
 

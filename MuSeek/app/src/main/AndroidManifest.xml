@@ -19,6 +19,8 @@
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
+            android:noHistory="true"
+            android:launchMode="singleTask"
             android:theme="@style/SplashTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,9 +36,16 @@
         <service
             android:name=".Services.SpiceRequestService"
             android:exported="false" />
-        <service
-            android:name=".Services.MediaPlayerService"
-            android:exported="true" />
+        <service android:name=".Services.MediaPlayerService" android:exported="true">
+            <intent-filter>
+                <action android:name="com.letb.museek.musicplayer.action.TOGGLE_PLAYBACK" />
+                <action android:name="com.letb.museek.musicplayer.action.PLAY" />
+                <action android:name="com.letb.museek.musicplayer.action.PAUSE" />
+                <action android:name="com.letb.museek.musicplayer.action.SKIP" />
+                <action android:name="com.letb.museek.musicplayer.action.REWIND" />
+                <action android:name="com.letb.museek.musicplayer.action.STOP" />
+            </intent-filter>
+        </service>
         <service
             android:name=".RequestProcessor.RequestProcessorService"
             android:exported="false" >

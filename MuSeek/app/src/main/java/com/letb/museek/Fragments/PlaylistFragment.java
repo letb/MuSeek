@@ -22,8 +22,7 @@ public class PlaylistFragment extends ListFragment {
     private OnTrackSelectedListener mListener;
     private TrackAdapter mAdapter;
 
-    public PlaylistFragment() {
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +39,13 @@ public class PlaylistFragment extends ListFragment {
         return view;
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        if (null != mListener) {
+            mListener.onTrackSelected(position);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -52,22 +58,16 @@ public class PlaylistFragment extends ListFragment {
         }
     }
 
+    public interface OnTrackSelectedListener {
+        void onTrackSelected(Integer position);
+    }
+
+    public PlaylistFragment() {
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        if (null != mListener) {
-            mListener.onTrackSelected(position);
-        }
-    }
-
-    public interface OnTrackSelectedListener {
-        public void onTrackSelected(Integer position);
-    }
-
 }

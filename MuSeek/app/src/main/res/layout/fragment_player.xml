@@ -1,75 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#221725">
 
-    <!-- Player Header -->
-    <LinearLayout
-        android:id="@+id/player_header_bg"
-        android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        android:layout_alignParentTop="true"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp">
-
-        <!-- Song Title -->
-        <TextView
-            android:id="@+id/songTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#04b3d2"
-            android:textSize="16dp"
-            android:paddingLeft="10dp"
-            android:textStyle="bold"
-            android:text="The Good, The Bad And The Ugly"
-            android:layout_marginTop="10dp" />
-    </LinearLayout>
-
-    <!-- Player Footer -->
-    <LinearLayout
-        android:id="@+id/player_footer_bg"
-        android:layout_width="fill_parent"
+    <RelativeLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:gravity="center">
+        android:background="#36223b">
 
-        <!-- Player Buttons -->
-        <LinearLayout
+        <ImageView
+            android:id="@+id/imageviewHeader"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/icon_header"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"/>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_toRightOf="@+id/imageviewHeader"
             android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-            <!-- Previous Button -->
-            <ImageButton
-                android:id="@+id/btnPrevious"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp">
+            <TextView
+                android:id="@+id/textSinger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/btn_player_previous"
-                android:background="@null" />
-            <!-- Play Button -->
-            <ImageButton
-                android:id="@+id/btnPlay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/btn_player_play"
-                android:background="@null" />
-            <!-- Next Button -->
-            <ImageButton
-                android:id="@+id/btnNext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/btn_player_next"
-                android:background="@null" />
+                android:textColor="#FFFFFF"
+                android:text="Linkin Park - Bleed It Out"/>
 
-            <ImageButton
-                android:id="@+id/btnPlaylist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/btn_player_playlist"
-                android:background="@null" />
-        </LinearLayout>
-    </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <co.mobiwise.library.MaskProgressView
+        android:id="@+id/maskProgressView"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/layoutHeader"
+        app:progressEmptyColor="#4e3c51"
+        app:progressLoadedColor="#e91e64"
+        app:coverMaskColor="#80000000"
+        app:durationTextColor="#FFFFFF"
+        app:durationTextSize="15sp"
+        app:coverImage="@drawable/cover"
+        app:progressHeight="4dp"
+        app:maxProgress="40"
+        app:currentProgress="23"
+        app:placeHolder="@drawable/cover"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@+id/layoutHeader"
+        android:background="@drawable/shadow"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/maskProgressView"
+        android:layout_centerVertical="true">
+
+
+        <Button
+            android:id="@+id/buttonControl"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/icon_play"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/icon_next"
+            android:layout_toRightOf="@+id/buttonControl"
+            android:layout_marginLeft="50dp"
+            android:layout_centerVertical="true"/>
+
+
+        <Button
+            android:id="@+id/buttonPrevious"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/icon_previous"
+            android:layout_toLeftOf="@+id/buttonControl"
+            android:layout_marginRight="50dp"
+            android:layout_centerVertical="true"/>
+
+
+    </RelativeLayout>
+
 </RelativeLayout>
