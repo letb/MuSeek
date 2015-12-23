@@ -29,6 +29,7 @@ public class MediaPlayerService
     public static final String ACTION_REWIND = "com.letb.museek.musicplayer.action.REWIND";
 
     public static final String PLAYLIST = "com.letb.museek.musicplayer.data.PLAYLIST";
+    public static final String SELECTED_TRACK_INDEX = "com.letb.museek.musicplayer.data.SELECTED_TRACK_INDEX";
     public static final String REWIND_POSITION = "com.letb.museek.musicplayer.data.REWIND_POSITION";
 
     enum State {
@@ -66,6 +67,7 @@ public class MediaPlayerService
                 break;
             case ACTION_PLAY:
                 trackList = (List<Track>) intent.getSerializableExtra(PLAYLIST);
+                currentTrackIndex = intent.getIntExtra(SELECTED_TRACK_INDEX, 0);
                 processPlayRequest();
                 break;
             case ACTION_REWIND:
@@ -92,10 +94,9 @@ public class MediaPlayerService
 
     private void processPlayRequest() {
         if (mState == State.Stopped) {
-            playNextSong(0);
+            playNextSong(currentTrackIndex);
         }
         else if (mState == State.Paused) {
-            mState = State.Playing;
             configAndStartMediaPlayer();
         }
         showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
@@ -123,21 +124,27 @@ public class MediaPlayerService
     }
 
     private void configAndStartMediaPlayer() {
-        if (!mMediaPlayer.isPlaying()) mMediaPlayer.start();
+        if (!mMediaPlayer.isPlaying()) {
+            mState = State.Playing;
+            showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
+            mMediaPlayer.start();
+        }
     }
 
     private void playNextSong(Integer newCurrentIndex) {
         mState = State.Stopped;
         relaxResources(false);
         try {
-            if (newCurrentIndex != null) {
+            if (newCurrentIndex != null && trackList.get(newCurrentIndex) != null) {
                 currentTrackIndex = newCurrentIndex;
-                createMediaPlayerIfNeeded();
-                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mMediaPlayer.setDataSource(trackList.get(currentTrackIndex).getUrl());
+            } else {
+                currentTrackIndex = 0;
             }
+            createMediaPlayerIfNeeded();
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mMediaPlayer.setDataSource(trackList.get(currentTrackIndex).getUrl());
             mState = State.Preparing;
-            showNotification("loading...", trackList.get(currentTrackIndex).getTitle());
+            showNotification("Loading...", trackList.get(currentTrackIndex).getTitle());
             mMediaPlayer.prepareAsync();
         }
         catch (IOException ex) {
@@ -159,8 +166,6 @@ public class MediaPlayerService
     }
 
     public void onPrepared(MediaPlayer player) {
-        mState = State.Playing;
-        showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
         configAndStartMediaPlayer();
     }
 

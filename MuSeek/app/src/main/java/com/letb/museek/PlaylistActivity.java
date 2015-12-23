@@ -42,17 +42,17 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
     }
 
     @Override
-    public void onTrackSelected(Integer position) {
+    public void onTrackSelected(Integer trackIndex) {
         Intent fragmentIntent = new Intent(this, MediaPlayerService.class);
         fragmentIntent.putExtra(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
         showFragment(new PlayerFragment(), fragmentIntent);
-        Track selectedTrack = trackList.get(position);
 //        TODO:For test
-        UserInformer.showMessage(PlaylistActivity.this, "Playing track " + trackList.get(position).getTitle());
+        UserInformer.showMessage(PlaylistActivity.this, "Playing track " + trackList.get(trackIndex).getTitle());
 //        TODO: Spaghetti
         Intent intent = new Intent(this, MediaPlayerService.class);
         intent.setAction(MediaPlayerService.ACTION_PLAY);
         intent.putExtra(MediaPlayerService.PLAYLIST, (ArrayList<Track>) trackList);
+        intent.putExtra(MediaPlayerService.SELECTED_TRACK_INDEX, trackIndex);
         this.startService(intent);
     }
 
