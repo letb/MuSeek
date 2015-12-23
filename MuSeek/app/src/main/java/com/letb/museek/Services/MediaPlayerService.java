@@ -2,7 +2,6 @@ package com.letb.museek.Services;
 
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -11,11 +10,16 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.letb.museek.Events.PlayerEvents.PlayerResponse;
+import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
+import com.letb.museek.Events.PlayerEvents.SwitchTrackResponse;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
 
 import java.io.IOException;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by marina.titova on 13.12.15.
@@ -32,7 +36,7 @@ public class MediaPlayerService
     public static final String SELECTED_TRACK_INDEX = "com.letb.museek.musicplayer.data.SELECTED_TRACK_INDEX";
     public static final String REWIND_POSITION = "com.letb.museek.musicplayer.data.REWIND_POSITION";
 
-    enum State {
+    public enum State {
         Retrieving, // the MediaRetriever is retrieving music
         Stopped, // media player is stopped and not prepared to play
         Preparing, // media player is preparing...
@@ -43,7 +47,9 @@ public class MediaPlayerService
     private MediaPlayer mMediaPlayer = null;    // The Media Player
     private List<Track> trackList = null;
     private Integer currentTrackIndex = 0;
-    private State mState = State.Stopped;
+    private State currentState = State.Stopped;
+
+    private EventBus bus = EventBus.getDefault();
 
 
     private void createMediaPlayerIfNeeded() {
@@ -58,6 +64,12 @@ public class MediaPlayerService
             mMediaPlayer.reset();
     }
 
+    public void onEvent(SwitchTrackRequest event){
+        currentTrackIndex += event.getDirection();
+        processPlayRequest();
+        bus.post(new SwitchTrackResponse(currentTrackIndex, currentState));
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
@@ -69,6 +81,7 @@ public class MediaPlayerService
                 trackList = (List<Track>) intent.getSerializableExtra(PLAYLIST);
                 currentTrackIndex = intent.getIntExtra(SELECTED_TRACK_INDEX, 0);
                 processPlayRequest();
+                bus.post(new PlayerResponse(currentTrackIndex, currentState));
                 break;
             case ACTION_REWIND:
                 int defaultPosition = 0;
@@ -79,7 +92,7 @@ public class MediaPlayerService
     }
 
     private void processTogglePlayPauseRequest() {
-        if (mState == State.Paused || mState == State.Stopped) {
+        if (currentState == State.Paused || currentState == State.Stopped) {
             processPlayRequest();
         } else {
             processPauseRequest();
@@ -88,22 +101,26 @@ public class MediaPlayerService
 
     private void processRewindRequest(Integer position) {
         int milliseconds = 1000;
-        if (mState == State.Playing || mState == State.Paused)
+        if (currentState == State.Playing || currentState == State.Paused)
             mMediaPlayer.seekTo(position * milliseconds);
     }
 
     private void processPlayRequest() {
-        if (mState == State.Stopped) {
-            playNextSong(currentTrackIndex);
+        if (
+                (currentState == State.Stopped) ||
+                (currentState == State.Playing))
+        {
+            playByIndex(currentTrackIndex);
         }
-        else if (mState == State.Paused) {
+        else if (currentState == State.Paused) {
             configAndStartMediaPlayer();
         }
+        currentState = State.Playing;
         showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
     }
 
     private void processPauseRequest() {
-        mState = State.Paused;
+        currentState = State.Paused;
         mMediaPlayer.pause();
         relaxResources(false);
         showNotification("paused...", trackList.get(currentTrackIndex).getTitle());
@@ -125,25 +142,29 @@ public class MediaPlayerService
 
     private void configAndStartMediaPlayer() {
         if (!mMediaPlayer.isPlaying()) {
-            mState = State.Playing;
+            currentState = State.Playing;
             showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
             mMediaPlayer.start();
         }
     }
 
-    private void playNextSong(Integer newCurrentIndex) {
-        mState = State.Stopped;
+    private void playByIndex(Integer newCurrentIndex) {
+        currentState = State.Stopped;
         relaxResources(false);
         try {
-            if (newCurrentIndex != null && trackList.get(newCurrentIndex) != null) {
-                currentTrackIndex = newCurrentIndex;
-            } else {
+            if ((newCurrentIndex < 0)) {
+                currentTrackIndex = trackList.size() - 1;
+            }
+            else if (newCurrentIndex > trackList.size() - 1) {
                 currentTrackIndex = 0;
+            }
+            else {
+                currentTrackIndex = newCurrentIndex;
             }
             createMediaPlayerIfNeeded();
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.setDataSource(trackList.get(currentTrackIndex).getUrl());
-            mState = State.Preparing;
+            currentState = State.Preparing;
             showNotification("Loading...", trackList.get(currentTrackIndex).getTitle());
             mMediaPlayer.prepareAsync();
         }
@@ -179,7 +200,8 @@ public class MediaPlayerService
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
         }
-        mState = State.Retrieving;
+        currentState = State.Retrieving;
+        bus.unregister(this);
     }
 
     @Override
@@ -189,5 +211,6 @@ public class MediaPlayerService
 
     @Override
     public void onCreate() {
+        bus.register(this);
     }
 }

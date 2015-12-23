@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import de.greenrobot.event.EventBus;
 
 public class RequestProcessorService extends BaseSpiceService {
+
     private static final String ACTION_TOKEN_REQUEST = "com.letb.museek.Listeners.action.token.request";
     private static final String ACTION_TRACK_REQUEST = "com.letb.museek.Listeners.action.track.request";
     private static final String ACTION_PLAYLIST_REQUEST = "com.letb.museek.Listeners.action.playlist.request";

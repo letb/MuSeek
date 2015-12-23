@@ -3,6 +3,7 @@ package com.letb.museek;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Entities.TokenHolder;
@@ -38,6 +39,8 @@ import roboguice.util.temp.Ln;
 
 public class SplashActivity extends BaseSpiceActivity {
 
+    private final String TAG = "SplashActivity";
+
     private EventBus bus = EventBus.getDefault();
     public static CountDownLatch latch = new CountDownLatch(1);
     private ArrayList<Track> trackList;
@@ -63,13 +66,8 @@ public class SplashActivity extends BaseSpiceActivity {
         super.onPause();
     }
 
-//    Дернули сервис с текущим контекстом и доп, данными. Он поймет
     public void requestToken() {
         RequestProcessorService.startTokenRequestAction(this);
-    }
-
-    public void requestTrack(String trackId, String reason) {
-        RequestProcessorService.startTrackRequestAction(this, trackId, reason);
     }
 
     public void requestTopTracks(int timePeriod, int page, String language) {
@@ -82,15 +80,8 @@ public class SplashActivity extends BaseSpiceActivity {
 
     public void onEvent(TokenEventSuccess event){
         TokenHolder.setData(event.getData().getAccessToken(), event.getData().getExpiresIn());
-        UserInformer.showMessage(SplashActivity.this, event.getData().getAccessToken());
-//        TODO: For Test
-//        requestTrack("11635570PMIz", "listen");
+        Log.i(TAG, event.getData().getAccessToken());
         requestTopTracks(2, 1, "en");
-    }
-
-
-    public void onEvent(TrackEventSuccess event){
-        proceedToPlayList(event.getData());
     }
 
     public void onEvent(PlaylistEventSuccess event) {
@@ -133,15 +124,4 @@ public class SplashActivity extends BaseSpiceActivity {
         intent.putExtra(PlaylistFragment.TRACK_LIST, trackList);
         startActivity(intent);
     }
-
-    private void proceedToPlayList(final Track trackForTest) {
-//        TODO: For test
-        ArrayList<Track> trackList = new ArrayList<>();
-        trackList.add(trackForTest);
-        Intent intent = new Intent(this, PlaylistActivity.class);
-        intent.putExtra(PlaylistFragment.TRACK_LIST, trackList);
-        startActivity(intent);
-    }
-
-
 }

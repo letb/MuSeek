@@ -10,13 +10,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.letb.museek.Events.PlayerEvents.PlayerResponseEvent;
+import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
+import com.letb.museek.Services.MediaPlayerService;
 
 import java.util.List;
 
 import co.mobiwise.library.MaskProgressView;
 import co.mobiwise.library.OnProgressDraggedListener;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by marina.titova on 13.12.15.
@@ -32,11 +36,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Button buttonNext;
     private Button buttonPrevious;
     private OnMediaButtonClickListener mListener;
+    private TextView titleView;
+    private EventBus bus = EventBus.getDefault();
 
     private MaskProgressView maskProgressView;
 
     private List<Track> currentTrackList;
-    private Integer trackIndex = 0;
+    private Integer currentTrackIndex = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,8 +75,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     public interface OnMediaButtonClickListener {
         void onPlayPauseClicked(Integer index);
-        void onNextClicked(Integer index);
-        void onPrevClicked(Integer index);
         void onPositionChanged(Integer index, Integer position);
     }
 
@@ -79,14 +83,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
      * @param direction
      * -1 = previous track
      * +1 = next track
-     * TODO: index check to be done in service
      */
     private void switchTrack(int direction) {
-        trackIndex = trackIndex + direction;
         maskProgressView.stop();
-        maskProgressView.setmMaxSeconds(currentTrackList.get(trackIndex).getData().getLength());
-        maskProgressView.start();
         buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+        bus.post(new SwitchTrackRequest(direction));
     }
 
     private void togglePlayPause() {
@@ -98,19 +99,19 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
             maskProgressView.start();
         }
-        mListener.onPlayPauseClicked(trackIndex);
+        mListener.onPlayPauseClicked(currentTrackIndex);
     }
 
     private void initializeProgressBar(View view) {
         maskProgressView = (MaskProgressView) view.findViewById(R.id.maskProgressView);
-        maskProgressView.setmMaxSeconds(currentTrackList.get(trackIndex).getData().getLength());
+        maskProgressView.setmMaxSeconds(currentTrackList.get(currentTrackIndex).getData().getLength());
         maskProgressView.start();
         maskProgressView.setOnProgressDraggedListener(new CustomProgressDraggedListener());
     }
 
     private void initializeLayout(View view) {
-        TextView titleView = (TextView) view.findViewById(R.id.textSinger);
-        titleView.setText(currentTrackList.get(trackIndex).getTitle());
+        titleView = (TextView) view.findViewById(R.id.textSinger);
+        titleView.setText(currentTrackList.get(currentTrackIndex).getTitle());
     }
 
     private void initializeButtons(View view) {
@@ -139,7 +140,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private class CustomProgressDraggedListener implements OnProgressDraggedListener {
         @Override
         public void onProgressDragged(int position) {
-            mListener.onPositionChanged(trackIndex, position);
+            mListener.onPositionChanged(currentTrackIndex, position);
         }
 
         @Override
@@ -150,7 +151,28 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bus.register(this);
     }
+
+    private void redrawLayout () {
+        titleView.setText(currentTrackList.get(currentTrackIndex).getTitle());
+        maskProgressView.setmMaxSeconds(currentTrackList.get(currentTrackIndex).getData().getLength());
+    }
+
+    public void onEvent(PlayerResponseEvent event){
+        currentTrackIndex = event.getTrackIndex();
+        redrawLayout();
+        if (event.getState() == MediaPlayerService.State.Paused) {
+            maskProgressView.pause();
+            buttonPlayPause.setBackgroundResource(R.drawable.icon_play);
+        }
+        else if (event.getState() == MediaPlayerService.State.Playing) {
+            maskProgressView.start();
+            buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+        }
+    }
+
+
 
     @Override
     public void onStart() {

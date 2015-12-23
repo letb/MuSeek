@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Fragments.PlayerFragment;
@@ -23,6 +24,7 @@ import java.util.List;
 
 public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragment.OnTrackSelectedListener, PlayerFragment.OnMediaButtonClickListener {
 
+    private final String TAG = "PlaylistActivity";
     private MediaPlayerService mediaPlayerService;
     private Intent playIntent;
     private List<Track> trackList;
@@ -46,8 +48,8 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
         Intent fragmentIntent = new Intent(this, MediaPlayerService.class);
         fragmentIntent.putExtra(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
         showFragment(new PlayerFragment(), fragmentIntent);
-//        TODO:For test
-        UserInformer.showMessage(PlaylistActivity.this, "Playing track " + trackList.get(trackIndex).getTitle());
+
+        Log.d(TAG, "Playing track " + trackList.get(trackIndex).getTitle());
 //        TODO: Spaghetti
         Intent intent = new Intent(this, MediaPlayerService.class);
         intent.setAction(MediaPlayerService.ACTION_PLAY);
@@ -73,16 +75,6 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
         Intent intent = new Intent(this, MediaPlayerService.class);
         intent.setAction(MediaPlayerService.ACTION_TOGGLE_PLAYBACK);
         this.startService(intent);
-    }
-
-    @Override
-    public void onNextClicked(Integer index) {
-
-    }
-
-    @Override
-    public void onPrevClicked(Integer index) {
-
     }
 
     @Override
