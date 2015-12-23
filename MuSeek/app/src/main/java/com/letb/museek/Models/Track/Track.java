@@ -28,8 +28,8 @@ public class Track implements Serializable {
 //    bitrate (string) — толщина потока в человекочитаемом формате
 //                                                         size (int) — размер файла в байтах
 
-    public Track(String id, String artist, String track, int length, String bitrate, int position, int size) {
-        this.data = new Data(id, artist, track, length, bitrate, position, size);
+    public Track(String id, String artist, String track, int length, String bitrate) {
+        this.data = new Data(id, artist, track, length, bitrate);
     }
 
     public String getSuccess() {

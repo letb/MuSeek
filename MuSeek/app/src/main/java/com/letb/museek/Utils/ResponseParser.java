@@ -20,7 +20,7 @@ import java.util.Iterator;
 /**
  * Created by dannie on 20.12.15.
  */
-public class PlaylistResponseParser {
+public class ResponseParser {
 
     private JsonElement response;
 
@@ -30,10 +30,9 @@ public class PlaylistResponseParser {
         String track = jsonTrack.getString("track");
         int length = jsonTrack.getInt("lenght");
         String bitrate = jsonTrack.getString("bitrate");
-        int position = jsonTrack.getInt("position");
         // TODO: вынести константы
 
-        Track resultTrack = new Track(id, artist, track, length, bitrate, position, 0);
+        Track resultTrack = new Track(id, artist, track, length, bitrate);
 
         return resultTrack;
     }
@@ -41,6 +40,29 @@ public class PlaylistResponseParser {
     static public ArrayList<Track> parsePlaylistResponse(JsonElement jsonElementPlaylist) throws JSONException {
         JSONObject jsonObjectPlaylist  = new JSONObject(jsonElementPlaylist.toString());
         JSONObject jsonTracks = jsonObjectPlaylist.getJSONObject("tracks").getJSONObject("data");
+        Iterator<?> keys = jsonTracks.keys();
+        ArrayList<Track> trackList = new ArrayList<Track>();
+
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            try {
+                if (jsonTracks.get(key) instanceof JSONObject) {
+                    JSONObject jsonTrack = (JSONObject) jsonTracks.get(key);
+
+                    trackList.add(jsonToTrack(jsonTrack));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return trackList;
+    }
+
+
+    static public ArrayList<Track> parseSearchResponse(JsonElement jsonElementPlaylist) throws JSONException {
+        JSONObject jsonObjectPlaylist  = new JSONObject(jsonElementPlaylist.toString());
+        JSONObject jsonTracks = jsonObjectPlaylist.getJSONObject("tracks");
         Iterator<?> keys = jsonTracks.keys();
         ArrayList<Track> trackList = new ArrayList<Track>();
 

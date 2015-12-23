@@ -8,12 +8,11 @@ public class Data implements Serializable{
 
     public Data() {};
 
-    public Data(String id, String artist, String track, int length, String bitrate, int position, int size) {
+    public Data(String id, String artist, String track, int length, String bitrate) {
         this.id = id;
         this.artist = artist;
         this.track = track;
         this.length = length;
-        this.bitrate = bitrate;
     }
 
     @SerializedName("track_id")

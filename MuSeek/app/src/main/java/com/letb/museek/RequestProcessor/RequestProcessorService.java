@@ -11,6 +11,7 @@ import com.letb.museek.BaseClasses.BaseSpiceService;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
+import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Events.TokenEventSuccess;
 import com.letb.museek.Events.TrackEventSuccess;
 import com.letb.museek.Events.TrackUrlEventSuccess;
@@ -35,6 +36,7 @@ public class RequestProcessorService extends BaseSpiceService {
     private static final String ACTION_TOKEN_REQUEST = "com.letb.museek.Listeners.action.token.request";
     private static final String ACTION_TRACK_REQUEST = "com.letb.museek.Listeners.action.track.request";
     private static final String ACTION_PLAYLIST_REQUEST = "com.letb.museek.Listeners.action.playlist.request";
+    private static final String ACTION_SEARCH_TRACKS_REQUEST = "com.letb.museek.Listeners.action.search.request";
     private static final String ACTION_TRACK_URL_REQUEST = "com.letb.museek.Listeners.action.trackurl.request";
 
     private static final String TRACK_ID = "com.letb.museek.Listeners.extra.track.id";
@@ -43,6 +45,11 @@ public class RequestProcessorService extends BaseSpiceService {
     private static final String PLAYLIST_PERIOD = "com.letb.museek.Listeners.extra.playlist.time";
     private static final String PLAYLIST_PAGE = "com.letb.museek.Listeners.extra.playlist.time";
     private static final String PLAYLIST_LANGUAGE = "com.letb.museek.Listeners.extra.playlist.time";
+
+    private static final String SEARCH_QUERY = "com.letb.museek.Listeners.extra.search.query";
+    private static final String SEARCH_RESULTS_ON_PAGE = "com.letb.museek.Listeners.extra.search.results";
+    private static final String SEARCH_QUALITY = "com.letb.museek.Listeners.extra.search.quality";
+
 
 
     private EventBus bus = EventBus.getDefault();
@@ -72,6 +79,15 @@ public class RequestProcessorService extends BaseSpiceService {
         intent.putExtra(PLAYLIST_LANGUAGE, language);
         context.startService(intent);
 
+    }
+
+    public static void startSearchTracksRequestAction(Context context, String query, int resultsOnPage, String quality) {
+        Intent intent = new Intent(context, RequestProcessorService.class);
+        intent.setAction(ACTION_SEARCH_TRACKS_REQUEST);
+        intent.putExtra(SEARCH_QUERY, query);
+        intent.putExtra(SEARCH_RESULTS_ON_PAGE, resultsOnPage);
+        intent.putExtra(SEARCH_QUALITY, quality);
+        context.startService(intent);
     }
 
     public static void startTrackUrlRequestAction(Context context, String trackId, String reason) {
@@ -107,6 +123,12 @@ public class RequestProcessorService extends BaseSpiceService {
                 final String language = intent.getStringExtra(PLAYLIST_LANGUAGE);
                 initiateTopTracksRequest(timePeriod, page, language);
                 break;
+            case ACTION_SEARCH_TRACKS_REQUEST:
+                final String query = intent.getStringExtra(SEARCH_QUERY);
+                final int resultsOnPage = intent.getIntExtra(SEARCH_RESULTS_ON_PAGE, 10);
+                final String quality = intent.getStringExtra(SEARCH_QUALITY);
+                initiateSearchTracksRequest(query, resultsOnPage, quality);
+                break;
         }
         return START_STICKY;
     }
@@ -130,7 +152,11 @@ public class RequestProcessorService extends BaseSpiceService {
     private void initiateTopTracksRequest(int timePeriod, int pageNumber, String language) {
         PlaylistRequest playlistRequest = new PlaylistRequest(TokenHolder.getAccessToken(), timePeriod, pageNumber, language);
         getSpiceManager().execute(playlistRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.PlaylistRequestListener());
+    }
 
+    private void initiateSearchTracksRequest(String query, int resultsOnPage, String quality) {
+        PlaylistRequest playlistRequest = new PlaylistRequest(TokenHolder.getAccessToken(), query, resultsOnPage, quality);
+        getSpiceManager().execute(playlistRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.SearchRequestListener());
     }
 
 //    Получили ответ и направили его слушающему классу
@@ -179,6 +205,18 @@ public class RequestProcessorService extends BaseSpiceService {
         @Override
         public void onRequestSuccess(final JsonElement result) {
             bus.post(new PlaylistEventSuccess(result));
+        }
+    }
+
+    public final class SearchRequestListener implements RequestListener<JsonElement> {
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            bus.post(new EventFail(spiceException.getMessage()));
+        }
+
+        @Override
+        public void onRequestSuccess(final JsonElement result) {
+            bus.post(new SearchEventSuccess(result));
         }
     }
 

@@ -1,7 +1,6 @@
 package com.letb.museek;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -9,6 +8,7 @@ import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
+import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Events.TokenEventSuccess;
 
 import com.letb.museek.Fragments.ArtistListFragment;
@@ -20,24 +20,13 @@ import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.RequestProcessor.RequestProcessorService;
 import com.letb.museek.Models.Track.Track;
-import com.letb.museek.Utils.PlaylistResponseParser;
+import com.letb.museek.Utils.ResponseParser;
 import com.letb.museek.Utils.UserInformer;
 
 import org.json.JSONException;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import de.greenrobot.event.EventBus;
 import roboguice.util.temp.Ln;
@@ -81,6 +70,10 @@ public class SplashActivity extends BaseSpiceActivity {
         RequestProcessorService.startTopTracksRequestAction(this, timePeriod, page, language);
     }
 
+    public void requestSearchTracks(String query, int resultsOnPage, String quality) {
+        RequestProcessorService.startSearchTracksRequestAction(this, query, resultsOnPage, quality);
+    }
+
     public void requestTrackUrl(String trackId, String reason) {
         RequestProcessorService.startTrackUrlRequestAction(this, trackId, reason);
     }
@@ -88,13 +81,23 @@ public class SplashActivity extends BaseSpiceActivity {
     public void onEvent(TokenEventSuccess event){
         TokenHolder.setData(event.getData().getAccessToken(), event.getData().getExpiresIn());
         Log.i(TAG, event.getData().getAccessToken());
-        requestTopTracks(2, 1, "en");
+//        requestTrack("11635570PMIz", "listen");
+//        requestTopTracks(2, 1, "en");
+        requestSearchTracks("bowie", 20, "all");
     }
 
     public void onEvent(PlaylistEventSuccess event) {
         try {
-            trackList = PlaylistResponseParser.parsePlaylistResponse(event.getData());
-            trackList = new ArrayList<>(trackList.subList(0, 2));
+            trackList = ResponseParser.parsePlaylistResponse(event.getData());
+            getCurrentTrackUrl();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onEvent(SearchEventSuccess event) {
+        try {
+            trackList = ResponseParser.parseSearchResponse(event.getData());
             getCurrentTrackUrl();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -124,7 +127,7 @@ public class SplashActivity extends BaseSpiceActivity {
         }
     }
 
-    public void onEvent(EventFail event){
+    public void onEvent(EventFail event) {
         UserInformer.showMessage(SplashActivity.this, event.getException());
     }
 

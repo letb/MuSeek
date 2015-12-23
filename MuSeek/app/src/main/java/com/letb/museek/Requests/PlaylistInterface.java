@@ -23,9 +23,17 @@ public interface PlaylistInterface {
     @FormUrlEncoded
     @POST("/index.php")
     JsonElement getTopTracks(@Field("access_token") String token,
-                          @Field("method") String method,
-                          @Field("list_type") int timePeriod,
-                          @Field("page") int page,
-                          @Field("language") String language);
+                             @Field("method") String method,
+                             @Field("list_type") int timePeriod,
+                             @Field("page") int page,
+                             @Field("language") String language);
+
+    @FormUrlEncoded
+    @POST("/index.php")
+    JsonElement getSearchResult(@Field("access_token") String token,
+                                @Field("method") String method,
+                                @Field("query") String query,
+                                @Field("result_on_page") int resultsOnPage,
+                                @Field("quality") String quality);
 
 }
