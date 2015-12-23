@@ -45,9 +45,7 @@ public class SplashActivity extends BaseSpiceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        proceedToMain(new Artist("Pink Floyd", "blabla.png"));
         requestToken();
-//        proceedToPlayList(new Track().setData(new Data()));
     }
 
     @Override

@@ -35,7 +35,6 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
         super.onCreate(savedInstanceState);
         trackList = (List<Track>) getIntent().getExtras().getSerializable(PlaylistFragment.TRACK_LIST);
 
-
         if  (this.getClass().isInstance(PlaylistActivity.class)) {
             Fragment fragment = new PlaylistFragment();
             fragment.setArguments(getIntent().getExtras());

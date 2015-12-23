@@ -52,6 +52,10 @@ public abstract class BaseSpiceActivity extends AppCompatActivity  {
                 // as a favorite...
                 return true;
 
+            case android.R.id.home:
+                this.finish();
+                return true;
+
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
