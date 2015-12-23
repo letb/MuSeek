@@ -14,6 +14,7 @@ import android.util.Log;
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Fragments.PlayerFragment;
 import com.letb.museek.Fragments.PlaylistFragment;
+import com.letb.museek.Models.Playlist;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.RequestProcessor.RequestProcessorService;
 import com.letb.museek.Services.MediaPlayerService;
@@ -33,9 +34,13 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         trackList = (List<Track>) getIntent().getExtras().getSerializable(PlaylistFragment.TRACK_LIST);
-        Fragment fragment = new PlaylistFragment();
-        fragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+
+
+        if  (this.getClass().isInstance(PlaylistActivity.class)) {
+            Fragment fragment = new PlaylistFragment();
+            fragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+        }
     }
 
     @Override
@@ -66,7 +71,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
         fragment.setArguments(data.getExtras());
         getSupportFragmentManager().beginTransaction()
         .add(android.R.id.content, fragment)
-        .addToBackStack("")
+                .addToBackStack("")
         .commit();
     }
 

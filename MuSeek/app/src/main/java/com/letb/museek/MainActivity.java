@@ -1,5 +1,6 @@
 package com.letb.museek;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -15,14 +16,14 @@ import com.letb.museek.Utils.UserInformer;
 
 import java.util.List;
 
-public class MainActivity extends BaseSpiceActivity implements ArtistListFragment.OnArtistSelectedListener,
-        PlaylistFragment.OnTrackSelectedListener {
+public class MainActivity extends PlaylistActivity implements ArtistListFragment.OnArtistSelectedListener {
 
     private List<Artist> artistList;
     private List<Track>  trackList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -45,16 +46,9 @@ public class MainActivity extends BaseSpiceActivity implements ArtistListFragmen
         UserInformer.showMessage(MainActivity.this, "Artist: " + artistList.get(position).getName());
     }
 
-    @Override
-    public void onTrackSelected(Integer position) {
-        UserInformer.showMessage(MainActivity.this, "Playing track " + trackList.get(position).getTitle());
-    }
-
     @IdRes
     public void showFragment (Fragment fragment, Intent data, @IdRes int container, FragmentTransaction ft) {
         fragment.setArguments(data.getExtras());
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(container, fragment);
-//        ft.commit();
     }
 }

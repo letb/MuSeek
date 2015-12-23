@@ -94,6 +94,7 @@ public class SplashActivity extends BaseSpiceActivity {
     public void onEvent(PlaylistEventSuccess event) {
         try {
             trackList = PlaylistResponseParser.parsePlaylistResponse(event.getData());
+            trackList = new ArrayList<>(trackList.subList(0, 2));
             getCurrentTrackUrl();
         } catch (JSONException e) {
             e.printStackTrace();
