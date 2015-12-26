@@ -122,9 +122,10 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
     public void onTrackSelected(Integer trackIndex) {
         Bundle selectedTrackData = new Bundle();
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         showFragment(new PlayerFragment(), selectedTrackData, android.R.id.content, ft);
+        ft.commit();
 
         Log.d(TAG, "Playing track " + trackList.get(trackIndex).getTitle());
 //        TODO: Spaghetti

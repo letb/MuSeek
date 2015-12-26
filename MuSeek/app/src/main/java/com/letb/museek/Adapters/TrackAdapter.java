@@ -60,7 +60,7 @@ public class TrackAdapter extends BaseAdapter {
             }
 
         //  TODO: display picture
-        holder.titleTextView.setText(track.getData().getTrack());
+        holder.titleTextView.setText(track.getTitle());
             return convertView;
         }
 
