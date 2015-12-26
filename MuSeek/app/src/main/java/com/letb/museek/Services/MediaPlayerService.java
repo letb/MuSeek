@@ -10,9 +10,8 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.letb.museek.Events.PlayerEvents.PlayerResponse;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
-import com.letb.museek.Events.PlayerEvents.SwitchTrackResponse;
+import com.letb.museek.Events.PlayerEvents.StatePlayingResponse;
 import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
@@ -32,7 +31,6 @@ public class MediaPlayerService
     public static final String ACTION_TOGGLE_PLAYBACK =
             "com.letb.museek.musicplayer.action.TOGGLE_PLAYBACK";
     public static final String ACTION_PLAY = "com.letb.museek.musicplayer.action.PLAY";
-    public static final String ACTION_START = "com.letb.museek.musicplayer.action.START";
     public static final String ACTION_REWIND = "com.letb.museek.musicplayer.action.REWIND";
 
     public static final String PLAYLIST = "com.letb.museek.musicplayer.data.PLAYLIST";
@@ -68,14 +66,19 @@ public class MediaPlayerService
     }
 
     public void onEvent(SwitchTrackRequest event){
-        currentTrackIndex += event.getDirection();
+        int newCurrentIndex = currentTrackIndex + event.getDirection();
+        if ((newCurrentIndex < 0))
+            currentTrackIndex = trackList.size() - 1;
+        else if (newCurrentIndex > trackList.size() - 1)
+            currentTrackIndex = 0;
+        else
+            currentTrackIndex = newCurrentIndex;
         requestTrack();
     }
 
     public void onEvent(TrackUrlEventSuccess event){
         trackList.get(currentTrackIndex).setUrl(event.getData());
         processPlayRequest();
-        bus.post(new SwitchTrackResponse(currentTrackIndex, currentState));
     }
 
     private void requestTrack() {
@@ -125,7 +128,7 @@ public class MediaPlayerService
                 (currentState == State.Stopped) ||
                 (currentState == State.Playing))
         {
-            playByIndex(currentTrackIndex);
+            playByIndex();
         }
         else if (currentState == State.Paused) {
             configAndStartMediaPlayer();
@@ -163,19 +166,10 @@ public class MediaPlayerService
         }
     }
 
-    private void playByIndex(Integer newCurrentIndex) {
+    private void playByIndex() {
         currentState = State.Stopped;
         relaxResources(false);
         try {
-            if ((newCurrentIndex < 0)) {
-                currentTrackIndex = trackList.size() - 1;
-            }
-            else if (newCurrentIndex > trackList.size() - 1) {
-                currentTrackIndex = 0;
-            }
-            else {
-                currentTrackIndex = newCurrentIndex;
-            }
             createMediaPlayerIfNeeded();
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.setDataSource(trackList.get(currentTrackIndex).getUrl());
@@ -202,6 +196,7 @@ public class MediaPlayerService
     }
 
     public void onPrepared(MediaPlayer player) {
+        bus.post(new StatePlayingResponse(currentTrackIndex, currentState));
         configAndStartMediaPlayer();
     }
 

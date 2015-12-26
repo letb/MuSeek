@@ -1,16 +1,15 @@
 package com.letb.museek;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
@@ -60,7 +59,6 @@ public class PlaylistActivity extends BaseSpiceActivity implements
 
     private ProgressBar spinner;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,28 +67,11 @@ public class PlaylistActivity extends BaseSpiceActivity implements
 
 //        artistList = (List<Artist>) getIntent().getExtras().getSerializable(ArtistListFragment.ARTIST_LIST);
 
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        myToolbar.setNavigationIcon(R.drawable.icon_play);
-//        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                NavUtils.navigateUpFromSameTask(Activity.this);
-//            }
-//        });
-        setSupportActionBar(myToolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Music");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-
-
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
 //        new Thread(new TrackListsTask()).start();
@@ -120,7 +101,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         Bundle selectedTrackData = new Bundle();
         selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
         selectedTrackData.putSerializable(PlayerFragment.CURRENT_TRACK, trackIndex);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         showFragment(new PlayerFragment(), selectedTrackData, android.R.id.content, ft);
         ft.commit();
 
@@ -149,7 +130,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements
 //        Bundle artistlistArgs = new Bundle();
 //        artistlistArgs.putSerializable(ArtistListFragment.ARTIST_LIST, artistList);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         showFragment(new HorizontalTrackListFragment(), playlistArgs, R.id.en_container, ft);
         showFragment(new HorizontalTrackListFragment(), playlistArgs, R.id.ru_container, ft);
 

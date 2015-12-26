@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.letb.museek">
+    package="com.letb.museek" >
+
+    <uses-sdk tools:overrideLibrary="android.support.v17.leanback" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <uses-sdk tools:overrideLibrary="android.support.v17.leanback"/>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
-            android:noHistory="true"
             android:launchMode="singleTask"
+            android:noHistory="true"
             android:theme="@style/SplashTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,14 +30,15 @@
         </activity>
         <activity android:name=".PlaylistActivity" >
         </activity>
-
         <activity android:name=".BaseClasses.BaseSpiceActivity" >
         </activity>
 
         <service
             android:name=".Services.SpiceRequestService"
             android:exported="false" />
-        <service android:name=".Services.MediaPlayerService" android:exported="true">
+        <service
+            android:name=".Services.MediaPlayerService"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.letb.museek.musicplayer.action.TOGGLE_PLAYBACK" />
                 <action android:name="com.letb.museek.musicplayer.action.PLAY" />

@@ -1,7 +1,7 @@
 package com.letb.museek.Fragments;
 
+import android.app.Fragment;
 import android.content.Context;
-import android.support.v4.app.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
