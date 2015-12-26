@@ -42,9 +42,9 @@ public class RequestProcessorService extends BaseSpiceService {
     private static final String TRACK_ID = "com.letb.museek.Listeners.extra.track.id";
     private static final String TRACK_REASON = "com.letb.museek.Listeners.extra.track.reason";
 
-    private static final String PLAYLIST_PERIOD = "com.letb.museek.Listeners.extra.playlist.time";
-    private static final String PLAYLIST_PAGE = "com.letb.museek.Listeners.extra.playlist.time";
-    private static final String PLAYLIST_LANGUAGE = "com.letb.museek.Listeners.extra.playlist.time";
+    private static final String PLAYLIST_PERIOD = "com.letb.museek.Listeners.extra.playlist.period";
+    private static final String PLAYLIST_PAGE = "com.letb.museek.Listeners.extra.playlist.page";
+    private static final String PLAYLIST_LANGUAGE = "com.letb.museek.Listeners.extra.playlist.language";
 
     private static final String SEARCH_QUERY = "com.letb.museek.Listeners.extra.search.query";
     private static final String SEARCH_RESULTS_ON_PAGE = "com.letb.museek.Listeners.extra.search.results";
