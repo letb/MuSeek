@@ -1,15 +1,14 @@
 package com.letb.museek;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
@@ -20,6 +19,8 @@ import com.letb.museek.Fragments.PlayerFragment;
 import com.letb.museek.Fragments.VerticalTrackListFragment;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.RequestProcessor.RequestProcessorService;
+import com.letb.museek.RequestProcessor.SearchTrackListTask;
+import com.letb.museek.RequestProcessor.TopTrackListTask;
 import com.letb.museek.Services.MediaPlayerService;
 import com.letb.museek.Utils.ResponseParser;
 import com.letb.museek.Utils.UserInformer;
@@ -74,8 +75,9 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         super.onStart();
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
-//        new Thread(new TrackListsTask()).start();
-        requestTopTracks(2, 1, "en");
+        new Thread(new TopTrackListTask("en")).start();
+        new Thread(new SearchTrackListTask("bowie")).start();
+//        requestTopTracks(2, 1, "en");
 //        requestSearchTracks("bowie", 20, "all");
     }
     @Override
@@ -98,10 +100,11 @@ public class PlaylistActivity extends BaseSpiceActivity implements
 
     @Override
     public void onTrackSelected(Integer trackIndex, List<Track> trackList) {
+        Log.d("PlaylistActivity", "Clicked item" + trackIndex);
         Bundle selectedTrackData = new Bundle();
         selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
         selectedTrackData.putSerializable(PlayerFragment.CURRENT_TRACK, trackIndex);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         showFragment(new PlayerFragment(), selectedTrackData, android.R.id.content, ft);
         ft.commit();
 
@@ -125,14 +128,16 @@ public class PlaylistActivity extends BaseSpiceActivity implements
     // Артисты пока что не настроены
     private void showPlaylistFragment() {
         Bundle playlistArgs = new Bundle();
-        playlistArgs.putSerializable(HorizontalTrackListFragment.TRACK_LIST, trackList);
+        playlistArgs.putSerializable(HorizontalTrackListFragment.TRACK_LIST, enTopTrackList);
 
+        Bundle searchlistArgs = new Bundle();
+        searchlistArgs.putSerializable(HorizontalTrackListFragment.TRACK_LIST, searchTrackList);
 //        Bundle artistlistArgs = new Bundle();
 //        artistlistArgs.putSerializable(ArtistListFragment.ARTIST_LIST, artistList);
 
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         showFragment(new HorizontalTrackListFragment(), playlistArgs, R.id.en_container, ft);
-        showFragment(new HorizontalTrackListFragment(), playlistArgs, R.id.ru_container, ft);
+        showFragment(new HorizontalTrackListFragment(), searchlistArgs, R.id.ru_container, ft);
 
 //        showFragment(new PlaylistFragment(), artistlistArgs, R.id.track_container, ft);
         ft.commit();
@@ -163,20 +168,32 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         RequestProcessorService.startSearchTracksRequestAction(this, query, resultsOnPage, quality);
     }
 
-    public void onEvent(PlaylistEventSuccess event) throws JSONException {
-        trackList = ResponseParser.parsePlaylistResponse(event.getData());
-        spinner.setVisibility(View.GONE);
-        showPlaylistFragment();
+    public void onEvent(final PlaylistEventSuccess event) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    trackList = ResponseParser.parsePlaylistResponse(event.getData());
+                    String trackListType = event.getEVENT_CONTENTS();
+                    switch (trackListType) {
+                        case SearchTrackListTask.SEARCH_EVENT:
+                            searchTrackList = trackList;
+                            break;
+                        case TopTrackListTask.TOP_EVENT:
+                            enTopTrackList = trackList;
+                    }
+
+                    spinner.setVisibility(View.GONE);
+                    showPlaylistFragment();
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    public void onEvent(SearchEventSuccess event) {
-        try {
-            searchTrackList = ResponseParser.parseSearchResponse(event.getData());
-            trackList.addAll(searchTrackList.subList(0, 5));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void onEvent(EventFail event) {
         UserInformer.showMessage(PlaylistActivity.this, event.getException());

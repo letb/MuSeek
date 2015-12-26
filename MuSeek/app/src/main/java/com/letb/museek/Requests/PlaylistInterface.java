@@ -14,6 +14,9 @@ import retrofit.http.POST;
  * Created by dannie on 19.12.15.
  */
 public interface PlaylistInterface {
+//    TODO: не хватает того же описания для остальных реквестов
+//    Оч круто было бы
+
 //    Метод get_top_list — получить топ за период
 //    Параметры:
 //    list_type (int, обязательный) тип списка, 1- неделя, 2 - месяц, 3 - 3 месяца, 4 - полгода, 5 - год

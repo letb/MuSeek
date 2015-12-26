@@ -15,19 +15,15 @@ import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Events.TokenEventSuccess;
 import com.letb.museek.Events.TrackEventSuccess;
 import com.letb.museek.Events.TrackUrlEventSuccess;
-import com.letb.museek.Models.Playlist;
 import com.letb.museek.Models.Token;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Requests.PlaylistRequest;
 import com.letb.museek.Requests.TokenRequest;
 import com.letb.museek.Requests.TrackRequest;
 import com.letb.museek.Requests.TrackUrlRequest;
-import com.letb.museek.SplashActivity;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import org.json.JSONObject;
 
 import de.greenrobot.event.EventBus;
 
@@ -117,12 +113,6 @@ public class RequestProcessorService extends BaseSpiceService {
                 final String trackUrlReason = intent.getStringExtra(TRACK_REASON);
                 initiateTrackUrlRequest(trackUrlId, trackUrlReason);
                 break;
-            case ACTION_PLAYLIST_REQUEST:
-                final int timePeriod = intent.getIntExtra(PLAYLIST_PERIOD, 1);
-                final int page = intent.getIntExtra(PLAYLIST_PAGE, 1);
-                final String language = intent.getStringExtra(PLAYLIST_LANGUAGE);
-                initiateTopTracksRequest(timePeriod, page, language);
-                break;
             case ACTION_SEARCH_TRACKS_REQUEST:
                 final String query = intent.getStringExtra(SEARCH_QUERY);
                 final int resultsOnPage = intent.getIntExtra(SEARCH_RESULTS_ON_PAGE, 10);
@@ -147,11 +137,6 @@ public class RequestProcessorService extends BaseSpiceService {
     private void initiateTrackUrlRequest(String trackId, String reason) {
         TrackUrlRequest trackRequest = new TrackUrlRequest(TokenHolder.getAccessToken(), trackId, reason);
         getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TrackUrlRequestListener());
-    }
-
-    private void initiateTopTracksRequest(int timePeriod, int pageNumber, String language) {
-        PlaylistRequest playlistRequest = new PlaylistRequest(TokenHolder.getAccessToken(), timePeriod, pageNumber, language);
-        getSpiceManager().execute(playlistRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.PlaylistRequestListener());
     }
 
     private void initiateSearchTracksRequest(String query, int resultsOnPage, String quality) {
@@ -193,18 +178,6 @@ public class RequestProcessorService extends BaseSpiceService {
         @Override
         public void onRequestSuccess(final String result) {
             bus.post(new TrackUrlEventSuccess(result));
-        }
-    }
-
-    public final class PlaylistRequestListener implements RequestListener<JsonElement> {
-        @Override
-        public void onRequestFailure(SpiceException spiceException) {
-            bus.post(new EventFail(spiceException.getMessage()));
-        }
-
-        @Override
-        public void onRequestSuccess(final JsonElement result) {
-            bus.post(new PlaylistEventSuccess(result));
         }
     }
 

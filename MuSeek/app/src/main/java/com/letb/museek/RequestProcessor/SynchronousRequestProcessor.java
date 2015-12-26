@@ -12,7 +12,7 @@ import retrofit.client.OkClient;
  * Created by eugene on 26.12.15.
  */
 public class SynchronousRequestProcessor {
-    public static final String API_BASE_URL = "http://your.api-base.url";
+    public static final String API_BASE_URL = "http://api.pleer.com";
 
     private static RestAdapter.Builder builder = new RestAdapter.Builder()
             .setEndpoint(API_BASE_URL)

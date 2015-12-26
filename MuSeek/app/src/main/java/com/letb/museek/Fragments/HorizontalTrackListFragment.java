@@ -1,8 +1,9 @@
 package com.letb.museek.Fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ public class HorizontalTrackListFragment extends Fragment implements TwoWayAdapt
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
+            Log.d("HorizontalTrackFragment", "Attached" + context.toString());
             mListener = (OnTrackSelectedListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
@@ -68,6 +70,7 @@ public class HorizontalTrackListFragment extends Fragment implements TwoWayAdapt
 
     @Override
     public void onItemClick(TwoWayAdapterView<?> parent, View view, int position, long id) {
+        Log.d("HorizontalTrackFragment", "Clicked item" + position);
         if (null != mListener) {
             mListener.onTrackSelected(position, mListItems);
         }
