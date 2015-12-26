@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.ProgressBar;
 
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
@@ -22,8 +23,9 @@ import com.letb.museek.Events.PlaylistEventSuccess;
 import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Fragments.ArtistListFragment;
+import com.letb.museek.Fragments.HorizontalTrackListFragment;
 import com.letb.museek.Fragments.PlayerFragment;
-import com.letb.museek.Fragments.PlaylistFragment;
+import com.letb.museek.Fragments.VerticalTrackListFragment;
 import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.Playlist;
 import com.letb.museek.Models.Track.Track;
@@ -41,7 +43,11 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import roboguice.util.temp.Ln;
 
-public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragment.OnTrackSelectedListener, PlayerFragment.OnMediaButtonClickListener,  ArtistListFragment.OnArtistSelectedListener {
+public class PlaylistActivity extends BaseSpiceActivity implements
+        HorizontalTrackListFragment.OnTrackSelectedListener,
+        VerticalTrackListFragment.OnTrackSelectedListener,
+        PlayerFragment.OnMediaButtonClickListener,
+        ArtistListFragment.OnArtistSelectedListener {
 
     private EventBus bus = EventBus.getDefault();
     private final String TAG = "PlaylistActivity";
@@ -80,7 +86,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
 //        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                NavUtils.navigateUpFromSameTask(MainActivity.this);
+//                NavUtils.navigateUpFromSameTask(Activity.this);
 //            }
 //        });
         setSupportActionBar(myToolbar);
@@ -146,13 +152,13 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
     // Артисты пока что не настроены
     private void showPlaylistFragment() {
         Bundle playlistArgs = new Bundle();
-        playlistArgs.putSerializable(PlaylistFragment.TRACK_LIST, trackList);
+        playlistArgs.putSerializable(HorizontalTrackListFragment.TRACK_LIST, trackList);
 
 //        Bundle artistlistArgs = new Bundle();
 //        artistlistArgs.putSerializable(ArtistListFragment.ARTIST_LIST, artistList);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        showFragment(new PlaylistFragment(), playlistArgs, R.id.track_container, ft);
+        showFragment(new HorizontalTrackListFragment(), playlistArgs, R.id.en_container, ft);
 //        showFragment(new PlaylistFragment(), artistlistArgs, R.id.track_container, ft);
         ft.commit();
     }

@@ -28,9 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BaseClasses.BaseSpiceActivity" >
-        </activity>
         <activity android:name=".PlaylistActivity" >
+        </activity>
+
+        <activity android:name=".BaseClasses.BaseSpiceActivity" >
         </activity>
 
         <service
@@ -54,14 +55,6 @@
             android:name=".BaseClasses.BaseSpiceService"
             android:exported="false" >
         </service>
-
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" >
-            android:parentActivityName="com.letb.museek.SplashActivity" >
-
-        </activity>
 
     </application>
 

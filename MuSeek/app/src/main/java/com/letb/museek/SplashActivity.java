@@ -12,7 +12,6 @@ import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Events.TokenEventSuccess;
 
 import com.letb.museek.Fragments.ArtistListFragment;
-import com.letb.museek.Fragments.PlaylistFragment;
 import com.letb.museek.Models.Artist;
 import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.RequestProcessor.RequestProcessorService;

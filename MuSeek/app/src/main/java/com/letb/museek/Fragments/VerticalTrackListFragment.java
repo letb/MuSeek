@@ -14,26 +14,29 @@ import com.letb.museek.R;
 
 import java.util.List;
 
-public class PlaylistFragment extends ListFragment {
+/**
+ * Created by marina.titova on 26.12.15.
+ */
+public class VerticalTrackListFragment extends ListFragment {
     public static final String TRACK_LIST = "TRACK_LIST";
 
     private List<Track> mListItems;
-
-    private OnTrackSelectedListener mListener;
     private TrackAdapter mAdapter;
+    private OnTrackSelectedListener mListener;
 
 
+    public VerticalTrackListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_play_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_track_list_vertical, container, false);
         if (getArguments() != null) {
             mListItems = (List<Track>) getArguments().getSerializable(TRACK_LIST);
         }
         ListView listView = (ListView) view.findViewById(android.R.id.list);
-        mAdapter = new TrackAdapter(getActivity(), mListItems);
+        mAdapter = new TrackAdapter(getActivity(), mListItems, TrackAdapter.ViewType.VERTICAL);
         listView.setAdapter(mAdapter);
         setListAdapter(mAdapter);
         return view;
@@ -57,12 +60,8 @@ public class PlaylistFragment extends ListFragment {
                     + " must implement OnTrackSelectedListener");
         }
     }
-
     public interface OnTrackSelectedListener {
         void onTrackSelected(Integer position);
-    }
-
-    public PlaylistFragment() {
     }
 
     @Override

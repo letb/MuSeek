@@ -13,59 +13,75 @@ import com.letb.museek.R;
 
 import java.util.List;
 
+import static com.letb.museek.Adapters.TrackAdapter.ViewType.*;
+
 /**
  * Created by eugene on 13.12.15.
  */
-/*
-NICE ViewHolder implementation found
- */
+
 public class TrackAdapter extends BaseAdapter {
-        private Context mContext;
-        private List<Track> mTracks;
 
-        public TrackAdapter(Context context, List<Track> tracks) {
-            mContext = context;
-            mTracks = tracks;
-        }
+    public enum ViewType {
+        HORIZONTAL,
+        VERTICAL
+    }
 
-        @Override
-        public int getCount() {
-            return mTracks.size();
-        }
+    private Context mContext;
+    private ViewType viewType;
+    private List<Track> mTracks;
 
-        @Override
-        public Track getItem(int position) {
-            return mTracks.get(position);
-        }
+    public TrackAdapter(Context context, List<Track> tracks, ViewType viewType) {
+        this.mContext = context;
+        this.mTracks  = tracks;
+        this.viewType = viewType;
+    }
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
+    @Override
+    public int getCount() {
+        return mTracks.size();
+    }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public Track getItem(int position) {
+        return mTracks.get(position);
+    }
 
-            Track track = getItem(position);
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_play_list, parent, false);
-                holder = new ViewHolder();
-                holder.trackImageView = (ImageView) convertView.findViewById(R.id.track_image);
-                holder.titleTextView = (TextView) convertView.findViewById(R.id.track_title);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Track track = getItem(position);
+
+        ViewHolder holder;
+        if (convertView == null) {
+            switch (viewType) {
+                case HORIZONTAL:
+                    convertView = LayoutInflater.from(mContext)
+                            .inflate(R.layout.item_track_list_horizontal, parent, false);
+                    break;
+                case VERTICAL:
+                    convertView = LayoutInflater.from(mContext)
+                            .inflate(R.layout.item_track_list_vertical, parent, false);
+                    break;
             }
-
-        //  TODO: display picture
-        holder.titleTextView.setText(track.getTitle());
-            return convertView;
+            holder = new ViewHolder();
+            holder.trackImageView = (ImageView) convertView.findViewById(R.id.track_image);
+            holder.titleTextView = (TextView) convertView.findViewById(R.id.track_title);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        static class ViewHolder {
-            ImageView trackImageView;
-            TextView titleTextView;
-        }
+    //  TODO: display picture
+    holder.titleTextView.setText(track.getData().getTrack());
+        return convertView;
+    }
+
+    static class ViewHolder {
+        ImageView trackImageView;
+        TextView titleTextView;
+    }
 }
