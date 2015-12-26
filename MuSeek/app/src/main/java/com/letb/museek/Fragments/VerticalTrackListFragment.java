@@ -46,7 +46,7 @@ public class VerticalTrackListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         if (null != mListener) {
-            mListener.onTrackSelected(position);
+            mListener.onTrackSelected(position, mListItems);
         }
     }
 
@@ -61,7 +61,7 @@ public class VerticalTrackListFragment extends ListFragment {
         }
     }
     public interface OnTrackSelectedListener {
-        void onTrackSelected(Integer position);
+        void onTrackSelected(Integer position, List<Track> trackList);
     }
 
     @Override

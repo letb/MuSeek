@@ -3,7 +3,6 @@ package com.letb.museek.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,11 +69,11 @@ public class HorizontalTrackListFragment extends Fragment implements TwoWayAdapt
     @Override
     public void onItemClick(TwoWayAdapterView<?> parent, View view, int position, long id) {
         if (null != mListener) {
-            mListener.onTrackSelected(position);
+            mListener.onTrackSelected(position, mListItems);
         }
     }
 
     public interface OnTrackSelectedListener {
-        void onTrackSelected(Integer position);
+        void onTrackSelected(Integer position, List<Track> trackList);
     }
 }

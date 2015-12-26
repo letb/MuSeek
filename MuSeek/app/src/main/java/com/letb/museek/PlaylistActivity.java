@@ -1,12 +1,7 @@
 package com.letb.museek;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,23 +9,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.ProgressBar;
 
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
 import com.letb.museek.Events.SearchEventSuccess;
-import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Fragments.ArtistListFragment;
 import com.letb.museek.Fragments.HorizontalTrackListFragment;
 import com.letb.museek.Fragments.PlayerFragment;
 import com.letb.museek.Fragments.VerticalTrackListFragment;
-import com.letb.museek.Models.Artist;
-import com.letb.museek.Models.Playlist;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.RequestProcessor.RequestProcessorService;
-import com.letb.museek.RequestProcessor.TrackListsTask;
 import com.letb.museek.Services.MediaPlayerService;
 import com.letb.museek.Utils.ResponseParser;
 import com.letb.museek.Utils.UserInformer;
@@ -41,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import roboguice.util.temp.Ln;
 
 public class PlaylistActivity extends BaseSpiceActivity implements
         HorizontalTrackListFragment.OnTrackSelectedListener,
@@ -99,6 +88,9 @@ public class PlaylistActivity extends BaseSpiceActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+
+
+
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
 //        new Thread(new TrackListsTask()).start();
@@ -124,19 +116,19 @@ public class PlaylistActivity extends BaseSpiceActivity implements
     }
 
     @Override
-    public void onTrackSelected(Integer trackIndex) {
+    public void onTrackSelected(Integer trackIndex, List<Track> trackList) {
         Bundle selectedTrackData = new Bundle();
-        selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, trackList);
+        selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
         selectedTrackData.putSerializable(PlayerFragment.CURRENT_TRACK, trackIndex);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         showFragment(new PlayerFragment(), selectedTrackData, android.R.id.content, ft);
         ft.commit();
 
-        Log.d(TAG, "Playing track " + trackList.get(trackIndex).getTitle());
+        Log.d(TAG, "Playing track " + this.trackList.get(trackIndex).getTitle());
 //        TODO: Spaghetti
         Intent intent = new Intent(this, MediaPlayerService.class);
         intent.setAction(MediaPlayerService.ACTION_PLAY);
-        intent.putExtra(MediaPlayerService.PLAYLIST, trackList);
+        intent.putExtra(MediaPlayerService.PLAYLIST, this.trackList);
         intent.putExtra(MediaPlayerService.SELECTED_TRACK_INDEX, trackIndex);
         this.startService(intent);
     }
@@ -159,6 +151,8 @@ public class PlaylistActivity extends BaseSpiceActivity implements
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         showFragment(new HorizontalTrackListFragment(), playlistArgs, R.id.en_container, ft);
+        showFragment(new HorizontalTrackListFragment(), playlistArgs, R.id.ru_container, ft);
+
 //        showFragment(new PlaylistFragment(), artistlistArgs, R.id.track_container, ft);
         ft.commit();
     }
