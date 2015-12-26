@@ -130,7 +130,7 @@ public class RequestProcessorService extends BaseSpiceService {
                 initiateSearchTracksRequest(query, resultsOnPage, quality);
                 break;
         }
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
 //    Отправили, собсна, реквест

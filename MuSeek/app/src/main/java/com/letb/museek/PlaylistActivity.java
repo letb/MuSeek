@@ -93,9 +93,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
     protected void onStart() {
         super.onStart();
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
-//        spinner.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
-//        requestTrack("11635570PMIz", "listen");
         requestTopTracks(2, 1, "en");
 //        requestSearchTracks("bowie", 20, "all");
     }
@@ -115,14 +113,13 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
     public void showFragment (Fragment fragment, Bundle data, @IdRes int container, FragmentTransaction ft) {
         fragment.setArguments(data);
         ft.add(container, fragment);
-
     }
 
     @Override
     public void onTrackSelected(Integer trackIndex) {
         Bundle selectedTrackData = new Bundle();
-
-        selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
+        selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, trackList);
+        selectedTrackData.putSerializable(PlayerFragment.CURRENT_TRACK, trackIndex);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         showFragment(new PlayerFragment(), selectedTrackData, android.R.id.content, ft);
         ft.commit();
@@ -131,7 +128,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
 //        TODO: Spaghetti
         Intent intent = new Intent(this, MediaPlayerService.class);
         intent.setAction(MediaPlayerService.ACTION_PLAY);
-        intent.putExtra(MediaPlayerService.PLAYLIST, (ArrayList<Track>) trackList);
+        intent.putExtra(MediaPlayerService.PLAYLIST, trackList);
         intent.putExtra(MediaPlayerService.SELECTED_TRACK_INDEX, trackIndex);
         this.startService(intent);
     }
@@ -142,9 +139,6 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
 //        UserInformer.showMessage(PlaylistActivity.this, "Artist: " + artistList.get(position).getName());
     }
 
-    private void proceedToPlay(Track track) {
-
-    }
 
     // После того как пришли все урлы к трекам, показываем их
     // Артисты пока что не настроены
@@ -186,61 +180,18 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
         RequestProcessorService.startSearchTracksRequestAction(this, query, resultsOnPage, quality);
     }
 
-    public void requestTrackUrl(String trackId, String reason) {
-        RequestProcessorService.startTrackUrlRequestAction(this, trackId, reason);
-    }
-
-
-
-    public void onEvent(PlaylistEventSuccess event) {
-        try {
-            if (!gotEnTop) {
-                enTopTrackList = ResponseParser.parsePlaylistResponse(event.getData());
-                trackList.addAll(enTopTrackList.subList(0, 5));
-                gotEnTop = true;
-                requestTopTracks(2, 1, "ru");
-            } else if (!gotRuTop) {
-                ruTopTrackList = ResponseParser.parsePlaylistResponse(event.getData());
-                trackList.addAll(ruTopTrackList.subList(0, 5));
-                gotRuTop = true;
-                requestSearchTracks("bowie", 20, "all");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void onEvent(PlaylistEventSuccess event) throws JSONException {
+        spinner.setVisibility(View.INVISIBLE);
+        trackList = ResponseParser.parsePlaylistResponse(event.getData());
+        showPlaylistFragment();
     }
 
     public void onEvent(SearchEventSuccess event) {
         try {
             searchTrackList = ResponseParser.parseSearchResponse(event.getData());
             trackList.addAll(searchTrackList.subList(0, 5));
-            getCurrentTrackUrl();
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void onEvent(TrackUrlEventSuccess event) {
-        trackList.get(currentTrackIndex).setUrl(event.getData());
-        currentTrackIndex += 1;
-
-        Ln.d("TRACK #" + Integer.toString(currentTrackIndex));
-
-        if (currentTrackIndex < trackList.size()) {
-            getCurrentTrackUrl();
-        } else {
-            spinner.setVisibility(View.GONE);
-            showPlaylistFragment();
-        }
-
-    }
-
-    private void getCurrentTrackUrl() {
-        Track track;
-        track = trackList.get(currentTrackIndex);
-        if (track.getUrl() == null) {
-            isEventArrived = false;
-            requestTrackUrl(track.getData().getId(), "listen");
         }
     }
 

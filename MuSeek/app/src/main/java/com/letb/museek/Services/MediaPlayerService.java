@@ -13,8 +13,10 @@ import android.util.Log;
 import com.letb.museek.Events.PlayerEvents.PlayerResponse;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackResponse;
+import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
+import com.letb.museek.RequestProcessor.RequestProcessorService;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +32,7 @@ public class MediaPlayerService
     public static final String ACTION_TOGGLE_PLAYBACK =
             "com.letb.museek.musicplayer.action.TOGGLE_PLAYBACK";
     public static final String ACTION_PLAY = "com.letb.museek.musicplayer.action.PLAY";
+    public static final String ACTION_START = "com.letb.museek.musicplayer.action.START";
     public static final String ACTION_REWIND = "com.letb.museek.musicplayer.action.REWIND";
 
     public static final String PLAYLIST = "com.letb.museek.musicplayer.data.PLAYLIST";
@@ -66,8 +69,21 @@ public class MediaPlayerService
 
     public void onEvent(SwitchTrackRequest event){
         currentTrackIndex += event.getDirection();
+        requestTrack();
+    }
+
+    public void onEvent(TrackUrlEventSuccess event){
+        trackList.get(currentTrackIndex).setUrl(event.getData());
         processPlayRequest();
         bus.post(new SwitchTrackResponse(currentTrackIndex, currentState));
+    }
+
+    private void requestTrack() {
+        RequestProcessorService.startTrackUrlRequestAction(
+                this,
+                trackList.get(currentTrackIndex).getData().getId(),
+                "Listen"
+        );
     }
 
     @Override
@@ -80,8 +96,7 @@ public class MediaPlayerService
             case ACTION_PLAY:
                 trackList = (List<Track>) intent.getSerializableExtra(PLAYLIST);
                 currentTrackIndex = intent.getIntExtra(SELECTED_TRACK_INDEX, 0);
-                processPlayRequest();
-                bus.post(new PlayerResponse(currentTrackIndex, currentState));
+                requestTrack();
                 break;
             case ACTION_REWIND:
                 int defaultPosition = 0;

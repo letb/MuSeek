@@ -28,6 +28,8 @@ import de.greenrobot.event.EventBus;
 public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     public static final String TRACK_LIST = "TRACK_LIST";
+    public static final String CURRENT_TRACK = "CURRENT_TRACK";
+
 
     private Integer NEXT = 1;
     private Integer PREV = -1;
@@ -48,8 +50,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_player, container, false);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             currentTrackList = (List<Track>) getArguments().getSerializable(TRACK_LIST);
+            currentTrackIndex = getArguments().getInt(CURRENT_TRACK);
+        }
         initializeProgressBar(view);
         initializeButtons(view);
         initializeLayout(view);
@@ -105,7 +109,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private void initializeProgressBar(View view) {
         maskProgressView = (MaskProgressView) view.findViewById(R.id.maskProgressView);
         maskProgressView.setmMaxSeconds(currentTrackList.get(currentTrackIndex).getData().getLength());
-        maskProgressView.start();
         maskProgressView.setOnProgressDraggedListener(new CustomProgressDraggedListener());
     }
 
