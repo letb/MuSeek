@@ -12,14 +12,14 @@ import roboguice.util.temp.Ln;
  */
 public class PlaylistRequest extends RetrofitSpiceRequest<JsonElement, PlaylistInterface> {
 
-    private enum Period {
+    public enum Period {
         WEEK, MONTH, QUARTER, HALFYEAR, YEAR;
     }
 
-    static private String METHOD_GET_TOP_LIST = "get_top_list";
-    static private String METHOD_TRACKS_SEARCH = "tracks_search";
-    static private String ENG_LANG = "en";
-    static private String RU_LANG = "ru";
+    public static String METHOD_GET_TOP_LIST = "get_top_list";
+    public static String METHOD_TRACKS_SEARCH = "tracks_search";
+    public static String ENG_LANG = "en";
+    public static String RU_LANG = "ru";
 
     private String method;
 

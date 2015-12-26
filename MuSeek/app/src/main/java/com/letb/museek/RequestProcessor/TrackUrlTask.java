@@ -21,13 +21,11 @@ import de.greenrobot.event.EventBus;
  */
 public class TrackUrlTask implements Runnable {
     private List<Track> trackList;
-    private Activity currentActivity;
     private EventBus bus = EventBus.getDefault();
     private ArrayList<String> trackUrls;
 
-    public TrackUrlTask(List<Track> trackList, Activity currentActivity) {
+    public TrackUrlTask(List<Track> trackList) {
         this.trackList = trackList;
-        this.currentActivity = currentActivity;
         bus.register(this);
     }
 

@@ -28,6 +28,7 @@ import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.Playlist;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.RequestProcessor.RequestProcessorService;
+import com.letb.museek.RequestProcessor.TrackListsTask;
 import com.letb.museek.Services.MediaPlayerService;
 import com.letb.museek.Utils.ResponseParser;
 import com.letb.museek.Utils.UserInformer;
@@ -94,6 +95,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
         super.onStart();
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
+//        new Thread(new TrackListsTask()).start();
         requestTopTracks(2, 1, "en");
 //        requestSearchTracks("bowie", 20, "all");
     }
@@ -181,8 +183,8 @@ public class PlaylistActivity extends BaseSpiceActivity implements PlaylistFragm
     }
 
     public void onEvent(PlaylistEventSuccess event) throws JSONException {
-        spinner.setVisibility(View.INVISIBLE);
         trackList = ResponseParser.parsePlaylistResponse(event.getData());
+        spinner.setVisibility(View.GONE);
         showPlaylistFragment();
     }
 
