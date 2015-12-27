@@ -17,7 +17,7 @@ import com.letb.museek.Events.PlayerEvents.TogglePlayPauseEvent;
 import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
-import com.letb.museek.RequestProcessor.RequestProcessorService;
+import com.letb.museek.RequestProcessor.AsynchronousRequestProcessor;
 
 import java.io.IOException;
 import java.util.List;
@@ -98,7 +98,7 @@ public class MediaPlayerService
     }
 
     private void requestTrack() {
-        RequestProcessorService.startTrackUrlRequestAction(
+        AsynchronousRequestProcessor.startTrackUrlRequestAction(
                 this,
                 trackList.get(currentTrackIndex).getData().getId(),
                 "Listen"

@@ -1,6 +1,7 @@
-package com.letb.museek.Requests;
+package com.letb.museek.Requests.AsynchronousRequests;
 
 import com.letb.museek.Models.Track.Track;
+import com.letb.museek.Requests.TrackInterface;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import roboguice.util.temp.Ln;

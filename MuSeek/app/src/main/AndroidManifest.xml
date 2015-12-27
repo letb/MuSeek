@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PlaylistActivity" >
+        <activity android:name=".MainActivity" >
         </activity>
         <activity android:name=".BaseClasses.BaseSpiceActivity" >
         </activity>
@@ -49,7 +49,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".RequestProcessor.RequestProcessorService"
+            android:name=".RequestProcessor.AsynchronousRequestProcessor"
             android:exported="false" >
         </service>
         <service

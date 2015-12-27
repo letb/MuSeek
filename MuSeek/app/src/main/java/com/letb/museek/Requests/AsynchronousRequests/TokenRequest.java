@@ -1,8 +1,9 @@
-package com.letb.museek.Requests;
+package com.letb.museek.Requests.AsynchronousRequests;
 
 import android.util.Base64;
 
 import com.letb.museek.Models.Token;
+import com.letb.museek.Requests.TokenInterface;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import roboguice.util.temp.Ln;

@@ -1,16 +1,8 @@
 package com.letb.museek.Utils;
 
-import android.content.Context;
-
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Models.Track.Track;
-import com.letb.museek.RequestProcessor.RequestProcessorService;
-import com.letb.museek.Requests.TrackRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -1,16 +1,11 @@
 package com.letb.museek.RequestProcessor;
 
-import com.letb.museek.Models.Track.Track;
 import com.squareup.okhttp.OkHttpClient;
-
-import java.util.List;
 
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
-/**
- * Created by eugene on 26.12.15.
- */
+
 public class SynchronousRequestProcessor {
     public static final String API_BASE_URL = "http://api.pleer.com";
 

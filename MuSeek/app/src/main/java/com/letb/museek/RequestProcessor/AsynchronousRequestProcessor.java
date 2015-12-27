@@ -10,24 +10,23 @@ import com.google.gson.JsonElement;
 import com.letb.museek.BaseClasses.BaseSpiceService;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Events.EventFail;
-import com.letb.museek.Events.PlaylistEventSuccess;
 import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Events.TokenEventSuccess;
 import com.letb.museek.Events.TrackEventSuccess;
 import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Models.Token;
 import com.letb.museek.Models.Track.Track;
-import com.letb.museek.Requests.PlaylistRequest;
-import com.letb.museek.Requests.TokenRequest;
-import com.letb.museek.Requests.TrackRequest;
-import com.letb.museek.Requests.TrackUrlRequest;
+import com.letb.museek.Requests.AsynchronousRequests.PlaylistRequest;
+import com.letb.museek.Requests.AsynchronousRequests.TokenRequest;
+import com.letb.museek.Requests.AsynchronousRequests.TrackRequest;
+import com.letb.museek.Requests.AsynchronousRequests.TrackUrlRequest;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import de.greenrobot.event.EventBus;
 
-public class RequestProcessorService extends BaseSpiceService {
+public class AsynchronousRequestProcessor extends BaseSpiceService {
 
     private static final String ACTION_TOKEN_REQUEST = "com.letb.museek.Listeners.action.token.request";
     private static final String ACTION_TRACK_REQUEST = "com.letb.museek.Listeners.action.track.request";
@@ -53,14 +52,14 @@ public class RequestProcessorService extends BaseSpiceService {
 //    Определили особый метод для нового реквеста, в кот. формируется интент для сервиса
 //    TODO: перенести формаирование интента в функцию-построитель
     public static void startTokenRequestAction(Context context) {
-        Intent intent = new Intent(context, RequestProcessorService.class);
+        Intent intent = new Intent(context, AsynchronousRequestProcessor.class);
         intent.setAction(ACTION_TOKEN_REQUEST);
 //        Дернули сервис
         context.startService(intent);
     }
 
     public static void startTrackRequestAction(Context context, String trackId, String reason) {
-        Intent intent = new Intent(context, RequestProcessorService.class);
+        Intent intent = new Intent(context, AsynchronousRequestProcessor.class);
         intent.setAction(ACTION_TRACK_REQUEST);
         intent.putExtra(TRACK_ID, trackId);
         intent.putExtra(TRACK_REASON, reason);
@@ -68,7 +67,7 @@ public class RequestProcessorService extends BaseSpiceService {
     }
 
     public static void startTopTracksRequestAction(Context context, int timePeriod, int page, String language) {
-        Intent intent = new Intent(context, RequestProcessorService.class);
+        Intent intent = new Intent(context, AsynchronousRequestProcessor.class);
         intent.setAction(ACTION_PLAYLIST_REQUEST);
         intent.putExtra(PLAYLIST_PERIOD, timePeriod);
         intent.putExtra(PLAYLIST_PAGE, page);
@@ -78,7 +77,7 @@ public class RequestProcessorService extends BaseSpiceService {
     }
 
     public static void startSearchTracksRequestAction(Context context, String query, int resultsOnPage, String quality) {
-        Intent intent = new Intent(context, RequestProcessorService.class);
+        Intent intent = new Intent(context, AsynchronousRequestProcessor.class);
         intent.setAction(ACTION_SEARCH_TRACKS_REQUEST);
         intent.putExtra(SEARCH_QUERY, query);
         intent.putExtra(SEARCH_RESULTS_ON_PAGE, resultsOnPage);
@@ -87,7 +86,7 @@ public class RequestProcessorService extends BaseSpiceService {
     }
 
     public static void startTrackUrlRequestAction(Context context, String trackId, String reason) {
-        Intent intent = new Intent(context, RequestProcessorService.class);
+        Intent intent = new Intent(context, AsynchronousRequestProcessor.class);
         intent.setAction(ACTION_TRACK_URL_REQUEST);
         intent.putExtra(TRACK_ID, trackId);
         intent.putExtra(TRACK_REASON, reason);
@@ -126,22 +125,22 @@ public class RequestProcessorService extends BaseSpiceService {
 //    Отправили, собсна, реквест
     private void initiateTokenRequest() {
         TokenRequest tokenRequest = new TokenRequest();
-        getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TokenRequestListener());
+        getSpiceManager().execute(tokenRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new AsynchronousRequestProcessor.TokenRequestListener());
     }
 
     private void initiateSingleTrackRequest(String trackId, String reason) {
         TrackRequest trackRequest = new TrackRequest(TokenHolder.getAccessToken(), trackId, reason);
-        getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TrackRequestListener());
+        getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new AsynchronousRequestProcessor.TrackRequestListener());
     }
 
     private void initiateTrackUrlRequest(String trackId, String reason) {
         TrackUrlRequest trackRequest = new TrackUrlRequest(TokenHolder.getAccessToken(), trackId, reason);
-        getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.TrackUrlRequestListener());
+        getSpiceManager().execute(trackRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new AsynchronousRequestProcessor.TrackUrlRequestListener());
     }
 
     private void initiateSearchTracksRequest(String query, int resultsOnPage, String quality) {
         PlaylistRequest playlistRequest = new PlaylistRequest(TokenHolder.getAccessToken(), query, resultsOnPage, quality);
-        getSpiceManager().execute(playlistRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new RequestProcessorService.SearchRequestListener());
+        getSpiceManager().execute(playlistRequest, 0, DurationInMillis.ALWAYS_EXPIRED, new AsynchronousRequestProcessor.SearchRequestListener());
     }
 
 //    Получили ответ и направили его слушающему классу

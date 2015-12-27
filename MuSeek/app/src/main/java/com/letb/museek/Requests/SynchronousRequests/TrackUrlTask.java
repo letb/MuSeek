@@ -1,12 +1,11 @@
-package com.letb.museek.RequestProcessor;
-
-import android.app.Activity;
+package com.letb.museek.Requests.SynchronousRequests;
 
 import com.google.gson.JsonElement;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Models.Track.Track;
+import com.letb.museek.RequestProcessor.SynchronousRequestProcessor;
 import com.letb.museek.Requests.TrackUrlInterface;
-import com.letb.museek.Requests.TrackUrlRequest;
+import com.letb.museek.Requests.AsynchronousRequests.TrackUrlRequest;
 
 import java.util.ArrayList;
 import java.util.List;

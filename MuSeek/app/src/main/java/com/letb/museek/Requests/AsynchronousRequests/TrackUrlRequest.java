@@ -1,6 +1,7 @@
-package com.letb.museek.Requests;
+package com.letb.museek.Requests.AsynchronousRequests;
 
 import com.google.gson.JsonElement;
+import com.letb.museek.Requests.TrackUrlInterface;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import roboguice.util.temp.Ln;

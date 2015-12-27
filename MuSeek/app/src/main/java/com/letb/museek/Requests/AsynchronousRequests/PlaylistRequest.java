@@ -1,6 +1,7 @@
-package com.letb.museek.Requests;
+package com.letb.museek.Requests.AsynchronousRequests;
 
 import com.google.gson.JsonElement;
+import com.letb.museek.Requests.PlaylistInterface;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import org.json.JSONObject;

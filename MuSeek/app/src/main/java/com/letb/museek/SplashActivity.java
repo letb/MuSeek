@@ -8,10 +8,8 @@ import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.TokenEventSuccess;
-import com.letb.museek.RequestProcessor.RequestProcessorService;
+import com.letb.museek.RequestProcessor.AsynchronousRequestProcessor;
 import com.letb.museek.Utils.UserInformer;
-
-import java.util.concurrent.CountDownLatch;
 
 import de.greenrobot.event.EventBus;
 
@@ -40,7 +38,7 @@ public class SplashActivity extends BaseSpiceActivity {
     }
 
     public void requestToken() {
-        RequestProcessorService.startTokenRequestAction(this);
+        AsynchronousRequestProcessor.startTokenRequestAction(this);
     }
 
     public void onEvent(TokenEventSuccess event){
@@ -54,7 +52,7 @@ public class SplashActivity extends BaseSpiceActivity {
     }
 
     private void proceedToPlayList () {
-        Intent intent = new Intent(this, PlaylistActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

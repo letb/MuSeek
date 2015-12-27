@@ -1,11 +1,11 @@
-package com.letb.museek.RequestProcessor;
+package com.letb.museek.Requests.SynchronousRequests;
 
 import com.google.gson.JsonElement;
 import com.letb.museek.Entities.TokenHolder;
-import com.letb.museek.Events.PlaylistEventSuccess;
 import com.letb.museek.Events.SearchEventSuccess;
+import com.letb.museek.RequestProcessor.SynchronousRequestProcessor;
 import com.letb.museek.Requests.PlaylistInterface;
-import com.letb.museek.Requests.PlaylistRequest;
+import com.letb.museek.Requests.AsynchronousRequests.PlaylistRequest;
 
 import de.greenrobot.event.EventBus;
 

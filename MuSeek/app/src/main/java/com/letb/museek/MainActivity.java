@@ -19,8 +19,8 @@ import com.letb.museek.Fragments.PlayerFragment;
 import com.letb.museek.Fragments.VerticalTrackListFragment;
 import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.Track.Track;
-import com.letb.museek.RequestProcessor.SearchTrackListTask;
-import com.letb.museek.RequestProcessor.TopTrackListTask;
+import com.letb.museek.Requests.SynchronousRequests.SearchTrackListTask;
+import com.letb.museek.Requests.SynchronousRequests.TopTrackListTask;
 import com.letb.museek.Services.MediaPlayerService;
 import com.letb.museek.Utils.ResponseParser;
 import com.letb.museek.Utils.UserInformer;
@@ -32,13 +32,13 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class PlaylistActivity extends BaseSpiceActivity implements
+public class MainActivity extends BaseSpiceActivity implements
         HorizontalTrackListFragment.OnTrackSelectedListener,
         VerticalTrackListFragment.OnTrackSelectedListener,
         ArtistListFragment.OnArtistSelectedListener {
 
     private EventBus bus = EventBus.getDefault();
-    private final String TAG = "PlaylistActivity";
+    private final String TAG = "MainActivity";
     private Intent playIntent;
     private ArrayList<Track> searchTrackList;
     private ArrayList<Track> ruTopTrackList;
@@ -117,7 +117,6 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         ft.commit();
     }
 
-
     public void onEvent(final PlaylistEventSuccess event) {
         Log.d(TAG, "Event arrived" + event.getData().toString());
         runOnUiThread(new Runnable() {
@@ -157,9 +156,8 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         });
     }
 
-
     public void onEvent(EventFail event) {
-        UserInformer.showMessage(PlaylistActivity.this, event.getException());
+        UserInformer.showMessage(MainActivity.this, event.getException());
     }
 
     /** LOGICS GOES HERE
