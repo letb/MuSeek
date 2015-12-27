@@ -71,7 +71,7 @@ public class ArtistListFragment extends Fragment {
     }
 
     public interface OnArtistSelectedListener {
-        public void onArtistSelected(Integer position);
+        void onArtistSelected(Integer position);
     }
 
 }

@@ -3,6 +3,7 @@ package com.letb.museek.RequestProcessor;
 import com.google.gson.JsonElement;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Events.PlaylistEventSuccess;
+import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Requests.PlaylistInterface;
 import com.letb.museek.Requests.PlaylistRequest;
 
@@ -18,7 +19,6 @@ public class SearchTrackListTask implements Runnable {
     /**
      * разбирать потом результат в активити по этому тегу
      */
-    public static final String SEARCH_EVENT = "SEARCH_EVENT";
 
     public SearchTrackListTask(String query) {
         this.query = query;
@@ -32,7 +32,7 @@ public class SearchTrackListTask implements Runnable {
          */
         tracks = trackService.getSearchResult(
                 TokenHolder.getAccessToken(),
-                PlaylistRequest.METHOD_GET_TOP_LIST,
+                PlaylistRequest.METHOD_TRACKS_SEARCH,
                 query,
                 10,
                 "all" // TODO: Whatever this means
@@ -41,6 +41,6 @@ public class SearchTrackListTask implements Runnable {
     }
 
     private void sendResult() {
-        bus.post(new PlaylistEventSuccess(tracks, SEARCH_EVENT));
+        bus.post(new SearchEventSuccess(tracks));
     }
 }

@@ -18,7 +18,8 @@ public class TopTrackListTask implements Runnable {
      * Можно положить en, ru или что угодно и
      * разбирать потом результат в активити по этому тегу
      */
-    public static final String TOP_EVENT = "TOP_EVENT";
+    public static final String EN_LIST = "EN_LIST";
+    public static final String RU_LIST = "RU_LIST";
 
     private String EVENT_CONTENTS;
 

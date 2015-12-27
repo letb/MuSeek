@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.letb.museek.Models.Artist;
 import com.letb.museek.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class ArtistAdapter extends BaseAdapter {
 
         //  TODO: display picture
         holder.nameTextView.setText(artist.getName());
+        Picasso.with(mContext).load(artist.getPic()).into(holder.artistImageView);
         return convertView;
     }
 }

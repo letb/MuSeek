@@ -17,8 +17,8 @@ import com.letb.museek.Fragments.ArtistListFragment;
 import com.letb.museek.Fragments.HorizontalTrackListFragment;
 import com.letb.museek.Fragments.PlayerFragment;
 import com.letb.museek.Fragments.VerticalTrackListFragment;
+import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.Track.Track;
-import com.letb.museek.RequestProcessor.RequestProcessorService;
 import com.letb.museek.RequestProcessor.SearchTrackListTask;
 import com.letb.museek.RequestProcessor.TopTrackListTask;
 import com.letb.museek.Services.MediaPlayerService;
@@ -40,22 +40,16 @@ public class PlaylistActivity extends BaseSpiceActivity implements
 
     private EventBus bus = EventBus.getDefault();
     private final String TAG = "PlaylistActivity";
-    private MediaPlayerService mediaPlayerService;
     private Intent playIntent;
     private ArrayList<Track> searchTrackList;
     private ArrayList<Track> ruTopTrackList;
     private ArrayList<Track> enTopTrackList;
 
     private ArrayList<Track> trackList = new ArrayList<>();
-//    private ArrayList<Artist> artistlist = new ArrayList<>();
-
-    private int currentTrackIndex = 0;
-
-    boolean gotEnTop = false;
-    boolean gotRuTop = false;
-    boolean gotSearchTracks = false;
-
-    boolean isEventArrived = false;
+    private ArrayList<Artist> artistList = new ArrayList<>();
+    protected final Integer EN_TRACK_LIST_CONTAINER = R.id.en_container;
+    protected final Integer RU_TRACK_LIST_CONTAINER = R.id.ru_container;
+    protected final Integer ARTIST_LIST_CONTAINER = R.id.artist_container;
 
 
     private ProgressBar spinner;
@@ -63,11 +57,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
-//        artistList = (List<Artist>) getIntent().getExtras().getSerializable(ArtistListFragment.ARTIST_LIST);
-
     }
 
     @Override
@@ -75,11 +65,10 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         super.onStart();
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
-        new Thread(new TopTrackListTask("en")).start();
+        new Thread(new TopTrackListTask(TopTrackListTask.EN_LIST)).start();
         new Thread(new SearchTrackListTask("bowie")).start();
-//        requestTopTracks(2, 1, "en");
-//        requestSearchTracks("bowie", 20, "all");
     }
+
     @Override
     public void onResume () {
         bus.register(this);
@@ -93,7 +82,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements
     }
 
     @IdRes
-    public void showFragment (Fragment fragment, Bundle data, @IdRes int container, FragmentTransaction ft) {
+    public void showFragment(Fragment fragment, Bundle data, @IdRes int container, FragmentTransaction ft) {
         fragment.setArguments(data);
         ft.add(container, fragment);
     }
@@ -117,33 +106,24 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         this.startService(intent);
     }
 
-
     @Override
     public void onArtistSelected(Integer position) {
 //        UserInformer.showMessage(PlaylistActivity.this, "Artist: " + artistList.get(position).getName());
     }
 
-
-    // После того как пришли все урлы к трекам, показываем их
-    // Артисты пока что не настроены
-    private void showPlaylistFragment() {
-        Bundle playlistArgs = new Bundle();
-        playlistArgs.putSerializable(HorizontalTrackListFragment.TRACK_LIST, enTopTrackList);
-
-        Bundle searchlistArgs = new Bundle();
-        searchlistArgs.putSerializable(HorizontalTrackListFragment.TRACK_LIST, searchTrackList);
-//        Bundle artistlistArgs = new Bundle();
-//        artistlistArgs.putSerializable(ArtistListFragment.ARTIST_LIST, artistList);
-
+    protected void placeContainerContents(int container, ArrayList<?> listToShow) {
+        Bundle fragmentArgs = new Bundle();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        showFragment(new HorizontalTrackListFragment(), playlistArgs, R.id.en_container, ft);
-        showFragment(new HorizontalTrackListFragment(), searchlistArgs, R.id.ru_container, ft);
-
-//        showFragment(new PlaylistFragment(), artistlistArgs, R.id.track_container, ft);
+        if (listToShow.get(0) instanceof Track) {
+            fragmentArgs.putSerializable(HorizontalTrackListFragment.TRACK_LIST, listToShow);
+            showFragment(new HorizontalTrackListFragment(), fragmentArgs, container, ft);
+        }
+        else if (listToShow.get(0) instanceof Artist) {
+            fragmentArgs.putSerializable(ArtistListFragment.ARTIST_LIST, listToShow);
+            showFragment(new ArtistListFragment(), fragmentArgs, container, ft);
+        }
         ft.commit();
     }
-
-
 
     @Override
     public void onPlayPauseClicked(Integer index) {
@@ -160,12 +140,14 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         this.startService(intent);
     }
 
-    public void requestTopTracks(int timePeriod, int page, String language) {
-        RequestProcessorService.startTopTracksRequestAction(this, timePeriod, page, language);
-    }
-
-    public void requestSearchTracks(String query, int resultsOnPage, String quality) {
-        RequestProcessorService.startSearchTracksRequestAction(this, query, resultsOnPage, quality);
+    private void showArtistsFromTrackList(ArrayList<Track> tracks) {
+        artistList.clear();
+        for (Track track : tracks) {
+            artistList.add(new Artist(
+                    track.getData().getArtist(), "http://ecx.images-amazon.com/images/I/61gMjdj6bjL._SL500_.jpg"
+            ));
+        }
+        placeContainerContents(ARTIST_LIST_CONTAINER, artistList);
     }
 
     public void onEvent(final PlaylistEventSuccess event) {
@@ -176,17 +158,28 @@ public class PlaylistActivity extends BaseSpiceActivity implements
                     trackList = ResponseParser.parsePlaylistResponse(event.getData());
                     String trackListType = event.getEVENT_CONTENTS();
                     switch (trackListType) {
-                        case SearchTrackListTask.SEARCH_EVENT:
-                            searchTrackList = trackList;
-                            break;
-                        case TopTrackListTask.TOP_EVENT:
+                        case TopTrackListTask.EN_LIST:
                             enTopTrackList = trackList;
+                            placeContainerContents(EN_TRACK_LIST_CONTAINER, enTopTrackList);
+                            showArtistsFromTrackList(enTopTrackList);
+                            break;
                     }
-
                     spinner.setVisibility(View.GONE);
-                    showPlaylistFragment();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-
+    public void onEvent(final SearchEventSuccess event) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    searchTrackList = ResponseParser.parseSearchResponse(event.getData());
+                    placeContainerContents(RU_TRACK_LIST_CONTAINER, searchTrackList);
+                    spinner.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
