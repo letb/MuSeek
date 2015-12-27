@@ -35,7 +35,6 @@ import de.greenrobot.event.EventBus;
 public class PlaylistActivity extends BaseSpiceActivity implements
         HorizontalTrackListFragment.OnTrackSelectedListener,
         VerticalTrackListFragment.OnTrackSelectedListener,
-        PlayerFragment.OnMediaButtonClickListener,
         ArtistListFragment.OnArtistSelectedListener {
 
     private EventBus bus = EventBus.getDefault();
@@ -90,47 +89,32 @@ public class PlaylistActivity extends BaseSpiceActivity implements
 
     @Override
     public void onTrackSelected(Integer trackIndex, List<Track> trackList) {
-        Log.d("PlaylistActivity", "Clicked item" + trackIndex);
-        Bundle selectedTrackData = new Bundle();
-        selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, (ArrayList<Track>) trackList);
-        selectedTrackData.putSerializable(PlayerFragment.CURRENT_TRACK, trackIndex);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        showFragment(new PlayerFragment(), selectedTrackData, android.R.id.content, ft);
-        ft.commit();
-
-        Log.d(TAG, "Playing track " + this.trackList.get(trackIndex).getTitle());
-//        TODO: Spaghetti
-        Intent intent = new Intent(this, MediaPlayerService.class);
-        intent.setAction(MediaPlayerService.ACTION_PLAY);
-        intent.putExtra(MediaPlayerService.PLAYLIST, this.trackList);
-        intent.putExtra(MediaPlayerService.SELECTED_TRACK_INDEX, trackIndex);
-        this.startService(intent);
+        Log.d(TAG, "Clicked track item" + trackIndex);
+        prepareAndShowPlayerFragment(trackIndex);
+        prepareAndStartService(trackList, trackIndex);
     }
 
     @Override
     public void onArtistSelected(Integer position) {
-//        UserInformer.showMessage(PlaylistActivity.this, "Artist: " + artistList.get(position).getName());
+        Log.d(TAG, "Clicked artist item" + position);
+        Artist artist = artistList.get(position);
+        new Thread(new SearchTrackListTask(artist.getName())).start();
     }
 
     protected void placeContainerContents(int container, ArrayList<?> listToShow) {
         Bundle fragmentArgs = new Bundle();
+        Fragment fragmentToShow;
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (listToShow.get(0) instanceof Track) {
             fragmentArgs.putSerializable(HorizontalTrackListFragment.TRACK_LIST, listToShow);
-            showFragment(new HorizontalTrackListFragment(), fragmentArgs, container, ft);
+            fragmentToShow = new HorizontalTrackListFragment();
         }
-        else if (listToShow.get(0) instanceof Artist) {
+        else {
             fragmentArgs.putSerializable(ArtistListFragment.ARTIST_LIST, listToShow);
-            showFragment(new ArtistListFragment(), fragmentArgs, container, ft);
+            fragmentToShow = new ArtistListFragment();
         }
+        showFragment(fragmentToShow, fragmentArgs, container, ft);
         ft.commit();
-    }
-
-    @Override
-    public void onPlayPauseClicked(Integer index) {
-        Intent intent = new Intent(this, MediaPlayerService.class);
-        intent.setAction(MediaPlayerService.ACTION_TOGGLE_PLAYBACK);
-        this.startService(intent);
     }
 
 
@@ -178,9 +162,9 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         UserInformer.showMessage(PlaylistActivity.this, event.getException());
     }
 
-    /**
+    /** LOGICS GOES HERE
      * Только логика, только хардкор
-     * (после этого комментария все методы делают что-то до цжаса умное. Парсят артистов, например)
+     * (после этого комментария все методы делают что-то до ужаса умное. Парсят артистов, например)
      */
     private void showArtistsFromTrackList(ArrayList<Track> tracks) {
         artistList.clear();
@@ -190,5 +174,26 @@ public class PlaylistActivity extends BaseSpiceActivity implements
             ));
         }
         placeContainerContents(ARTIST_LIST_CONTAINER, artistList);
+    }
+
+    private void prepareAndShowPlayerFragment (Integer currentTrackIndex) {
+        Bundle selectedTrackData = new Bundle();
+        selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, trackList);
+        selectedTrackData.putSerializable(PlayerFragment.CURRENT_TRACK, currentTrackIndex);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        showFragment(new PlayerFragment(), selectedTrackData, android.R.id.content, ft);
+        ft.addToBackStack(PlayerFragment.TAG).commit();
+    }
+
+    private void prepareAndStartService(List<Track> trackListToPlay, Integer currentTrackIndex) {
+        Log.d(TAG, "Playing track " + trackList.get(currentTrackIndex).getTitle());
+
+        Intent intent = new Intent(this, MediaPlayerService.class);
+        intent.setAction(MediaPlayerService.ACTION_PLAY);
+        intent.putExtra(MediaPlayerService.PLAYLIST, (ArrayList<Track>) trackListToPlay);
+        intent.putExtra(MediaPlayerService.SELECTED_TRACK_INDEX, currentTrackIndex);
+
+        this.startService(intent);
     }
 }

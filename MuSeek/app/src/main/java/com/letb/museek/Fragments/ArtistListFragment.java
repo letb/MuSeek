@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,9 @@ import com.letb.museek.R;
 
 import java.util.List;
 
-public class ArtistListFragment extends Fragment {
+public class ArtistListFragment extends Fragment implements TwoWayAdapterView.OnItemClickListener {
     public static final String ARTIST_LIST = "ARTIST_LIST";
+    public static final String TAG = "ArtistListFragment";
 
     private List<Artist> mListItems;
 
@@ -42,7 +44,7 @@ public class ArtistListFragment extends Fragment {
         mRecyclerView.setLongClickable(true);
         mAdapter = new ArtistAdapter(getActivity(), mListItems);
         mRecyclerView.setAdapter(mAdapter);
-//        mRecyclerView.setOnItemClickListener((TwoWayAdapterView.OnItemClickListener) this);
+        mRecyclerView.setOnItemClickListener(this);
         return view;
     }
 
@@ -58,16 +60,18 @@ public class ArtistListFragment extends Fragment {
         }
     }
 
-    public void onItemClick(RecyclerView parent, View child, int position, long id) {
-        if (null != mListener) {
-            mListener.onArtistSelected(position);
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onItemClick(TwoWayAdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG, "Clicked item" + position);
+        if (null != mListener) {
+            mListener.onArtistSelected(position);
+        }
     }
 
     public interface OnArtistSelectedListener {

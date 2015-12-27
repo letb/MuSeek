@@ -32,6 +32,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     public static final String TRACK_LIST = "TRACK_LIST";
     public static final String CURRENT_TRACK = "CURRENT_TRACK";
 
+    public static final String TAG = "PlayerFragment";
+
 
     private Integer NEXT = 1;
     private Integer PREV = -1;
@@ -39,7 +41,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Button buttonPlayPause;
     private Button buttonNext;
     private Button buttonPrevious;
-    private OnMediaButtonClickListener mListener;
     private TextView titleView;
     private EventBus bus = EventBus.getDefault();
 
@@ -77,10 +78,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             default:
                 break;
         }
-    }
-
-    public interface OnMediaButtonClickListener {
-        void onPlayPauseClicked(Integer index);
     }
 
     /**
@@ -133,12 +130,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            mListener = (OnMediaButtonClickListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnTranslateAreaListener");
-        }
     }
 
     private class CustomProgressDraggedListener implements OnProgressDraggedListener {
