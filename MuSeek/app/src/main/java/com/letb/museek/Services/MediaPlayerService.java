@@ -10,8 +10,9 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.letb.museek.Events.PlayerEvents.RewindTractToPositionRequest;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
-import com.letb.museek.Events.PlayerEvents.StatePlayingResponse;
+import com.letb.museek.Events.PlayerEvents.ReadyToPlayResponse;
 import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
@@ -74,6 +75,10 @@ public class MediaPlayerService
         else
             currentTrackIndex = newCurrentIndex;
         requestTrack();
+    }
+
+    public void onEvent(RewindTractToPositionRequest event){
+        processRewindRequest(event.getPosition());
     }
 
     public void onEvent(TrackUrlEventSuccess event){
@@ -196,7 +201,7 @@ public class MediaPlayerService
     }
 
     public void onPrepared(MediaPlayer player) {
-        bus.post(new StatePlayingResponse(currentTrackIndex, currentState));
+        bus.post(new ReadyToPlayResponse(currentTrackIndex, currentState));
         configAndStartMediaPlayer();
     }
 

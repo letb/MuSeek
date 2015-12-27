@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.letb.museek.Events.PlayerEvents.PlayerResponseEvent;
+import com.letb.museek.Events.PlayerEvents.RewindTractToPositionRequest;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
@@ -79,7 +80,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     public interface OnMediaButtonClickListener {
         void onPlayPauseClicked(Integer index);
-        void onPositionChanged(Integer index, Integer position);
     }
 
     /**
@@ -143,7 +143,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private class CustomProgressDraggedListener implements OnProgressDraggedListener {
         @Override
         public void onProgressDragged(int position) {
-            mListener.onPositionChanged(currentTrackIndex, position);
+            bus.post(new RewindTractToPositionRequest(position));
         }
 
         @Override
@@ -174,8 +174,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
         }
     }
-
-
 
     @Override
     public void onStart() {

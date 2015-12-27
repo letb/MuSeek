@@ -82,7 +82,7 @@
              on screen to determine the scrollbar's properties. -->
         <attr name="smoothScrollbar" format="boolean" />
 
-        <!-- Use this attribute to control which direction the GridView scrolls when in
+        <!-- Use this attribute to control which position the GridView scrolls when in
              portrait orientation -->
         <attr name="scrollDirectionPortrait">
             <!-- Scroll up vertically. This is the default value. -->

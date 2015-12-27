@@ -47,6 +47,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements
 
     private ArrayList<Track> trackList = new ArrayList<>();
     private ArrayList<Artist> artistList = new ArrayList<>();
+
     protected final Integer EN_TRACK_LIST_CONTAINER = R.id.en_container;
     protected final Integer RU_TRACK_LIST_CONTAINER = R.id.ru_container;
     protected final Integer ARTIST_LIST_CONTAINER = R.id.artist_container;
@@ -132,25 +133,9 @@ public class PlaylistActivity extends BaseSpiceActivity implements
         this.startService(intent);
     }
 
-    @Override
-    public void onPositionChanged(Integer index, Integer position) {
-        Intent intent = new Intent(this, MediaPlayerService.class);
-        intent.setAction(MediaPlayerService.ACTION_REWIND);
-        intent.putExtra(MediaPlayerService.REWIND_POSITION, position);
-        this.startService(intent);
-    }
-
-    private void showArtistsFromTrackList(ArrayList<Track> tracks) {
-        artistList.clear();
-        for (Track track : tracks) {
-            artistList.add(new Artist(
-                    track.getData().getArtist(), "http://ecx.images-amazon.com/images/I/61gMjdj6bjL._SL500_.jpg"
-            ));
-        }
-        placeContainerContents(ARTIST_LIST_CONTAINER, artistList);
-    }
 
     public void onEvent(final PlaylistEventSuccess event) {
+        Log.d(TAG, "Event arrived" + event.getData().toString());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -173,6 +158,7 @@ public class PlaylistActivity extends BaseSpiceActivity implements
     }
 
     public void onEvent(final SearchEventSuccess event) {
+        Log.d(TAG, "Event arrived" + event.getData().toString());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -190,5 +176,19 @@ public class PlaylistActivity extends BaseSpiceActivity implements
 
     public void onEvent(EventFail event) {
         UserInformer.showMessage(PlaylistActivity.this, event.getException());
+    }
+
+    /**
+     * Только логика, только хардкор
+     * (после этого комментария все методы делают что-то до цжаса умное. Парсят артистов, например)
+     */
+    private void showArtistsFromTrackList(ArrayList<Track> tracks) {
+        artistList.clear();
+        for (Track track : tracks) {
+            artistList.add(new Artist(
+                    track.getData().getArtist(), "http://ecx.images-amazon.com/images/I/61gMjdj6bjL._SL500_.jpg"
+            ));
+        }
+        placeContainerContents(ARTIST_LIST_CONTAINER, artistList);
     }
 }

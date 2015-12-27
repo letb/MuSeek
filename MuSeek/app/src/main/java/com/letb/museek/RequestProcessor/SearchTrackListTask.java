@@ -16,9 +16,6 @@ public class SearchTrackListTask implements Runnable {
     private EventBus bus = EventBus.getDefault();
     private JsonElement tracks;
     private String query;
-    /**
-     * разбирать потом результат в активити по этому тегу
-     */
 
     public SearchTrackListTask(String query) {
         this.query = query;
