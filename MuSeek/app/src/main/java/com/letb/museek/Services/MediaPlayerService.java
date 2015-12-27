@@ -13,6 +13,7 @@ import android.util.Log;
 import com.letb.museek.Events.PlayerEvents.RewindTractToPositionRequest;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
 import com.letb.museek.Events.PlayerEvents.ReadyToPlayResponse;
+import com.letb.museek.Events.PlayerEvents.TogglePlayPauseEvent;
 import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
@@ -78,7 +79,17 @@ public class MediaPlayerService
     }
 
     public void onEvent(RewindTractToPositionRequest event){
-        processRewindRequest(event.getPosition());
+        if (
+                (event.getPosition() > 0) &&
+                (event.getPosition() < trackList.get(currentTrackIndex).getData().getLength())) {
+            processRewindRequest(event.getPosition());
+        }
+        else
+            processRewindRequest(0);
+    }
+
+    public void onEvent(TogglePlayPauseEvent event){
+        processTogglePlayPauseRequest();
     }
 
     public void onEvent(TrackUrlEventSuccess event){
@@ -98,17 +109,10 @@ public class MediaPlayerService
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
         switch (action) {
-            case ACTION_TOGGLE_PLAYBACK:
-                processTogglePlayPauseRequest();
-                break;
             case ACTION_PLAY:
                 trackList = (List<Track>) intent.getSerializableExtra(PLAYLIST);
                 currentTrackIndex = intent.getIntExtra(SELECTED_TRACK_INDEX, 0);
                 requestTrack();
-                break;
-            case ACTION_REWIND:
-                int defaultPosition = 0;
-                processRewindRequest(intent.getIntExtra(REWIND_POSITION, defaultPosition));
                 break;
         }
         return START_NOT_STICKY;

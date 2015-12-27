@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.letb.museek.Events.PlayerEvents.PlayerResponseEvent;
 import com.letb.museek.Events.PlayerEvents.RewindTractToPositionRequest;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
+import com.letb.museek.Events.PlayerEvents.TogglePlayPauseEvent;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
 import com.letb.museek.Services.MediaPlayerService;
@@ -103,7 +104,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
             maskProgressView.start();
         }
-        mListener.onPlayPauseClicked(currentTrackIndex);
+        bus.post(new TogglePlayPauseEvent());
     }
 
     private void initializeProgressBar(View view) {
