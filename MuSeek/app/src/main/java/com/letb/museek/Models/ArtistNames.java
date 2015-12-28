@@ -25,11 +25,18 @@ public class ArtistNames {
             "Kasabian",
             "5’nizza",
             "A-ha",
-            "The Velvet Underground"
-
+            "The Velvet Underground",
+            "Tom Waits",
+            "Röyksopp",
+            "David Bowie",
+            "Regina Spektor"
     };
 
     public static String getRandomName() {
         return names[generator.nextInt(names.length)];
     }
+    public static String getName(int i) {
+        return names[i];
+    }
+
 }
