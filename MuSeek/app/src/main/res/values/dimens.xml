@@ -15,4 +15,8 @@
 
     <dimen name="grid_text_height">48dp</dimen>
     <dimen name="grid_text_padding">14dp</dimen>
+    <dimen name="grid_subheader_height">48dp</dimen>
+    <dimen name="grid_subheader_font_size">16sp</dimen>
+    <dimen name="grid_subheader_padding_left">16dp</dimen>
+
 </resources>

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.letb.museek.Adapters.ArtistAdapter;
 import com.letb.museek.BaseClasses.TwoWayAdapterView;
@@ -18,13 +19,16 @@ import java.util.List;
 
 public class ArtistListFragment extends Fragment implements TwoWayAdapterView.OnItemClickListener {
     public static final String ARTIST_LIST = "ARTIST_LIST";
+    public static final String TITLE = "ArtistListFragmentTitle";
     public static final String TAG = "ArtistListFragment";
 
     private List<Artist> mListItems;
+    private String title;
 
     private OnArtistSelectedListener mListener;
     private ArtistAdapter mAdapter;
     private TwoWayGridView mRecyclerView;
+    private TextView titleView;
 
     public ArtistListFragment() {
     }
@@ -36,7 +40,12 @@ public class ArtistListFragment extends Fragment implements TwoWayAdapterView.On
         View view = inflater.inflate(R.layout.fragment_list_horizontal, container, false);
         if (getArguments() != null) {
             mListItems = (List<Artist>) getArguments().getSerializable(ARTIST_LIST);
+            title = (String) getArguments().getSerializable(TITLE);
+
         }
+
+        titleView = (TextView) view.findViewById(R.id.title);
+        titleView.setText(title);
 
         mRecyclerView = (TwoWayGridView) view.findViewById(R.id.gridview);
         mRecyclerView.setLongClickable(true);

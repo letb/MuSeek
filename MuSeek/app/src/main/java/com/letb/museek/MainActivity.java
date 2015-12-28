@@ -221,10 +221,12 @@ public class MainActivity extends BaseSpiceActivity implements
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (listToShow.get(0) instanceof Track) {
             fragmentArgs.putSerializable(HorizontalTrackListFragment.TRACK_LIST, listToShow);
+            fragmentArgs.putSerializable(HorizontalTrackListFragment.TITLE, "Popular Tracks");
             fragmentToShow = new HorizontalTrackListFragment();
         }
         else {
             fragmentArgs.putSerializable(ArtistListFragment.ARTIST_LIST, listToShow);
+            fragmentArgs.putSerializable(ArtistListFragment.TITLE, "Top Artists");
             fragmentToShow = new ArtistListFragment();
         }
         showFragment(fragmentToShow, fragmentArgs, container, ft);

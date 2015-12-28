@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.letb.museek.Adapters.TrackAdapter;
 import com.letb.museek.BaseClasses.TwoWayAdapterView;
@@ -21,12 +22,14 @@ import java.util.List;
  */
 public class HorizontalTrackListFragment extends Fragment implements TwoWayAdapterView.OnItemClickListener {
     public static final String TRACK_LIST = "TRACK_LIST";
-    public static final String TRACK_LIST_NAME = "TRACK_LIST_NAME";
+    public static final String TITLE = "TRACK_LIST_NAME";
 
 
     private List<Track> mListItems;
+    private String title;
     private TrackAdapter mAdapter;
     private TwoWayGridView mRecyclerView;
+    private TextView titleView;
     private OnTrackSelectedListener mListener;
 
     public HorizontalTrackListFragment() {
@@ -39,7 +42,11 @@ public class HorizontalTrackListFragment extends Fragment implements TwoWayAdapt
         View view = inflater.inflate(R.layout.fragment_list_horizontal, container, false);
         if (getArguments() != null) {
             mListItems = (List<Track>) getArguments().getSerializable(TRACK_LIST);
+            title = (String) getArguments().getSerializable(TITLE);
         }
+
+        titleView = (TextView) view.findViewById(R.id.title);
+        titleView.setText(title);
 
         mRecyclerView = (TwoWayGridView) view.findViewById(R.id.gridview);
         mRecyclerView.setLongClickable(true);
