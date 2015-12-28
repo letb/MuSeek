@@ -44,7 +44,7 @@ public abstract class BaseSpiceActivity extends AppCompatActivity  {
     @IdRes
     protected void showFragment(Fragment fragment, Bundle data, @IdRes int container, FragmentTransaction ft) {
         fragment.setArguments(data);
-        ft.add(container, fragment);
+        ft.replace(container, fragment);
     }
 
     protected void prepareAndShowPlayerFragment (Integer currentTrackIndex, ArrayList<Track> currentTrackList) {

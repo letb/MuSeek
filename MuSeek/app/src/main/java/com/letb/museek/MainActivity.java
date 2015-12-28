@@ -54,6 +54,7 @@ public class MainActivity extends BaseSpiceActivity implements
 
     private ArrayList<Track> trackList = new ArrayList<>();
     private ArrayList<Artist> artistList = new ArrayList<>();
+    private ArrayList<String> artistNames = new ArrayList<>();
 
     protected final Integer EN_TRACK_LIST_CONTAINER = R.id.en_container;
     protected final Integer RU_TRACK_LIST_CONTAINER = R.id.ru_container;
@@ -73,13 +74,12 @@ public class MainActivity extends BaseSpiceActivity implements
         setContentView(R.layout.activity_main);
         artistList.clear();
         // FIXME: 28.12.15 Ну типа константы надо именовать, все дела
-        for (int i = 0; i < 20; ++i) {
+        for (int i = 0; i < 10; ++i) {
             Artist artist = new Artist(ArtistNames.getRandomName());
-            if (artistList.contains(artist)) {
-                --i;
-            } else {
-                artistList.add(artist);
-            }
+            while (artistNames.contains(artist.getName()))
+                artist = new Artist(ArtistNames.getRandomName());
+            artistList.add(artist);
+            artistNames.add(artist.getName());
         }
 
         // Set a Toolbar to replace the ActionBar.
