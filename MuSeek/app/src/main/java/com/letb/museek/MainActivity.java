@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.gson.JsonElement;
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Events.ArtistInfoEvent;
 import com.letb.museek.Events.EventFail;
@@ -25,6 +24,7 @@ import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Requests.SynchronousRequests.ArtistInfoTask;
 import com.letb.museek.Requests.SynchronousRequests.SearchTrackListTask;
 import com.letb.museek.Requests.SynchronousRequests.TopTrackListTask;
+import com.letb.museek.Requests.SynchronousRequests.TrackInfoTask;
 import com.letb.museek.Services.MediaPlayerService;
 import com.letb.museek.Utils.ResponseParser;
 import com.letb.museek.Utils.UserInformer;
@@ -99,7 +99,7 @@ public class MainActivity extends BaseSpiceActivity implements
     @Override
     public void onTrackSelected(Integer trackIndex, List<Track> trackList) {
         Log.d(TAG, "Clicked track item" + trackIndex);
-        prepareAndShowPlayerFragment(trackIndex);
+        prepareAndShowPlayerFragment(trackIndex, (ArrayList<Track>) trackList);
         prepareAndStartService(trackList, trackIndex);
     }
 
@@ -138,7 +138,10 @@ public class MainActivity extends BaseSpiceActivity implements
                         case TopTrackListTask.EN_LIST:
                             enTopTrackList = trackList;
                             placeContainerContents(EN_TRACK_LIST_CONTAINER, enTopTrackList);
-                            showArtistsFromTrackList(enTopTrackList);
+                            /**
+                             * TODO: <username>, тебе сюда!
+                             */
+                            new Thread(new TrackInfoTask(enTopTrackList)).start();
                             break;
                     }
                     spinner.setVisibility(View.GONE);
@@ -179,9 +182,9 @@ public class MainActivity extends BaseSpiceActivity implements
      * Только логика, только хардкор
      * (после этого комментария все методы делают что-то до ужаса умное. Парсят артистов, например)
      */
-    private void prepareAndShowPlayerFragment (Integer currentTrackIndex) {
+    private void prepareAndShowPlayerFragment (Integer currentTrackIndex, ArrayList<Track> currentTrackList) {
         Bundle selectedTrackData = new Bundle();
-        selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, trackList);
+        selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, currentTrackList);
         selectedTrackData.putSerializable(PlayerFragment.CURRENT_TRACK, currentTrackIndex);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

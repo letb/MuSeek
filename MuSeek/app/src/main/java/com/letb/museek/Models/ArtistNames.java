@@ -8,13 +8,25 @@ import java.util.Random;
 public class ArtistNames {
     private static final Random generator = new Random();
     private static final String[] names = {
-            "Justin Bieber",
+            "New Order",
             "Adele",
-            "Red Hot Chili Peppers",
+            "Dead Can Dance",
             "Pink Floyd",
-            "Kanye West",
-            "David Bowie",
-            "Imagine Dragons"
+            "Portishead",
+            "Radiohead",
+            "UNKLE",
+            "Glen Porter",
+            "Angelo Badalamenti",
+            "I Are Droid",
+            "The Doors",
+            "Slowdive",
+            "The Killers",
+            "Piano Magic",
+            "Kasabian",
+            "5’nizza",
+            "A-ha",
+            "The Velvet Underground"
+
     };
 
     public static String getRandomName() {

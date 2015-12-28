@@ -1,10 +1,13 @@
 package com.letb.museek.Requests;
 
+import com.google.gson.JsonElement;
 import com.letb.museek.Models.Track.Track;
 
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Query;
 
 
 public interface TrackInterface {
@@ -30,4 +33,23 @@ public interface TrackInterface {
                       @Field("track_id") String trackId,
                       @Field("reason") String reason);
 
+    /**
+     *
+     * @param method track.getInfo
+     * @param artist artist (Required (unless mbid)] : The artist name
+     * @param track track (Required (unless mbid)] : The track name
+     * @param api_key api_key (Required) : A Last.fm API key.
+     * @param autocorrect Transform misspelled artist and track names into correct artist and track names,
+     *                    returning the correct version instead.
+     *                    The corrected artist and track name will be returned in the response.
+     * @param format JSON
+     * @return
+     */
+    @GET("/")
+    JsonElement getInfo(@Query("method") String method,
+                        @Query("artist") String artist,
+                        @Query("track") String track,
+                        @Query("api_key") String api_key,
+                        @Query("autocorrect") Boolean autocorrect,
+                        @Query("format") String format);
 }
