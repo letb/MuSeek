@@ -35,7 +35,7 @@ public class VerticalTrackListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_track_list_vertical, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_vertical, container, false);
         if (getArguments() != null) {
             mListItems = (List<Track>) getArguments().getSerializable(TRACK_LIST);
         }

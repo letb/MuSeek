@@ -3,12 +3,10 @@ package com.letb.museek.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.letb.museek.Adapters.ArtistAdapter;
 import com.letb.museek.BaseClasses.TwoWayAdapterView;
@@ -35,7 +33,7 @@ public class ArtistListFragment extends Fragment implements TwoWayAdapterView.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_artist_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_horizontal, container, false);
         if (getArguments() != null) {
             mListItems = (List<Artist>) getArguments().getSerializable(ARTIST_LIST);
         }
