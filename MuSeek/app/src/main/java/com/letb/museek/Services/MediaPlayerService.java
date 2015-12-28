@@ -61,6 +61,7 @@ public class MediaPlayerService
             mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
             mMediaPlayer.setOnPreparedListener(this);
             mMediaPlayer.setOnErrorListener(this);
+            mMediaPlayer.setLooping(true);
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
         else

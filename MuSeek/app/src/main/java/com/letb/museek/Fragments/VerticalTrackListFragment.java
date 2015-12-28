@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.letb.museek.Adapters.TrackAdapter;
+import com.letb.museek.Events.ClearPlayListEvent;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by marina.titova on 26.12.15.
@@ -23,6 +26,7 @@ public class VerticalTrackListFragment extends ListFragment {
     private List<Track> mListItems;
     private TrackAdapter mAdapter;
     private OnTrackSelectedListener mListener;
+    private EventBus bus = EventBus.getDefault();
 
 
     public VerticalTrackListFragment() {}
@@ -64,9 +68,21 @@ public class VerticalTrackListFragment extends ListFragment {
         void onTrackSelected(Integer position, List<Track> trackList);
     }
 
+    public void onEvent(ClearPlayListEvent event){
+        mListItems.clear();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bus.register(this);
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        bus.unregister(this);
     }
 }

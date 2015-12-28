@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
+import com.letb.museek.Events.ClearPlayListEvent;
 import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Fragments.VerticalTrackListFragment;
 import com.letb.museek.Models.Artist;
@@ -93,8 +94,7 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
     }
 
     private void clearSearchResult () {
-        searchTrackList.clear();
-        showSearchResults();
+        bus.post(new ClearPlayListEvent());
     }
 
 
