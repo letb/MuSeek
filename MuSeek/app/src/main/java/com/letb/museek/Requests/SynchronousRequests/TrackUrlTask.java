@@ -3,7 +3,7 @@ package com.letb.museek.Requests.SynchronousRequests;
 import com.google.gson.JsonElement;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Models.Track.Track;
-import com.letb.museek.RequestProcessor.SynchronousRequestProcessor;
+import com.letb.museek.RequestProcessor.Pleer_SynchronousRequestProcessor;
 import com.letb.museek.Requests.TrackUrlInterface;
 import com.letb.museek.Requests.AsynchronousRequests.TrackUrlRequest;
 
@@ -30,7 +30,7 @@ public class TrackUrlTask implements Runnable {
 
     @Override
     public void run() {
-        TrackUrlInterface trackService = SynchronousRequestProcessor.createService(TrackUrlInterface.class);
+        TrackUrlInterface trackService = Pleer_SynchronousRequestProcessor.createService(TrackUrlInterface.class);
         for (Track track : trackList) {
             JsonElement jsonUrl = trackService.getTrackUrl(
                     TokenHolder.getAccessToken(),

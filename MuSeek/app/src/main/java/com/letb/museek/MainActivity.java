@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.google.gson.JsonElement;
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
+import com.letb.museek.Events.ArtistInfoEvent;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
 import com.letb.museek.Events.SearchEventSuccess;
@@ -18,7 +20,9 @@ import com.letb.museek.Fragments.HorizontalTrackListFragment;
 import com.letb.museek.Fragments.PlayerFragment;
 import com.letb.museek.Fragments.VerticalTrackListFragment;
 import com.letb.museek.Models.Artist;
+import com.letb.museek.Models.ArtistNames;
 import com.letb.museek.Models.Track.Track;
+import com.letb.museek.Requests.SynchronousRequests.ArtistInfoTask;
 import com.letb.museek.Requests.SynchronousRequests.SearchTrackListTask;
 import com.letb.museek.Requests.SynchronousRequests.TopTrackListTask;
 import com.letb.museek.Services.MediaPlayerService;
@@ -58,6 +62,10 @@ public class MainActivity extends BaseSpiceActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        artistList.clear();
+        // FIXME: 28.12.15 Ну типа константы надо именовать, все дела
+        for (int i = 0; i < 20; ++i)
+            artistList.add(new Artist(ArtistNames.getRandomName()));
     }
 
     @Override
@@ -67,6 +75,7 @@ public class MainActivity extends BaseSpiceActivity implements
         spinner.setVisibility(View.VISIBLE);
         new Thread(new TopTrackListTask(TopTrackListTask.EN_LIST)).start();
         new Thread(new SearchTrackListTask("bowie")).start();
+        new Thread(new ArtistInfoTask(artistList)).start();
     }
 
     @Override
@@ -129,7 +138,6 @@ public class MainActivity extends BaseSpiceActivity implements
                         case TopTrackListTask.EN_LIST:
                             enTopTrackList = trackList;
                             placeContainerContents(EN_TRACK_LIST_CONTAINER, enTopTrackList);
-                            showArtistsFromTrackList(enTopTrackList);
                             break;
                     }
                     spinner.setVisibility(View.GONE);
@@ -156,6 +164,12 @@ public class MainActivity extends BaseSpiceActivity implements
         });
     }
 
+    public void onEvent(final ArtistInfoEvent event) throws JSONException {
+        Log.d(TAG, "Event arrived" + event.getArtists().toString());
+        artistList = ResponseParser.parseArtistInfoResponse(event.getArtists());
+        placeContainerContents(ARTIST_LIST_CONTAINER, artistList);
+    }
+
     public void onEvent(EventFail event) {
         UserInformer.showMessage(MainActivity.this, event.getException());
     }
@@ -164,16 +178,6 @@ public class MainActivity extends BaseSpiceActivity implements
      * Только логика, только хардкор
      * (после этого комментария все методы делают что-то до ужаса умное. Парсят артистов, например)
      */
-    private void showArtistsFromTrackList(ArrayList<Track> tracks) {
-        artistList.clear();
-        for (Track track : tracks) {
-            artistList.add(new Artist(
-                    track.getData().getArtist(), "http://ecx.images-amazon.com/images/I/61gMjdj6bjL._SL500_.jpg"
-            ));
-        }
-        placeContainerContents(ARTIST_LIST_CONTAINER, artistList);
-    }
-
     private void prepareAndShowPlayerFragment (Integer currentTrackIndex) {
         Bundle selectedTrackData = new Bundle();
         selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, trackList);

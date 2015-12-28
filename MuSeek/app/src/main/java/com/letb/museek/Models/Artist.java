@@ -3,6 +3,7 @@ package com.letb.museek.Models;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by marina.titova on 20.12.15.
@@ -14,9 +15,10 @@ public class Artist implements Serializable {
     @SerializedName("pic")
     private String pic;
 
-    public Artist(String name, String pic) {
+    private List<String> imagesSizesAsc;
+
+    public Artist(String name) {
         this.name = name;
-        this.pic = pic;
     }
 
     public String getName() {
@@ -35,4 +37,8 @@ public class Artist implements Serializable {
         this.pic = pic;
     }
 
+    public void setImagesSizesAsc(List<String> imagesSizesAsc) {
+        this.imagesSizesAsc = imagesSizesAsc;
+        this.pic = imagesSizesAsc.get(2);
+    }
 }

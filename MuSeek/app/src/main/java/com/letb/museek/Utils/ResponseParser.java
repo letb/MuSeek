@@ -1,21 +1,21 @@
 package com.letb.museek.Utils;
 
 import com.google.gson.JsonElement;
+import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.Track.Track;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by dannie on 20.12.15.
  */
 public class ResponseParser {
-
-    private JsonElement response;
-
     static private Track jsonToTrack(JSONObject jsonTrack) throws JSONException {
         String id = jsonTrack.getString("id");
         String artist = jsonTrack.getString("artist");
@@ -24,9 +24,7 @@ public class ResponseParser {
         String bitrate = jsonTrack.getString("bitrate");
         // TODO: вынести константы
 
-        Track resultTrack = new Track(id, artist, track, length, bitrate);
-
-        return resultTrack;
+        return new Track(id, artist, track, length, bitrate);
     }
 
     static public ArrayList<Track> parsePlaylistResponse(JsonElement jsonElementPlaylist) throws JSONException {
@@ -70,8 +68,29 @@ public class ResponseParser {
                 e.printStackTrace();
             }
         }
-
         return trackList;
+    }
+
+    public static ArrayList<Artist> parseArtistInfoResponse (ArrayList<JsonElement> artistsAsJson) throws JSONException {
+        ArrayList<Artist> artists = new ArrayList<>();
+        for (JsonElement jsonArtist : artistsAsJson) {
+            JSONObject artistObject = new JSONObject(jsonArtist.toString());
+            // FIXME: 28.12.15 WTF?
+            artistObject = artistObject.getJSONObject("artist");
+            List<String> images = getImages(artistObject.getJSONArray("image"));
+            Artist artistFromJson = new Artist(artistObject.getString("name"));
+            artistFromJson.setImagesSizesAsc(images);
+            artists.add(artistFromJson);
+        }
+        return artists;
+    }
+
+    private static List<String> getImages (JSONArray jsonImages) throws JSONException {
+        List<String> images = new ArrayList<>();
+        for (int i = 0; i < jsonImages.length(); ++i) {
+            images.add(jsonImages.getJSONObject(i).getString("#text"));
+        }
+        return images;
     }
 
 

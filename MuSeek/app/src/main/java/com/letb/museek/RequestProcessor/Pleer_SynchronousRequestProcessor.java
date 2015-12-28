@@ -6,7 +6,7 @@ import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
 
-public class SynchronousRequestProcessor {
+public class Pleer_SynchronousRequestProcessor {
     public static final String API_BASE_URL = "http://api.pleer.com";
 
     private static RestAdapter.Builder builder = new RestAdapter.Builder()

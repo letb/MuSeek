@@ -3,7 +3,7 @@ package com.letb.museek.Requests.SynchronousRequests;
 import com.google.gson.JsonElement;
 import com.letb.museek.Entities.TokenHolder;
 import com.letb.museek.Events.SearchEventSuccess;
-import com.letb.museek.RequestProcessor.SynchronousRequestProcessor;
+import com.letb.museek.RequestProcessor.Pleer_SynchronousRequestProcessor;
 import com.letb.museek.Requests.PlaylistInterface;
 import com.letb.museek.Requests.AsynchronousRequests.PlaylistRequest;
 
@@ -23,7 +23,7 @@ public class SearchTrackListTask implements Runnable {
 
     @Override
     public void run() {
-        PlaylistInterface trackService = SynchronousRequestProcessor.createService(PlaylistInterface.class);
+        PlaylistInterface trackService = Pleer_SynchronousRequestProcessor.createService(PlaylistInterface.class);
         /**
          * Some default stuff
          */
