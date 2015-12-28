@@ -7,7 +7,6 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +19,6 @@ import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Events.ArtistInfoEvent;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
-import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Fragments.ArtistListFragment;
 import com.letb.museek.Fragments.HorizontalTrackListFragment;
 import com.letb.museek.Fragments.PlayerFragment;
@@ -29,7 +27,6 @@ import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.ArtistNames;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Requests.SynchronousRequests.ArtistInfoTask;
-import com.letb.museek.Requests.SynchronousRequests.SearchTrackListTask;
 import com.letb.museek.Requests.SynchronousRequests.TopTrackListTask;
 import com.letb.museek.Requests.SynchronousRequests.TrackInfoTask;
 import com.letb.museek.Services.MediaPlayerService;
@@ -61,6 +58,7 @@ public class MainActivity extends BaseSpiceActivity implements
     protected final Integer EN_TRACK_LIST_CONTAINER = R.id.en_container;
     protected final Integer RU_TRACK_LIST_CONTAINER = R.id.ru_container;
     protected final Integer ARTIST_LIST_CONTAINER = R.id.artist_container;
+    protected final Integer WHOLE_CONTAINER = R.id.total_container;
 
 
     private ProgressBar spinner;
@@ -164,7 +162,6 @@ public class MainActivity extends BaseSpiceActivity implements
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
         new Thread(new TopTrackListTask(TopTrackListTask.EN_LIST)).start();
-        new Thread(new SearchTrackListTask("bowie")).start();
         new Thread(new ArtistInfoTask(artistList)).start();
     }
 
@@ -182,10 +179,7 @@ public class MainActivity extends BaseSpiceActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     // Make sure this is the method with just `Bundle` as the signature
@@ -203,11 +197,7 @@ public class MainActivity extends BaseSpiceActivity implements
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @IdRes
-    public void showFragment(Fragment fragment, Bundle data, @IdRes int container, FragmentTransaction ft) {
-        fragment.setArguments(data);
-        ft.add(container, fragment);
-    }
+
 
     @Override
     public void onTrackSelected(Integer trackIndex, List<Track> trackList) {
@@ -220,10 +210,12 @@ public class MainActivity extends BaseSpiceActivity implements
     public void onArtistSelected(Integer position) {
         Log.d(TAG, "Clicked artist item" + position);
         Artist artist = artistList.get(position);
-        new Thread(new SearchTrackListTask(artist.getName())).start();
+        Intent searchIntent = new Intent(this, SearchActivity.class);
+        searchIntent.putExtra(SearchActivity.SEARCH_STRING, artist);
+        startActivity(searchIntent);
     }
 
-    protected void placeContainerContents(int container, ArrayList<?> listToShow) {
+    protected void placeListContainerContents(int container, ArrayList<?> listToShow) {
         Bundle fragmentArgs = new Bundle();
         Fragment fragmentToShow;
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -250,7 +242,7 @@ public class MainActivity extends BaseSpiceActivity implements
                     switch (trackListType) {
                         case TopTrackListTask.EN_LIST:
                             enTopTrackList = trackList;
-                            placeContainerContents(EN_TRACK_LIST_CONTAINER, enTopTrackList);
+                            placeListContainerContents(EN_TRACK_LIST_CONTAINER, enTopTrackList);
                             /**
                              * TODO: <username>, тебе сюда!
                              */
@@ -265,54 +257,13 @@ public class MainActivity extends BaseSpiceActivity implements
         });
     }
 
-    public void onEvent(final SearchEventSuccess event) {
-        Log.d(TAG, "Event arrived" + event.getData().toString());
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    searchTrackList = ResponseParser.parseSearchResponse(event.getData());
-                    placeContainerContents(RU_TRACK_LIST_CONTAINER, searchTrackList);
-                    spinner.setVisibility(View.GONE);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     public void onEvent(final ArtistInfoEvent event) throws JSONException {
         Log.d(TAG, "Event arrived" + event.getArtists().toString());
         artistList = ResponseParser.parseArtistInfoResponse(event.getArtists());
-        placeContainerContents(ARTIST_LIST_CONTAINER, artistList);
+        placeListContainerContents(ARTIST_LIST_CONTAINER, artistList);
     }
 
     public void onEvent(EventFail event) {
         UserInformer.showMessage(MainActivity.this, event.getException());
-    }
-
-    /** LOGICS GOES HERE
-     * Только логика, только хардкор
-     * (после этого комментария все методы делают что-то до ужаса умное. Парсят артистов, например)
-     */
-    private void prepareAndShowPlayerFragment (Integer currentTrackIndex, ArrayList<Track> currentTrackList) {
-        Bundle selectedTrackData = new Bundle();
-        selectedTrackData.putSerializable(PlayerFragment.TRACK_LIST, currentTrackList);
-        selectedTrackData.putSerializable(PlayerFragment.CURRENT_TRACK, currentTrackIndex);
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        showFragment(new PlayerFragment(), selectedTrackData, android.R.id.content, ft);
-        ft.addToBackStack(PlayerFragment.TAG).commit();
-    }
-
-    private void prepareAndStartService(List<Track> trackListToPlay, Integer currentTrackIndex) {
-        Log.d(TAG, "Playing track " + trackList.get(currentTrackIndex).getTitle());
-
-        Intent intent = new Intent(this, MediaPlayerService.class);
-        intent.setAction(MediaPlayerService.ACTION_PLAY);
-        intent.putExtra(MediaPlayerService.PLAYLIST, (ArrayList<Track>) trackListToPlay);
-        intent.putExtra(MediaPlayerService.SELECTED_TRACK_INDEX, currentTrackIndex);
-
-        this.startService(intent);
     }
 }
