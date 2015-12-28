@@ -4,8 +4,9 @@
     <item
         android:drawable="@color/gray"/>
 
-    <item
-        android:src="@drawable/logo"
-        android:gravity="center"/>
+    <item>
+        <bitmap android:gravity="center"
+        android:src="@mipmap/logo"/>
+    </item>
 
 </layer-list>
