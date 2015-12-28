@@ -168,7 +168,7 @@ public class MainActivity extends BaseSpiceActivity implements
         artistList.clear();
         for (Track track : tracks) {
             artistList.add(new Artist(
-                    track.getData().getArtist(), "http://ecx.images-amazon.com/images/I/61gMjdj6bjL._SL500_.jpg"
+                    track.getData().getArtist(), "https://upload.wikimedia.org/wikipedia/commons/c/c6/Sierpinski_square.jpg"
             ));
         }
         placeContainerContents(ARTIST_LIST_CONTAINER, artistList);
