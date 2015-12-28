@@ -138,6 +138,7 @@ public class MainActivity extends BaseSpiceActivity implements
                         case TopTrackListTask.EN_LIST:
                             enTopTrackList = trackList;
                             placeContainerContents(EN_TRACK_LIST_CONTAINER, enTopTrackList);
+                            showArtistsFromTrackList(enTopTrackList);
                             break;
                     }
                     spinner.setVisibility(View.GONE);
