@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
-            android:text="Linkin Park - Bleed It Out"
+            android:text="Artist - Track"
             android:textStyle="italic"
             android:layout_below="@+id/relativeLayout2"
             android:layout_alignLeft="@+id/relativeLayout2"
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
-            android:text="Linkin Park - Bleed It Out"
+            android:text="Artist - Track"
             android:textSize="@dimen/title_size"
             android:layout_above="@+id/relativeLayout2"
             android:layout_alignLeft="@+id/relativeLayout2"
@@ -89,17 +89,17 @@
 
         <Button
             android:id="@+id/buttonControl"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:background="@drawable/icon_play"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_play_circle_filled_white_48dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"/>
 
         <Button
             android:id="@+id/buttonNext"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@drawable/icon_next"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_skip_next_white_48dp"
             android:layout_toRightOf="@+id/buttonControl"
             android:layout_marginLeft="50dp"
             android:layout_centerVertical="true"/>
@@ -107,9 +107,9 @@
 
         <Button
             android:id="@+id/buttonPrevious"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@drawable/icon_previous"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_skip_previous_white_48dp"
             android:layout_toLeftOf="@+id/buttonControl"
             android:layout_marginRight="50dp"
             android:layout_centerVertical="true"/>

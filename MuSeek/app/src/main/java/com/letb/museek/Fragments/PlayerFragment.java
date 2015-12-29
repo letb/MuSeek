@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -105,17 +104,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
      */
     private void switchTrack(int direction) {
         maskProgressView.stop();
-        buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+        buttonPlayPause.setBackgroundResource(R.drawable.ic_pause_circle_filled_white_48dp);
         bus.post(new SwitchTrackRequest(direction));
     }
 
     private void togglePlayPause() {
         if (maskProgressView.isPlaying()) {
-            buttonPlayPause.setBackgroundResource(R.drawable.icon_play);
+            buttonPlayPause.setBackgroundResource(R.drawable.ic_play_circle_filled_white_48dp);
             maskProgressView.pause();
         }
         else {
-            buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+            buttonPlayPause.setBackgroundResource(R.drawable.ic_pause_circle_filled_white_48dp);
             maskProgressView.start();
         }
         bus.post(new TogglePlayPauseRequest());
@@ -144,7 +143,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         buttonPlayPause.setOnClickListener(this);
         buttonNext.setOnClickListener(this);
         buttonPrevious.setOnClickListener(this);
-        buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+        buttonPlayPause.setBackgroundResource(R.drawable.ic_pause_circle_filled_white_48dp);
     }
 
     public PlayerFragment() {}
@@ -209,19 +208,19 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 break;
             case Stopped:
                 maskProgressView.stop();
-                buttonPlayPause.setBackgroundResource(R.drawable.icon_play);
+                buttonPlayPause.setBackgroundResource(R.drawable.ic_play_circle_filled_white_48dp);
                 break;
             case Preparing:
                 spinner.setVisibility(View.VISIBLE);
                 break;
             case Playing:
                 maskProgressView.start();
-                buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+                buttonPlayPause.setBackgroundResource(R.drawable.ic_pause_circle_filled_white_48dp);
                 spinner.setVisibility(View.GONE);
                 break;
             case Paused:
                 maskProgressView.pause();
-                buttonPlayPause.setBackgroundResource(R.drawable.icon_play);
+                buttonPlayPause.setBackgroundResource(R.drawable.ic_play_circle_filled_white_48dp);
                 break;
         }
     }

@@ -8,7 +8,7 @@
     android:weightSum="1">
 
     <ImageView
-        android:src = "@drawable/icon_play"
+        android:src = "@drawable/ic_play_circle_filled_white_48dp"
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
         android:layout_width="fill_parent"

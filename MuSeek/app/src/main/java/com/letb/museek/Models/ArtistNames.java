@@ -35,7 +35,6 @@ public class ArtistNames {
             "2Pac",
             "Kenny G",
             "Frank Sinatra",
-            "Disturbed",
             "AC/DC",
             "Queen",
             "Louis Armstrong",

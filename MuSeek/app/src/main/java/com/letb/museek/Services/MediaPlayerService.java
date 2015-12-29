@@ -211,7 +211,7 @@ public class MediaPlayerService
         int notificationId = 999;
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.icon_play)
+                        .setSmallIcon(R.drawable.ic_play_circle_filled_white_48dp)
                         .setContentTitle(title)
                         .setContentText(text);
         NotificationManager mNotifyMgr =
