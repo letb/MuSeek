@@ -13,8 +13,6 @@ import com.letb.museek.R;
 
 import java.util.List;
 
-import static com.letb.museek.Adapters.TrackAdapter.ViewType.*;
-
 /**
  * Created by eugene on 13.12.15.
  */
@@ -70,6 +68,8 @@ public class TrackAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.trackImageView = (ImageView) convertView.findViewById(R.id.track_image);
             holder.titleTextView = (TextView) convertView.findViewById(R.id.track_title);
+            holder.artistTextView = (TextView) convertView.findViewById(R.id.track_artist);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -77,12 +77,18 @@ public class TrackAdapter extends BaseAdapter {
 
     //  TODO: display picture
 //        holder.trackImageView.se
-        holder.titleTextView.setText(track.getData().getTrack());
+        if (holder.titleTextView != null)
+            holder.titleTextView.setText(track.getData().getTrack());
+        if (holder.artistTextView != null)
+            holder.artistTextView.setText(track.getData().getArtist());
+
         return convertView;
     }
 
     static class ViewHolder {
         ImageView trackImageView;
         TextView titleTextView;
+        TextView artistTextView;
+
     }
 }

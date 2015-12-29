@@ -78,7 +78,7 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
         fragmentArgs.putSerializable(VerticalTrackListFragment.TRACK_LIST, searchTrackList);
         fragmentToShow = new VerticalTrackListFragment();
         fragmentToShow.setArguments(fragmentArgs);
-        ft.add(SEARCH_LIST_CONTAINER, fragmentToShow);
+        ft.replace(SEARCH_LIST_CONTAINER, fragmentToShow);
         ft.commit();
     }
 
