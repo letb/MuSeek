@@ -50,6 +50,6 @@ public interface TrackInterface {
                         @Query("artist") String artist,
                         @Query("track") String track,
                         @Query("api_key") String api_key,
-                        @Query("autocorrect") Boolean autocorrect,
+                        @Query("autocorrect") String autocorrect,
                         @Query("format") String format);
 }

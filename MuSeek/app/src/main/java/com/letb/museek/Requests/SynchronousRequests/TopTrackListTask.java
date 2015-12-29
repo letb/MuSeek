@@ -37,7 +37,7 @@ public class TopTrackListTask implements Runnable {
         tracks = trackService.getTopTracks(
                 TokenHolder.getAccessToken(),
                 PlaylistRequest.METHOD_GET_TOP_LIST,
-                1,
+                5,
                 1,
                 PlaylistRequest.ENG_LANG
         );

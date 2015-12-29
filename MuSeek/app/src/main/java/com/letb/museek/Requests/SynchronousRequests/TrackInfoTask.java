@@ -27,7 +27,7 @@ public class TrackInfoTask implements Runnable {
     private final String method = "track.getInfo";
     private final String api_key = "a39a62a55486131cc5ae5588670f594b";
     private final String format = "json";
-    private final Boolean autocorrect = Boolean.TRUE;
+    private final String autocorrect = "1";
 
     @Override
     public void run() {
