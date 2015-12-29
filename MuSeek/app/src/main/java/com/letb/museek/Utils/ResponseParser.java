@@ -71,33 +71,41 @@ public class ResponseParser {
         return trackList;
     }
 
-    public static ArrayList<Artist> parseArtistInfoResponse (ArrayList<JsonElement> artistsAsJson) throws JSONException {
+    public static ArrayList<Artist> parseArtistInfoResponse (ArrayList<JsonElement> artistsAsJson) {
         ArrayList<Artist> artists = new ArrayList<>();
         for (JsonElement jsonArtist : artistsAsJson) {
-            JSONObject artistObject = new JSONObject(jsonArtist.toString());
-            // FIXME: 28.12.15 WTF?
-            artistObject = artistObject.getJSONObject("artist");
-            List<String> images = getImages(artistObject.getJSONArray("image"));
-            Artist artistFromJson = new Artist(artistObject.getString("name"));
-            artistFromJson.setImagesSizesAsc(images);
-            artists.add(artistFromJson);
+            JSONObject artistObject = null;
+            try {
+                artistObject = new JSONObject(jsonArtist.toString());
+                // FIXME: 28.12.15 WTF?
+                artistObject = artistObject.getJSONObject("artist");
+                List<String> images = getImages(artistObject.getJSONArray("image"));
+                Artist artistFromJson = new Artist(artistObject.getString("name"));
+                artistFromJson.setImagesSizesAsc(images);
+                artists.add(artistFromJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         return artists;
     }
 
-    public static ArrayList<Track> parseTrackInfoResponse (ArrayList<JsonElement> tracksAsJson) throws JSONException {
-        ArrayList<Track> tracks = new ArrayList<>();
-        for (JsonElement jsonTrack : tracksAsJson) {
-            JSONObject trackObject = new JSONObject(jsonTrack.toString());
-            // FIXME: 28.12.15 WTF?
+    public static ArrayList<Track> parseTrackInfoResponse (ArrayList<JsonElement> tracksAsJson, ArrayList<Track> trackList)  {
 
-            trackObject = trackObject.getJSONObject("artist");
-            List<String> images = getImages(trackObject.getJSONArray("image"));
-//            Track artistFromJson = new Track(trackObject.getString("name"));
-//            artistFromJson.setImagesSizesAsc(images);
-//            tracks.add(artistFromJson);
-        }
-        return tracks;
+            int i = 0;
+            for (JsonElement jsonTrack : tracksAsJson) {
+                JSONObject trackObject = null;
+                try {
+                    trackObject = new JSONObject(jsonTrack.toString());
+                    trackObject = trackObject.getJSONObject("track");
+                    List<String> images = getImages(trackObject.getJSONObject("album").getJSONArray("image"));
+                    trackList.get(i).setImagesSizesAsc(images);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                ++i;
+            }
+        return trackList;
     }
 
     private static List<String> getImages (JSONArray jsonImages) throws JSONException {

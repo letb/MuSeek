@@ -18,6 +18,7 @@ import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Events.ArtistInfoEvent;
 import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
+import com.letb.museek.Events.TrackInfoEvent;
 import com.letb.museek.Fragments.ArtistListFragment;
 import com.letb.museek.Fragments.HorizontalTrackListFragment;
 import com.letb.museek.Fragments.VerticalTrackListFragment;
@@ -244,10 +245,6 @@ public class MainActivity extends BaseSpiceActivity implements
                     switch (trackListType) {
                         case TopTrackListTask.EN_LIST:
                             enTopTrackList = trackList;
-                            placeListContainerContents(EN_TRACK_LIST_CONTAINER, enTopTrackList);
-                            /**
-                             * TODO: <username>, тебе сюда!
-                             */
                             new Thread(new TrackInfoTask(enTopTrackList)).start();
                             break;
                     }
@@ -255,6 +252,18 @@ public class MainActivity extends BaseSpiceActivity implements
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+    }
+
+    public void onEvent(final TrackInfoEvent event) throws JSONException {
+        Log.d(TAG, "Event arrived" + event.getTracks().toString());
+        trackList = ResponseParser.parseTrackInfoResponse(event.getTracks(), trackList);
+        placeListContainerContents(EN_TRACK_LIST_CONTAINER, trackList);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                enPlayListSpinner.setVisibility(View.GONE);
             }
         });
     }

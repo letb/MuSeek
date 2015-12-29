@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -82,6 +83,8 @@ public class TrackAdapter extends BaseAdapter {
         if (holder.artistTextView != null)
             holder.artistTextView.setText(track.getData().getArtist());
 
+        //  TODO: display picture
+        Picasso.with(mContext).load(track.getPic()).into(holder.trackImageView);
         return convertView;
     }
 

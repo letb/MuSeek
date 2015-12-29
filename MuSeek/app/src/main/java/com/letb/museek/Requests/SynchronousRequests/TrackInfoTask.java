@@ -34,20 +34,31 @@ public class TrackInfoTask implements Runnable {
     public void run() {
         TrackInterface trackService = Lastfm_SynchronousRequestProcessor.createService(TrackInterface.class);
         for (Track track : trackList) {
-            JsonElement jsonArtist = trackService.getInfo(
+            String trackArtist = track.getData().getArtist();
+            trackArtist = checkArtistName(trackArtist);
+            JsonElement jsonTrack = trackService.getInfo(
                     method,
-                    track.getData().getArtist(),
-                    track.getTitle(),
+                    trackArtist,
+                    track.getData().getTrack(),
                     api_key,
                     autocorrect,
                     format
             );
-            trackInfos.add(jsonArtist);
+            trackInfos.add(jsonTrack);
         }
         sendResult();
     }
 
     private void sendResult() {
         bus.post(new TrackInfoEvent(trackInfos));
+    }
+
+    private String checkArtistName(String artist) {
+        int subStrIndex = artist.toLowerCase().indexOf("feat");
+        if (subStrIndex > -1) {
+            artist = artist.substring(0, subStrIndex - 1);
+        }
+
+        return artist;
     }
 }

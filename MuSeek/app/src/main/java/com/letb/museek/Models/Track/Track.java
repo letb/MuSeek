@@ -3,6 +3,7 @@ package com.letb.museek.Models.Track;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 public class Track implements Serializable {
@@ -15,6 +16,24 @@ public class Track implements Serializable {
 
     @SerializedName("data")
     private Data data;
+
+    @SerializedName("pic")
+    private String pic;
+
+    private List<String> imagesSizesAsc;
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
+    }
+
+    public void setImagesSizesAsc(List<String> imagesSizesAsc) {
+        this.imagesSizesAsc = imagesSizesAsc;
+        this.pic = imagesSizesAsc.get(2);
+    }
 
     public Track() {
         data = new Data();
