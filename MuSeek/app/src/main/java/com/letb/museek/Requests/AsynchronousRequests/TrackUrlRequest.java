@@ -26,8 +26,8 @@ public class TrackUrlRequest extends RetrofitSpiceRequest<String, TrackUrlInterf
 
     @Override
     public String loadDataFromNetwork() throws Exception {
-        Ln.d("Request track info");
         JsonElement jsonUrl = getService().getTrackUrl(token, METHOD_GET_TRACK_URL, trackId, reason);
+        Ln.d(jsonUrl + "TRACK_URL");
         return jsonUrl.getAsJsonObject().get("url").getAsString();
     }
 }

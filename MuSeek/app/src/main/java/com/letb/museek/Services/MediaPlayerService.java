@@ -10,10 +10,10 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.letb.museek.Events.PlayerEvents.PlayerResponseEvent;
 import com.letb.museek.Events.PlayerEvents.RewindTractToPositionRequest;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
-import com.letb.museek.Events.PlayerEvents.ReadyToPlayResponse;
-import com.letb.museek.Events.PlayerEvents.TogglePlayPauseEvent;
+import com.letb.museek.Events.PlayerEvents.TogglePlayPauseRequest;
 import com.letb.museek.Events.TrackUrlEventSuccess;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
@@ -54,6 +54,10 @@ public class MediaPlayerService
 
     private EventBus bus = EventBus.getDefault();
 
+    private void changeState(State state) {
+        this.currentState = state;
+        bus.post(new PlayerResponseEvent(currentTrackIndex, currentState, trackList));
+    }
 
     private void createMediaPlayerIfNeeded() {
         if (mMediaPlayer == null) {
@@ -89,7 +93,7 @@ public class MediaPlayerService
             processRewindRequest(0);
     }
 
-    public void onEvent(TogglePlayPauseEvent event){
+    public void onEvent(TogglePlayPauseRequest event){
         processTogglePlayPauseRequest();
     }
 
@@ -143,12 +147,12 @@ public class MediaPlayerService
         else if (currentState == State.Paused) {
             configAndStartMediaPlayer();
         }
-        currentState = State.Playing;
+//        changeState(State.Playing);
         showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
     }
 
     private void processPauseRequest() {
-        currentState = State.Paused;
+        changeState(State.Paused);
         mMediaPlayer.pause();
         relaxResources(false);
         showNotification("paused...", trackList.get(currentTrackIndex).getTitle());
@@ -170,20 +174,20 @@ public class MediaPlayerService
 
     private void configAndStartMediaPlayer() {
         if (!mMediaPlayer.isPlaying()) {
-            currentState = State.Playing;
+            changeState(State.Playing);
             showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
             mMediaPlayer.start();
         }
     }
 
     private void playByIndex() {
-        currentState = State.Stopped;
+        changeState(State.Stopped);
         relaxResources(false);
         try {
             createMediaPlayerIfNeeded();
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.setDataSource(trackList.get(currentTrackIndex).getUrl());
-            currentState = State.Preparing;
+            changeState(State.Preparing);
             showNotification("Loading...", trackList.get(currentTrackIndex).getTitle());
             mMediaPlayer.prepareAsync();
         }
@@ -206,7 +210,6 @@ public class MediaPlayerService
     }
 
     public void onPrepared(MediaPlayer player) {
-        bus.post(new ReadyToPlayResponse(currentTrackIndex, currentState));
         configAndStartMediaPlayer();
     }
 
@@ -217,10 +220,10 @@ public class MediaPlayerService
 
     @Override
     public void onDestroy() {
-        if (mMediaPlayer != null) {
+        if (mMediaPlayer != null)
             mMediaPlayer.release();
-        }
-        currentState = State.Retrieving;
+
+        changeState(State.Retrieving);
         bus.unregister(this);
     }
 

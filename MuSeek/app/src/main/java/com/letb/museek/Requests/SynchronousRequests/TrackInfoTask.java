@@ -2,6 +2,7 @@ package com.letb.museek.Requests.SynchronousRequests;
 
 import com.google.gson.JsonElement;
 import com.letb.museek.Events.ArtistInfoEvent;
+import com.letb.museek.Events.TrackInfoEvent;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.RequestProcessor.Lastfm_SynchronousRequestProcessor;
 import com.letb.museek.Requests.ArtistInterface;
@@ -47,6 +48,6 @@ public class TrackInfoTask implements Runnable {
     }
 
     private void sendResult() {
-        bus.post(new ArtistInfoEvent(trackInfos));
+        bus.post(new TrackInfoEvent(trackInfos));
     }
 }

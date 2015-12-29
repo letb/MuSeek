@@ -26,16 +26,33 @@
             android:layout_toRightOf="@+id/imageviewHeader"
             android:gravity="center_vertical"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp">
-            <TextView
-                android:id="@+id/textSinger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:text="Linkin Park - Bleed It Out"/>
+            android:layout_marginLeft="20dp"
+            android:id="@+id/relativeLayout2">
 
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/artistView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:text="Linkin Park - Bleed It Out"
+            android:textStyle="italic"
+            android:layout_below="@+id/relativeLayout2"
+            android:layout_alignLeft="@+id/relativeLayout2"
+            android:layout_alignStart="@+id/relativeLayout2" />
+
+        <TextView
+            android:id="@+id/titleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:text="Linkin Park - Bleed It Out"
+            android:textSize="@dimen/title_size"
+            android:layout_above="@+id/relativeLayout2"
+            android:layout_alignLeft="@+id/relativeLayout2"
+            android:layout_alignStart="@+id/relativeLayout2" />
 
 
     </RelativeLayout>
@@ -99,5 +116,13 @@
 
 
     </RelativeLayout>
+
+    <ProgressBar android:id="@+id/playerProgress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

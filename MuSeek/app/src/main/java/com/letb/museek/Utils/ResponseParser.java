@@ -85,6 +85,21 @@ public class ResponseParser {
         return artists;
     }
 
+    public static ArrayList<Track> parseTrackInfoResponse (ArrayList<JsonElement> tracksAsJson) throws JSONException {
+        ArrayList<Track> tracks = new ArrayList<>();
+        for (JsonElement jsonTrack : tracksAsJson) {
+            JSONObject trackObject = new JSONObject(jsonTrack.toString());
+            // FIXME: 28.12.15 WTF?
+
+            trackObject = trackObject.getJSONObject("artist");
+            List<String> images = getImages(trackObject.getJSONArray("image"));
+//            Track artistFromJson = new Track(trackObject.getString("name"));
+//            artistFromJson.setImagesSizesAsc(images);
+//            tracks.add(artistFromJson);
+        }
+        return tracks;
+    }
+
     private static List<String> getImages (JSONArray jsonImages) throws JSONException {
         List<String> images = new ArrayList<>();
         for (int i = 0; i < jsonImages.length(); ++i) {

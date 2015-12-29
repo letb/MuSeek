@@ -12,6 +12,7 @@ import com.letb.museek.Adapters.TrackAdapter;
 import com.letb.museek.Events.ClearPlayListEvent;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
+import com.letb.museek.Requests.SynchronousRequests.TrackInfoTask;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class VerticalTrackListFragment extends ListFragment {
         mAdapter = new TrackAdapter(getActivity(), mListItems, TrackAdapter.ViewType.VERTICAL);
         listView.setAdapter(mAdapter);
         setListAdapter(mAdapter);
+        new Thread(new TrackInfoTask(mListItems)).start();
         return view;
     }
 

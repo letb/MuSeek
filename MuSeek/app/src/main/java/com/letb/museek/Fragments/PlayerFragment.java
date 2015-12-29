@@ -2,18 +2,20 @@ package com.letb.museek.Fragments;
 
 import android.content.Context;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.letb.museek.Events.PlayerEvents.PlayerResponseEvent;
 import com.letb.museek.Events.PlayerEvents.RewindTractToPositionRequest;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
-import com.letb.museek.Events.PlayerEvents.TogglePlayPauseEvent;
+import com.letb.museek.Events.PlayerEvents.TogglePlayPauseRequest;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
 import com.letb.museek.Services.MediaPlayerService;
@@ -42,12 +44,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Button buttonNext;
     private Button buttonPrevious;
     private TextView titleView;
+    private TextView artistView;
+
     private EventBus bus = EventBus.getDefault();
 
     private MaskProgressView maskProgressView;
 
     private List<Track> currentTrackList;
     private Integer currentTrackIndex = 0;
+
+    private ProgressBar spinner;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +64,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             currentTrackList = (List<Track>) getArguments().getSerializable(TRACK_LIST);
             currentTrackIndex = getArguments().getInt(CURRENT_TRACK);
         }
+        spinner = (ProgressBar) view.findViewById(R.id.playerProgress);
+        spinner.setVisibility(View.VISIBLE);
+
         initializeProgressBar(view);
         initializeButtons(view);
         initializeLayout(view);
@@ -101,7 +111,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
             maskProgressView.start();
         }
-        bus.post(new TogglePlayPauseEvent());
+        bus.post(new TogglePlayPauseRequest());
     }
 
     private void initializeProgressBar(View view) {
@@ -111,8 +121,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initializeLayout(View view) {
-        titleView = (TextView) view.findViewById(R.id.textSinger);
-        titleView.setText(currentTrackList.get(currentTrackIndex).getTitle());
+        titleView = (TextView) view.findViewById(R.id.titleView);
+        titleView.setText(currentTrackList.get(currentTrackIndex).getData().getTrack());
+
+        artistView = (TextView) view.findViewById(R.id.artistView);
+        artistView.setText(currentTrackList.get(currentTrackIndex).getData().getArtist());
     }
 
     private void initializeButtons(View view) {
@@ -150,20 +163,37 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     }
 
     private void redrawLayout () {
-        titleView.setText(currentTrackList.get(currentTrackIndex).getTitle());
+        titleView.setText(currentTrackList.get(currentTrackIndex).getData().getTrack());
+        artistView.setText(currentTrackList.get(currentTrackIndex).getData().getArtist());
         maskProgressView.setmMaxSeconds(currentTrackList.get(currentTrackIndex).getData().getLength());
     }
 
     public void onEvent(PlayerResponseEvent event){
         currentTrackIndex = event.getTrackIndex();
+        currentTrackList = event.getCurrentTrackList();
         redrawLayout();
-        if (event.getState() == MediaPlayerService.State.Paused) {
-            maskProgressView.pause();
-            buttonPlayPause.setBackgroundResource(R.drawable.icon_play);
-        }
-        else if (event.getState() == MediaPlayerService.State.Playing) {
-            maskProgressView.start();
-            buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+        MediaPlayerService.State currentState = event.getState();
+
+        switch (currentState) {
+            case Retrieving:
+                spinner.setVisibility(View.VISIBLE);
+                break;
+            case Stopped:
+                maskProgressView.stop();
+                buttonPlayPause.setBackgroundResource(R.drawable.icon_play);
+                break;
+            case Preparing:
+                spinner.setVisibility(View.VISIBLE);
+                break;
+            case Playing:
+                maskProgressView.start();
+                buttonPlayPause.setBackgroundResource(R.drawable.icon_pause);
+                spinner.setVisibility(View.GONE);
+                break;
+            case Paused:
+                maskProgressView.pause();
+                buttonPlayPause.setBackgroundResource(R.drawable.icon_play);
+                break;
         }
     }
 

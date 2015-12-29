@@ -3,7 +3,6 @@ package com.letb.museek;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,7 +20,6 @@ import com.letb.museek.Events.EventFail;
 import com.letb.museek.Events.PlaylistEventSuccess;
 import com.letb.museek.Fragments.ArtistListFragment;
 import com.letb.museek.Fragments.HorizontalTrackListFragment;
-import com.letb.museek.Fragments.PlayerFragment;
 import com.letb.museek.Fragments.VerticalTrackListFragment;
 import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.ArtistNames;
@@ -29,7 +27,6 @@ import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Requests.SynchronousRequests.ArtistInfoTask;
 import com.letb.museek.Requests.SynchronousRequests.TopTrackListTask;
 import com.letb.museek.Requests.SynchronousRequests.TrackInfoTask;
-import com.letb.museek.Services.MediaPlayerService;
 import com.letb.museek.Utils.ResponseParser;
 import com.letb.museek.Utils.UserInformer;
 
@@ -62,7 +59,8 @@ public class MainActivity extends BaseSpiceActivity implements
     protected final Integer WHOLE_CONTAINER = R.id.total_container;
 
 
-    private ProgressBar spinner;
+    private ProgressBar artistSpinner;
+    private ProgressBar enPlayListSpinner;
     private DrawerLayout dlDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private NavigationView nvDrawer;
@@ -72,15 +70,6 @@ public class MainActivity extends BaseSpiceActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        artistList.clear();
-        // FIXME: 28.12.15 Ну типа константы надо именовать, все дела
-        for (int i = 0; i < 10; ++i) {
-            Artist artist = new Artist(ArtistNames.getRandomName());
-            while (artistNames.contains(artist.getName()))
-                artist = new Artist(ArtistNames.getRandomName());
-            artistList.add(artist);
-            artistNames.add(artist.getName());
-        }
 
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -159,8 +148,24 @@ public class MainActivity extends BaseSpiceActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
-        spinner.setVisibility(View.VISIBLE);
+        artistSpinner = (ProgressBar)findViewById(R.id.artistProgressBar);
+        artistSpinner.setVisibility(View.VISIBLE);
+        artistSpinner.bringToFront();
+
+        enPlayListSpinner = (ProgressBar)findViewById(R.id.enPlayListProgressBar);
+        enPlayListSpinner.setVisibility(View.VISIBLE);
+        enPlayListSpinner.bringToFront();
+
+        artistList.clear();
+        // FIXME: 28.12.15 Ну типа константы надо именовать, все дела
+        for (int i = 0; i < 10; ++i) {
+            Artist artist = new Artist(ArtistNames.getRandomName());
+            while (artistNames.contains(artist.getName()))
+                artist = new Artist(ArtistNames.getRandomName());
+            artistList.add(artist);
+            artistNames.add(artist.getName());
+        }
+
         new Thread(new TopTrackListTask(TopTrackListTask.EN_LIST)).start();
         new Thread(new ArtistInfoTask(artistList)).start();
     }
@@ -251,7 +256,7 @@ public class MainActivity extends BaseSpiceActivity implements
                             new Thread(new TrackInfoTask(enTopTrackList)).start();
                             break;
                     }
-                    spinner.setVisibility(View.GONE);
+                    enPlayListSpinner.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -263,6 +268,12 @@ public class MainActivity extends BaseSpiceActivity implements
         Log.d(TAG, "Event arrived" + event.getArtists().toString());
         artistList = ResponseParser.parseArtistInfoResponse(event.getArtists());
         placeListContainerContents(ARTIST_LIST_CONTAINER, artistList);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                artistSpinner.setVisibility(View.GONE);
+            }
+        });
     }
 
     public void onEvent(EventFail event) {

@@ -59,7 +59,7 @@
             <!-- Disables transcript mode. This is the default value. -->
             <enum name="disabled" value="0"/>
             <!-- The list will automatically scroll to the bottom when
-                 a artists set change notification is received and only if the last item is
+                 a tracks set change notification is received and only if the last item is
                  already visible on screen. -->
             <enum name="normal" value="1" />
             <!-- The list will automatically scroll to the bottom, no matter what items
