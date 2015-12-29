@@ -17,8 +17,6 @@ public class SplashActivity extends BaseSpiceActivity {
 
     private final String TAG = "SplashActivity";
 
-    private EventBus bus = EventBus.getDefault();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +24,6 @@ public class SplashActivity extends BaseSpiceActivity {
 
     @Override
     public void onResume () {
-        bus.register(this);
         if (TokenHolder.getAccessToken() == null)
             requestToken();
         else
@@ -36,7 +33,6 @@ public class SplashActivity extends BaseSpiceActivity {
 
     @Override
     protected void onPause() {
-        bus.unregister(this);
         super.onPause();
     }
 

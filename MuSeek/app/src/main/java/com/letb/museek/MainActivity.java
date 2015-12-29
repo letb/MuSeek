@@ -45,7 +45,6 @@ public class MainActivity extends BaseSpiceActivity implements
         VerticalTrackListFragment.OnTrackSelectedListener,
         ArtistListFragment.OnArtistSelectedListener {
 
-    private EventBus bus = EventBus.getDefault();
     private final String TAG = "MainActivity";
     private Intent playIntent;
     private ArrayList<Track> searchTrackList;
@@ -154,14 +153,12 @@ public class MainActivity extends BaseSpiceActivity implements
     protected void onResume() {
         Log.d(TAG, "I was resumed");
         super.onResume();
-        bus.register(this);
     }
 
     @Override
     protected void onPause() {
         Log.d(TAG, "I was paused");
         super.onPause();
-        bus.unregister(this);
     }
 
     private void refreshArtists () {
