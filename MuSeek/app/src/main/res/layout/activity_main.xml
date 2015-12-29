@@ -6,52 +6,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/total_container"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/scrollView" >
 
-        <!-- The ActionBar displayed at the top -->
-        <include
-            layout="@layout/toolbar"
+        <LinearLayout
+            android:id="@+id/total_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/artist_container"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
+            <!-- The ActionBar displayed at the top -->
+            <include
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-            <ProgressBar android:id="@+id/artistProgressBar"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/artist_container"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <ProgressBar android:id="@+id/artistProgressBar"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+                </FrameLayout>
+
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/en_container"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <ProgressBar android:id="@+id/enPlayListProgressBar"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+                </FrameLayout>
+
+            <FrameLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ru_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
 
-        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/en_container"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-            <ProgressBar android:id="@+id/enPlayListProgressBar"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-
-            </FrameLayout>
-
-        <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/ru_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </FrameLayout>
-
-
-    </LinearLayout>
 
     <!-- The navigation drawer that comes from the left -->
     <!-- Note that `android:layout_gravity` needs to be set to 'start' -->

@@ -72,16 +72,16 @@ public abstract class BaseSpiceActivity extends AppCompatActivity  {
 
     @Override
     protected void onPause() {
-        Log.d(TAG, "I am paused!");
         bus.unregister(this);
+        Log.d(TAG, "I am paused!");
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         bus.register(this);
-        super.onResume();
         Log.d(TAG, "I am resumed!");
+        super.onResume();
     }
 
     public void onEvent(PlayerResponseEvent event){
