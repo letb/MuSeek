@@ -12,8 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
@@ -37,8 +35,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
 
 public class MainActivity extends BaseSpiceActivity implements
         HorizontalTrackListFragment.OnTrackSelectedListener,
@@ -267,7 +263,6 @@ public class MainActivity extends BaseSpiceActivity implements
                             new Thread(new TrackInfoTask(enTopTrackList)).start();
                             break;
                     }
-                    enPlayListSpinner.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

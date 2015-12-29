@@ -21,6 +21,7 @@ import com.letb.museek.Fragments.VerticalTrackListFragment;
 import com.letb.museek.Models.Artist;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Requests.SynchronousRequests.SearchTrackListTask;
+import com.letb.museek.Requests.SynchronousRequests.TrackInfoTask;
 import com.letb.museek.Utils.ResponseParser;
 import com.squareup.picasso.Picasso;
 
@@ -107,6 +108,7 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
                 try {
                     searchTrackList = ResponseParser.parseSearchResponse(event.getData());
                     showSearchResults();
+                    new Thread(new TrackInfoTask(searchTrackList)).start();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -116,14 +118,17 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
 
     @Override
     public void onResume () {
-        bus.register(this);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        bus.unregister(this);
         super.onPause();
+    }
+
+    public void onEvent(final TrackInfoEvent event) throws JSONException {
+        Log.d(TAG, "Event arrived" + event.getTracks().toString());
+        searchTrackList = ResponseParser.parseTrackInfoResponse(event.getTracks(), searchTrackList);
     }
 
     @Override

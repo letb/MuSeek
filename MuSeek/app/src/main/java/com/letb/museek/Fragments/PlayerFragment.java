@@ -2,6 +2,9 @@ package com.letb.museek.Fragments;
 
 import android.content.Context;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,6 +23,8 @@ import com.letb.museek.Events.PlayerEvents.TogglePlayPauseRequest;
 import com.letb.museek.Models.Track.Track;
 import com.letb.museek.R;
 import com.letb.museek.Services.MediaPlayerService;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -45,6 +51,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Button buttonPrevious;
     private TextView titleView;
     private TextView artistView;
+    private ImageView headerView;
 
     private EventBus bus = EventBus.getDefault();
 
@@ -118,6 +125,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         maskProgressView = (MaskProgressView) view.findViewById(R.id.maskProgressView);
         maskProgressView.setmMaxSeconds(currentTrackList.get(currentTrackIndex).getData().getLength());
         maskProgressView.setOnProgressDraggedListener(new CustomProgressDraggedListener());
+
+        headerView = (ImageView) view.findViewById(R.id.imageviewHeader);
     }
 
     private void initializeLayout(View view) {
@@ -166,6 +175,26 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         titleView.setText(currentTrackList.get(currentTrackIndex).getData().getTrack());
         artistView.setText(currentTrackList.get(currentTrackIndex).getData().getArtist());
         maskProgressView.setmMaxSeconds(currentTrackList.get(currentTrackIndex).getData().getLength());
+        Picasso.with(getActivity())
+        .load(currentTrackList.get(currentTrackIndex).getPic())
+        .into(new Target() {
+            @Override
+            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                maskProgressView.setCoverImage(bitmap);
+                headerView.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+                maskProgressView.setCoverImage(BitmapFactory.decodeResource(getActivity().getResources(),
+                        R.drawable.album));
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
     }
 
     public void onEvent(PlayerResponseEvent event){

@@ -76,15 +76,14 @@ public class TrackAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-    //  TODO: display picture
-//        holder.trackImageView.se
         if (holder.titleTextView != null)
             holder.titleTextView.setText(track.getData().getTrack());
         if (holder.artistTextView != null)
             holder.artistTextView.setText(track.getData().getArtist());
 
         //  TODO: display picture
-        Picasso.with(mContext).load(track.getPic()).into(holder.trackImageView);
+        if (track.getPic() != null)
+            Picasso.with(mContext).load(track.getPic()).into(holder.trackImageView);
         return convertView;
     }
 
@@ -92,6 +91,5 @@ public class TrackAdapter extends BaseAdapter {
         ImageView trackImageView;
         TextView titleTextView;
         TextView artistTextView;
-
     }
 }
