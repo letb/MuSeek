@@ -146,8 +146,9 @@ public class MainActivity extends BaseSpiceActivity implements
 
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
+        bus.register(this);
         artistSpinner = (ProgressBar)findViewById(R.id.artistProgressBar);
         artistSpinner.setVisibility(View.VISIBLE);
         artistSpinner.bringToFront();
@@ -171,15 +172,9 @@ public class MainActivity extends BaseSpiceActivity implements
     }
 
     @Override
-    public void onResume () {
-        bus.register(this);
-        super.onResume();
-    }
-
-    @Override
     protected void onPause() {
-        bus.unregister(this);
         super.onPause();
+        bus.unregister(this);
     }
 
     @Override

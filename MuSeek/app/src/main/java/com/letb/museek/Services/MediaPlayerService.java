@@ -65,22 +65,32 @@ public class MediaPlayerService
             mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
             mMediaPlayer.setOnPreparedListener(this);
             mMediaPlayer.setOnErrorListener(this);
-            mMediaPlayer.setLooping(true);
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    changeState(State.Stopped);
+                    Log.i("MediaPlayer Completion", "Track Complete");
+                    moveToNextTrack(currentTrackIndex + 1);
+                    requestTrack();
+                }
+            });
         }
         else
             mMediaPlayer.reset();
     }
 
     public void onEvent(SwitchTrackRequest event){
-        int newCurrentIndex = currentTrackIndex + event.getDirection();
+        moveToNextTrack(currentTrackIndex + event.getDirection());
+        requestTrack();
+    }
+
+    private void moveToNextTrack (int newCurrentIndex) {
         if ((newCurrentIndex < 0))
             currentTrackIndex = trackList.size() - 1;
         else if (newCurrentIndex > trackList.size() - 1)
             currentTrackIndex = 0;
         else
             currentTrackIndex = newCurrentIndex;
-        requestTrack();
     }
 
     public void onEvent(RewindTractToPositionRequest event){

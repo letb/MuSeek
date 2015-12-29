@@ -22,12 +22,15 @@ public class SplashActivity extends BaseSpiceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestToken();
     }
 
     @Override
     public void onResume () {
         bus.register(this);
+        if (TokenHolder.getAccessToken() == null)
+            requestToken();
+        else
+            proceedToPlayList();
         super.onResume();
     }
 

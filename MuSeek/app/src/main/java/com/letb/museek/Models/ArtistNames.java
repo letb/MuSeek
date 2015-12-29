@@ -29,7 +29,20 @@ public class ArtistNames {
             "Tom Waits",
             "Röyksopp",
             "David Bowie",
-            "Regina Spektor"
+            "Chamillionaire",
+            "Eazy-E",
+            "David Garret",
+            "2Pac",
+            "Kenny G",
+            "Frank Sinatra",
+            "Disturbed",
+            "AC/DC",
+            "Queen",
+            "Louis Armstrong",
+            "Michael Jackson",
+            "N.W.A",
+            "Hollywood Undead",
+            "Elvis Presley"
     };
 
     public static String getRandomName() {

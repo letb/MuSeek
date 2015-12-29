@@ -65,6 +65,18 @@ public abstract class BaseSpiceActivity extends AppCompatActivity  {
         this.startService(intent);
     }
 
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "I am paused!");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "I am resumed!");
+    }
+
     protected SpiceManager getSpiceManager() {
         return spiceManager;
     }

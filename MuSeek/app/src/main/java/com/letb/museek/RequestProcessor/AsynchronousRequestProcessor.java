@@ -119,7 +119,7 @@ public class AsynchronousRequestProcessor extends BaseSpiceService {
                 initiateSearchTracksRequest(query, resultsOnPage, quality);
                 break;
         }
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
 //    Отправили, собсна, реквест
