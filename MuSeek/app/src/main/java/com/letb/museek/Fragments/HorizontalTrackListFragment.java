@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.letb.museek.Adapters.TrackAdapter;
@@ -31,6 +32,8 @@ public class HorizontalTrackListFragment extends Fragment implements TwoWayAdapt
     private TwoWayGridView mRecyclerView;
     private TextView titleView;
     private OnTrackSelectedListener mListener;
+    private Button trackListRefreshButton;
+
 
     public HorizontalTrackListFragment() {
     }
@@ -53,6 +56,14 @@ public class HorizontalTrackListFragment extends Fragment implements TwoWayAdapt
         mAdapter = new TrackAdapter(getActivity(), mListItems, TrackAdapter.ViewType.HORIZONTAL);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnItemClickListener(this);
+
+        trackListRefreshButton = (Button) view.findViewById(R.id.refreshButton);
+        trackListRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onTrackListRefreshed();
+            }
+        });
         return view;
     }
 
@@ -85,5 +96,6 @@ public class HorizontalTrackListFragment extends Fragment implements TwoWayAdapt
 
     public interface OnTrackSelectedListener {
         void onTrackSelected(Integer position, List<Track> trackList);
+        void onTrackListRefreshed();
     }
 }

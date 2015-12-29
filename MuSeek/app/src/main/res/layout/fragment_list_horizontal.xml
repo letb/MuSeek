@@ -3,14 +3,31 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/title"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/grid_subheader_height"
-        android:textSize="@dimen/grid_subheader_font_size"
-        android:text="Artists"
-        android:paddingLeft="@dimen/grid_subheader_padding_left"
-        android:gravity="center|left" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/grid_subheader_height"
+            android:textSize="@dimen/grid_subheader_font_size"
+            android:text="Artists"
+            android:paddingLeft="@dimen/grid_subheader_padding_left"
+            android:gravity="center|left" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh_button"
+            android:id="@+id/refreshButton"
+            android:layout_gravity="right|center_vertical" />
+
+
+    </FrameLayout>
+
+
 
     <com.letb.museek.BaseClasses.TwoWayGridView
         xmlns:android="http://schemas.android.com/apk/res/android"

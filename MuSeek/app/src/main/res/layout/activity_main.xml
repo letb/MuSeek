@@ -21,7 +21,7 @@
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/artist_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="200dp">
 
             <ProgressBar android:id="@+id/artistProgressBar"
                 style="?android:attr/progressBarStyleLarge"
@@ -33,7 +33,7 @@
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/en_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="200dp">
 
             <ProgressBar android:id="@+id/enPlayListProgressBar"
                 style="?android:attr/progressBarStyleLarge"

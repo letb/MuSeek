@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
@@ -75,6 +77,8 @@ public class MainActivity extends BaseSpiceActivity implements
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        refreshArtists();
+        refreshTopEnList();
 
         // Find our drawer view
         dlDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -148,15 +152,22 @@ public class MainActivity extends BaseSpiceActivity implements
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "I was resumed");
         super.onResume();
         bus.register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "I was paused");
+        super.onPause();
+        bus.unregister(this);
+    }
+
+    private void refreshArtists () {
         artistSpinner = (ProgressBar)findViewById(R.id.artistProgressBar);
         artistSpinner.setVisibility(View.VISIBLE);
         artistSpinner.bringToFront();
-
-        enPlayListSpinner = (ProgressBar)findViewById(R.id.enPlayListProgressBar);
-        enPlayListSpinner.setVisibility(View.VISIBLE);
-        enPlayListSpinner.bringToFront();
 
         artistList.clear();
         // FIXME: 28.12.15 Ну типа константы надо именовать, все дела
@@ -168,14 +179,15 @@ public class MainActivity extends BaseSpiceActivity implements
             artistNames.add(artist.getName());
         }
 
-        new Thread(new TopTrackListTask(TopTrackListTask.EN_LIST)).start();
         new Thread(new ArtistInfoTask(artistList)).start();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        bus.unregister(this);
+    private void refreshTopEnList () {
+        enPlayListSpinner = (ProgressBar)findViewById(R.id.enPlayListProgressBar);
+        enPlayListSpinner.setVisibility(View.VISIBLE);
+        enPlayListSpinner.bringToFront();
+
+        new Thread(new TopTrackListTask(TopTrackListTask.EN_LIST)).start();
     }
 
     @Override
@@ -208,12 +220,22 @@ public class MainActivity extends BaseSpiceActivity implements
     }
 
     @Override
+    public void onTrackListRefreshed() {
+        refreshTopEnList();
+    }
+
+    @Override
     public void onArtistSelected(Integer position) {
         Log.d(TAG, "Clicked artist item" + position);
         Artist artist = artistList.get(position);
         Intent searchIntent = new Intent(this, SearchActivity.class);
         searchIntent.putExtra(SearchActivity.SEARCH_STRING, artist);
         startActivity(searchIntent);
+    }
+
+    @Override
+    public void onArtistListRefreshed() {
+        refreshArtists();
     }
 
     protected void placeListContainerContents(int container, ArrayList<?> listToShow) {

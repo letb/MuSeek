@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.letb.museek.Adapters.ArtistAdapter;
@@ -29,6 +30,7 @@ public class ArtistListFragment extends Fragment implements TwoWayAdapterView.On
     private ArtistAdapter mAdapter;
     private TwoWayGridView mRecyclerView;
     private TextView titleView;
+    private Button artistRefreshButton;
 
     public ArtistListFragment() {
     }
@@ -52,6 +54,14 @@ public class ArtistListFragment extends Fragment implements TwoWayAdapterView.On
         mAdapter = new ArtistAdapter(getActivity(), mListItems);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnItemClickListener(this);
+
+        artistRefreshButton = (Button) view.findViewById(R.id.refreshButton);
+        artistRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onArtistListRefreshed();
+            }
+        });
         return view;
     }
 
@@ -83,6 +93,7 @@ public class ArtistListFragment extends Fragment implements TwoWayAdapterView.On
 
     public interface OnArtistSelectedListener {
         void onArtistSelected(Integer position);
+        void onArtistListRefreshed();
     }
 
 }
