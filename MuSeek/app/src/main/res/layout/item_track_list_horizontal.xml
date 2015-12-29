@@ -2,28 +2,50 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="@dimen/grid_row_width"
-    android:layout_height="@dimen/grid_row_height"
-    android:paddingLeft="@dimen/grid_cell_padding">
+    android:layout_height="@dimen/grid_row_height">
 
     <ImageView
         android:id="@+id/track_image"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
         android:src = "@drawable/album"/>
 
-    <TextView
-        android:id="@+id/track_title"
-        android:gravity="left"
-        android:padding="14dp"
+
+    <LinearLayout
+        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/grid_text_height"
-        android:text="Tom Waits WaitsWaitsWaitsWaits Waits "
-        android:textSize="@dimen/grid_font_size"
-        android:lines="1"
-        android:scrollHorizontally="true"
-        android:ellipsize="end"
-        android:textColor="#f7f6f6"
-        android:background="#7f353131"
-        android:layout_alignBottom="@+id/track_image"/>
+        android:layout_alignBottom="@+id/track_image"
+        android:orientation="vertical"
+        android:padding="14dp"
+        android:background="#7f353131">
+
+        <TextView
+            android:id="@+id/track_title"
+            android:gravity="left"
+            android:layout_width="fill_parent"
+            android:text="Another Brick in the Wall"
+            android:textSize="@dimen/list_row_font_first"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:scrollHorizontally="true"
+            android:ellipsize="end"
+            android:textColor="#f7f6f6"/>
+
+        <TextView
+            android:id="@+id/track_artist"
+            android:gravity="left"
+            android:paddingTop="4dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Pink Floyd"
+            android:textSize="@dimen/list_row_font_second"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="end"
+            android:textColor="#f7f6f6"/>
+    </LinearLayout>
+
 </RelativeLayout>

@@ -39,7 +39,7 @@ public class ArtistListFragment extends Fragment implements TwoWayAdapterView.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_list_horizontal, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_grid, container, false);
         if (getArguments() != null) {
             mListItems = (List<Artist>) getArguments().getSerializable(ARTIST_LIST);
             title = (String) getArguments().getSerializable(TITLE);

@@ -30,8 +30,10 @@
 
 
     <com.letb.museek.BaseClasses.TwoWayGridView
+        android:padding="@dimen/grid_cell_padding"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:horizontalSpacing="@dimen/grid_cell_padding"
         app:columnWidth="@dimen/grid_row_width"
         android:layout_height="@dimen/grid_row_height"
         android:layout_width="match_parent"

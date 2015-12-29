@@ -12,8 +12,8 @@
 
     <dimen name="grid_font_size">16sp</dimen>
     <dimen name="grid_cell_padding">4dp</dimen>
-    <dimen name="grid_row_height">150dp</dimen>
-    <dimen name="grid_row_width">154dp</dimen>
+    <dimen name="grid_row_height">170dp</dimen>
+    <dimen name="grid_row_width">174dp</dimen>
 
     <dimen name="grid_text_height">48dp</dimen>
     <dimen name="grid_text_padding">14dp</dimen>
