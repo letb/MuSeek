@@ -86,6 +86,7 @@ public class MainActivity extends BaseSpiceActivity implements
         setupDrawerContent(nvDrawer);
         // Inflate the header view at runtime
         View headerLayout = nvDrawer.inflateHeaderView(R.layout.nav_header);
+        toolbar.setTitle("Main");
         // We can now look up items within the header if needed
 //        ImageView ivHeaderPhoto = headerLayout.findViewById(R.id.imageView);
     }
@@ -113,12 +114,10 @@ public class MainActivity extends BaseSpiceActivity implements
         if (menuItem.getItemId() == R.id.nav_second_button) {
             Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
-            setTitle(menuItem.getTitle());
         }
 
 
         // Highlight the selected item, update the title, and close the drawer
-        menuItem.setChecked(true);
         dlDrawer.closeDrawers();
     }
 
@@ -127,6 +126,8 @@ public class MainActivity extends BaseSpiceActivity implements
     protected void onResume() {
         Log.d(TAG, "I was resumed");
         super.onResume();
+        toolbar.setTitle("Main");
+
     }
 
     @Override

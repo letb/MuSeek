@@ -64,6 +64,7 @@ public class HorizontalTrackListFragment extends Fragment implements TwoWayAdapt
                 mListener.onTrackListRefreshed();
             }
         });
+        trackListRefreshButton.setVisibility(View.GONE);
         return view;
     }
 

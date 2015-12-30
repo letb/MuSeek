@@ -24,7 +24,7 @@
 
 
         <ImageView
-            android:src = "@drawable/ic_play_circle_filled_white_48dp"
+            android:src = "@drawable/album"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
             android:layout_width="fill_parent"

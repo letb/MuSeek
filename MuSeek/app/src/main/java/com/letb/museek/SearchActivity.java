@@ -97,6 +97,7 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
         setupDrawerContent(nvDrawer);
         // Inflate the header view at runtime
         View headerLayout = nvDrawer.inflateHeaderView(R.layout.nav_header);
+        toolbar.setTitle("Search");
         // We can now look up items within the header if needed
 //        ImageView ivHeaderPhoto = headerLayout.findViewById(R.id.imageView);
     }
@@ -125,12 +126,10 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
             Intent intent = NavUtils.getParentActivityIntent(this);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
             NavUtils.navigateUpTo(this, intent);
-            setTitle(menuItem.getTitle());
         }
 
 
         // Highlight the selected item, update the title, and close the drawer
-        menuItem.setChecked(true);
         dlDrawer.closeDrawers();
     }
 
@@ -180,6 +179,8 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
     @Override
     public void onResume () {
         super.onResume();
+        toolbar.setTitle("Search");
+
     }
 
     @Override
