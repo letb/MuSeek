@@ -1,13 +1,18 @@
 package com.letb.museek;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,13 +52,22 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
     private Button searchButton;
     private ImageView artistImage;
     private EventBus bus = EventBus.getDefault();
+    private DrawerLayout dlDrawer;
+    private ActionBarDrawerToggle drawerToggle;
+    private NavigationView nvDrawer;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        // Set a Toolbar to replace the ActionBar.
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Search");
+        setSupportActionBar(toolbar);
+
         Intent intent = getIntent();
-        if (intent != null && intent.getData() != null)
+        if (intent != null)
             searchArtist = (Artist) intent.getSerializableExtra(SEARCH_STRING);
 
         searchButton = (Button) findViewById(R.id.search_button);
@@ -71,6 +85,52 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
                 doSearch();
             }
         });
+
+        // Find our drawer view
+        dlDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = setupDrawerToggle();
+        // Tie DrawerLayout events to the ActionBarToggle
+        dlDrawer.setDrawerListener(drawerToggle);
+        // Find our drawer view
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        // Setup drawer view
+        setupDrawerContent(nvDrawer);
+        // Inflate the header view at runtime
+        View headerLayout = nvDrawer.inflateHeaderView(R.layout.nav_header);
+        // We can now look up items within the header if needed
+//        ImageView ivHeaderPhoto = headerLayout.findViewById(R.id.imageView);
+    }
+
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, dlDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
+
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
+
+
+    public void selectDrawerItem(MenuItem menuItem) {
+
+        if (menuItem.getItemId() == R.id.nav_first_button) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            setTitle(menuItem.getTitle());
+        }
+
+
+        // Highlight the selected item, update the title, and close the drawer
+        menuItem.setChecked(true);
+        dlDrawer.closeDrawers();
     }
 
     private void showSearchResults () {
@@ -137,4 +197,25 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
         prepareAndShowPlayerFragment(position, (ArrayList<Track>) trackList);
         prepareAndStartService(trackList, position);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    // Make sure this is the method with just `Bundle` as the signature
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
 }

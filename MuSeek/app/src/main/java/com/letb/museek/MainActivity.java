@@ -71,6 +71,7 @@ public class MainActivity extends BaseSpiceActivity implements
 
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Main");
         setSupportActionBar(toolbar);
         refreshArtists();
         refreshTopEnList();
