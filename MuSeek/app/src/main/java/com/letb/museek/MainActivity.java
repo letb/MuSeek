@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Events.ArtistInfoEvent;
 import com.letb.museek.Events.EventFail;
+import com.letb.museek.Events.PlayerEvents.NowPlayingEvent;
 import com.letb.museek.Events.PlaylistEventSuccess;
 import com.letb.museek.Events.TrackInfoEvent;
 import com.letb.museek.Fragments.ArtistListFragment;
@@ -28,6 +29,7 @@ import com.letb.museek.Models.Track.Track;
 import com.letb.museek.Requests.SynchronousRequests.ArtistInfoTask;
 import com.letb.museek.Requests.SynchronousRequests.TopTrackListTask;
 import com.letb.museek.Requests.SynchronousRequests.TrackInfoTask;
+import com.letb.museek.Services.MediaPlayerService;
 import com.letb.museek.Utils.ResponseParser;
 import com.letb.museek.Utils.UserInformer;
 
@@ -42,6 +44,7 @@ public class MainActivity extends BaseSpiceActivity implements
         ArtistListFragment.OnArtistSelectedListener {
 
     private final String TAG = "MainActivity";
+    public final String NOW_PLAYING = "now_paying";
     private Intent playIntent;
     private ArrayList<Track> searchTrackList;
     private ArrayList<Track> ruTopTrackList;
@@ -86,6 +89,8 @@ public class MainActivity extends BaseSpiceActivity implements
         setupDrawerContent(nvDrawer);
         // Inflate the header view at runtime
         View headerLayout = nvDrawer.inflateHeaderView(R.layout.nav_header);
+
+
         // We can now look up items within the header if needed
 //        ImageView ivHeaderPhoto = headerLayout.findViewById(R.id.imageView);
     }
@@ -112,13 +117,15 @@ public class MainActivity extends BaseSpiceActivity implements
 
         if (menuItem.getItemId() == R.id.nav_second_button) {
             Intent intent = new Intent(this, SearchActivity.class);
+            NavigationView currentNv = (NavigationView) findViewById(R.id.nvView);
+            MenuItem nowPlayingItem = currentNv.getMenu().findItem(R.id.nav_now_playing);
+            intent.putExtra("NOW_PLAYING", nowPlayingItem.getTitle());
             startActivity(intent);
             setTitle(menuItem.getTitle());
         }
 
-
-        // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);
+        // Highlight the selected item, update the title, and close the drawer
         dlDrawer.closeDrawers();
     }
 
@@ -127,6 +134,9 @@ public class MainActivity extends BaseSpiceActivity implements
     protected void onResume() {
         Log.d(TAG, "I was resumed");
         super.onResume();
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("NOW_PLAYING"))
+            setNowPlayng(intent.getStringExtra("NOW_PLAYING"));
     }
 
     @Override
@@ -139,7 +149,6 @@ public class MainActivity extends BaseSpiceActivity implements
         artistSpinner = (ProgressBar)findViewById(R.id.artistProgressBar);
         artistSpinner.setVisibility(View.VISIBLE);
         artistSpinner.bringToFront();
-
         artistList.clear();
         // FIXME: 28.12.15 Ну типа константы надо именовать, все дела
         for (int i = 0; i < 10; ++i) {
@@ -271,6 +280,16 @@ public class MainActivity extends BaseSpiceActivity implements
                 artistSpinner.setVisibility(View.GONE);
             }
         });
+    }
+
+    public void onEvent(NowPlayingEvent event) {
+        setNowPlayng(event.getTrack().getTitle());
+    }
+
+    public void setNowPlayng(String trackTitle) {
+        NavigationView currentNv = (NavigationView) findViewById(R.id.nvView);
+        MenuItem nowPlayingItem = currentNv.getMenu().findItem(R.id.nav_now_playing);
+        nowPlayingItem.setTitle(trackTitle);
     }
 
     public void onEvent(EventFail event) {

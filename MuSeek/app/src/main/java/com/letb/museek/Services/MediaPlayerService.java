@@ -10,6 +10,7 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.letb.museek.Events.PlayerEvents.NowPlayingEvent;
 import com.letb.museek.Events.PlayerEvents.PlayerResponseEvent;
 import com.letb.museek.Events.PlayerEvents.RewindTractToPositionRequest;
 import com.letb.museek.Events.PlayerEvents.SwitchTrackRequest;
@@ -158,6 +159,7 @@ public class MediaPlayerService
             configAndStartMediaPlayer();
         }
 //        changeState(State.Playing);
+        getNowPlaying();
         showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
     }
 
@@ -186,6 +188,7 @@ public class MediaPlayerService
         if (!mMediaPlayer.isPlaying()) {
             changeState(State.Playing);
             showNotification("playing...", trackList.get(currentTrackIndex).getTitle());
+            getNowPlaying();
             mMediaPlayer.start();
         }
     }
@@ -217,6 +220,10 @@ public class MediaPlayerService
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.notify(notificationId, mBuilder.build());
+    }
+
+    public void getNowPlaying() {
+        bus.post(new NowPlayingEvent(trackList.get(currentTrackIndex)));
     }
 
     public void onPrepared(MediaPlayer player) {

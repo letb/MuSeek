@@ -21,6 +21,7 @@ import android.widget.ImageView;
 
 import com.letb.museek.BaseClasses.BaseSpiceActivity;
 import com.letb.museek.Events.ClearPlayListEvent;
+import com.letb.museek.Events.PlayerEvents.NowPlayingEvent;
 import com.letb.museek.Events.SearchEventSuccess;
 import com.letb.museek.Events.TrackInfoEvent;
 import com.letb.museek.Fragments.VerticalTrackListFragment;
@@ -67,8 +68,10 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        if (intent != null)
+        if (intent != null) {
             searchArtist = (Artist) intent.getSerializableExtra(SEARCH_STRING);
+            setNowPlayng(intent.getStringExtra("NOW_PLAYING"));
+        }
 
         searchButton = (Button) findViewById(R.id.search_button);
         searchField = (EditText) findViewById(R.id.search_field);
@@ -123,14 +126,16 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
 
         if (menuItem.getItemId() == R.id.nav_first_button) {
             Intent intent = NavUtils.getParentActivityIntent(this);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            NavigationView currentNv = (NavigationView) findViewById(R.id.nvView);
+            MenuItem nowPlayingItem = currentNv.getMenu().findItem(R.id.nav_now_playing);
+            intent.putExtra("NOW_PLAYING", nowPlayingItem.getTitle());
             NavUtils.navigateUpTo(this, intent);
-            setTitle(menuItem.getTitle());
         }
 
-
-        // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);
+        // Highlight the selected item, update the title, and close the drawer
         dlDrawer.closeDrawers();
     }
 
@@ -180,6 +185,9 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
     @Override
     public void onResume () {
         super.onResume();
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("NOW_PLAYING"))
+            setNowPlayng(intent.getStringExtra("NOW_PLAYING"));
     }
 
     @Override
@@ -219,4 +227,15 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
+    public void onEvent(NowPlayingEvent event) {
+        NavigationView currentNv = (NavigationView) findViewById(R.id.nvView);
+        MenuItem nowPlayingItem = currentNv.getMenu().findItem(R.id.nav_now_playing);
+        nowPlayingItem.setTitle(event.getTrack().getTitle());
+    }
+
+    public void setNowPlayng(String trackTitle) {
+        NavigationView currentNv = (NavigationView) findViewById(R.id.nvView);
+        MenuItem nowPlayingItem = currentNv.getMenu().findItem(R.id.nav_now_playing);
+        nowPlayingItem.setTitle(trackTitle);
+    }
 }
