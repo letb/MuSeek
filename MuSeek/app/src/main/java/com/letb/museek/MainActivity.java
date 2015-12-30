@@ -71,7 +71,6 @@ public class MainActivity extends BaseSpiceActivity implements
 
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Main");
         setSupportActionBar(toolbar);
         refreshArtists();
         refreshTopEnList();
@@ -202,6 +201,7 @@ public class MainActivity extends BaseSpiceActivity implements
         Artist artist = artistList.get(position);
         Intent searchIntent = new Intent(this, SearchActivity.class);
         searchIntent.putExtra(SearchActivity.SEARCH_STRING, artist);
+        searchIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(searchIntent);
     }
 

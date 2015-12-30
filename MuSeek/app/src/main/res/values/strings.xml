@@ -3,7 +3,7 @@
     <string name="main_activity">MuSeek YO</string>
 
     <string name="TOKEN_FAILURE">Access Token Failed</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Main</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -11,6 +11,6 @@
     <string name="action_settings">ACTION_SETTINGS</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_search">Search</string>
     <string name="refresh_button">Refresh</string>
 </resources>
