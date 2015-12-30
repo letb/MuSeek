@@ -102,6 +102,9 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
         View headerLayout = nvDrawer.inflateHeaderView(R.layout.nav_header);
         // We can now look up items within the header if needed
 //        ImageView ivHeaderPhoto = headerLayout.findViewById(R.id.imageView);
+
+
+
     }
 
 
@@ -157,6 +160,8 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
             new Thread(new SearchTrackListTask(searchString)).start();
             if (searchArtist != null && !searchArtist.getName().equals(searchString)) {
                 artistImage.setImageResource(0);
+            } else {
+                artistImage.setImageResource(R.drawable.album);
             }
         }
     }
