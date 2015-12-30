@@ -159,8 +159,6 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
         if (StringUtils.isNotEmpty(searchString)) {
             new Thread(new SearchTrackListTask(searchString)).start();
             if (searchArtist != null && !searchArtist.getName().equals(searchString)) {
-                artistImage.setImageResource(0);
-            } else {
                 artistImage.setImageResource(R.drawable.album);
             }
         }
