@@ -53,7 +53,7 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         Intent intent = getIntent();
-        if (intent != null)
+        if (intent != null && intent.getData() != null)
             searchArtist = (Artist) intent.getSerializableExtra(SEARCH_STRING);
 
         searchButton = (Button) findViewById(R.id.search_button);
@@ -89,7 +89,7 @@ public class SearchActivity extends BaseSpiceActivity implements VerticalTrackLi
         searchString = String.valueOf(searchField.getText());
         if (StringUtils.isNotEmpty(searchString)) {
             new Thread(new SearchTrackListTask(searchString)).start();
-            if (!searchArtist.getName().equals(searchString)) {
+            if (searchArtist != null && !searchArtist.getName().equals(searchString)) {
                 artistImage.setImageResource(0);
             }
         }

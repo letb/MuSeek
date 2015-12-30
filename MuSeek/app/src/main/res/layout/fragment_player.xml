@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#221725">
+    android:background="@color/colorPrimaryDark">
 
     <RelativeLayout
         android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="#36223b">
+        android:background="@color/colorPrimaryDark">
 
         <ImageView
             android:id="@+id/imageviewHeader"
@@ -62,17 +62,17 @@
         android:layout_width="400dp"
         android:layout_height="400dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/layoutHeader"
-        app:progressEmptyColor="#4e3c51"
-        app:progressLoadedColor="#e91e64"
+        app:progressEmptyColor="@color/colorPrimary"
+        app:progressLoadedColor="@color/colorPrimaryLight"
         app:coverMaskColor="#80000000"
-        app:durationTextColor="#FFFFFF"
+        app:durationTextColor="@color/colorPrimaryVeryLight"
         app:durationTextSize="15sp"
         app:coverImage="@drawable/cover"
         app:progressHeight="4dp"
         app:maxProgress="40"
         app:currentProgress="23"
-        app:placeHolder="@drawable/cover"/>
+        app:placeHolder="@drawable/cover"
+        android:layout_below="@+id/layoutHeader" />
 
     <View
         android:layout_width="match_parent"
@@ -81,10 +81,9 @@
         android:background="@drawable/shadow"/>
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/maskProgressView"
-        android:layout_centerVertical="true">
+        android:layout_below="@+id/maskProgressView">
 
 
         <Button

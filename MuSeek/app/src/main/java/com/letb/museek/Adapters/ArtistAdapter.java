@@ -59,9 +59,15 @@ public class ArtistAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        //  TODO: display picture
         holder.nameTextView.setText(artist.getName());
-        Picasso.with(mContext).load(artist.getPic()).into(holder.artistImageView);
+        //  TODO: display picture
+        if (holder.artistImageView != null) {
+            if (artist.getPic() == null) {
+                Picasso.with(mContext).load(R.drawable.album).into(holder.artistImageView);
+            } else {
+                Picasso.with(mContext).load(artist.getPic()).into(holder.artistImageView);
+            }
+        }
         return convertView;
     }
 }

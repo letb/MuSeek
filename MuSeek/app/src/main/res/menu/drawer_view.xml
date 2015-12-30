@@ -3,14 +3,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_first_fragment"
+            android:id="@+id/nav_first_button"
             android:title="Main" />
         <item
-            android:id="@+id/nav_second_fragment"
+            android:id="@+id/nav_second_button"
             android:title="Search" />
-        <item
-            android:id="@+id/nav_third_fragment"
-            android:title="Settings" />
     </group>
 
 </menu>

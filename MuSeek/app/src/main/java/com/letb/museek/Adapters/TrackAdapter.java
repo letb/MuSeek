@@ -82,7 +82,7 @@ public class TrackAdapter extends BaseAdapter {
             holder.artistTextView.setText(track.getData().getArtist());
 
         //  TODO: display picture
-        if (holder.trackImageView !=null) {
+        if (holder.trackImageView != null) {
             if (track.getPic() == null) {
                 Picasso.with(mContext).load(R.drawable.album).into(holder.trackImageView);
             } else {
